@@ -2,7 +2,7 @@
 
 // // Create Axios instance
 // const API = axios.create({
-//   baseURL: "https://ecommerce-mern-backend-upua.onrender.com/api", // your backend render URL
+//   baseURLcom: "https://ecommerce-mern-backend-upua.onrender.com/api", // your backend render URL
 //   headers: {
 //     "Content-Type": "application/json",
 //   },

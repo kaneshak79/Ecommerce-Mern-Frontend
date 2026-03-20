@@ -306,7 +306,8 @@ import ProductDetails from "./pages/buyer/ProductDetails";
 import Checkout from "./pages/buyer/Checkout";
 import Payment from "./pages/buyer/Payment";
 import OrderConfirmation from "./pages/buyer/OrderConfirmation";
-
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 // Auth
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
@@ -320,9 +321,9 @@ import SellerOrders from "./pages/seller/SellerOrders";
 import StoreManager from "./pages/seller/StoreManager";
 import SalesReport from "./pages/seller/SalesReport";
 import SellerProfile from "./pages/seller/SellerProfile";
-
+import Profile from "./pages/buyer/Profile";
 import SellerRoute from "./pages/seller/SellerRoute";
-
+import SearchResults from "./pages/buyer/SearchResults";
 function App() {
   const location = useLocation();
 
@@ -343,7 +344,12 @@ function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/forgotpassword" element={<ForgotPassword />}/>
+        
 
+<Route path="/resetpassword/:token" element={<ResetPassword />} />
+<Route path="/search" element={<SearchResults />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
