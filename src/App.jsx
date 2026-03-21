@@ -473,6 +473,7 @@ const App = () => {
           path="/"
           element={
             <ProtectedRoute>
+              <Navbar />
               <Home />
             </ProtectedRoute>
           }
