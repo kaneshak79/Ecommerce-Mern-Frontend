@@ -2127,291 +2127,6 @@
 
 
 
-// import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import axios from "../../utils/axios";
-// import { useCart } from "../../context/CartContext";
-// import { useWishlist } from "../../context/WishlistContext";
-
-// const ProductDetails = () => {
-//   const { id } = useParams();
-//   const { addToCart } = useCart();
-//   const { addToWishlist } = useWishlist();
-
-//   const [product, setProduct] = useState(null);
-//   const [reviews, setReviews] = useState([]);
-//   const [activeTab, setActiveTab] = useState("details");
-
-//   const [showForm, setShowForm] = useState(false);
-//   const [rating, setRating] = useState(5);
-//   const [comment, setComment] = useState("");
-//   const [editingReviewId, setEditingReviewId] = useState(null);
-
-//   const backendURL =
-//     import.meta.env.VITE_BACKEND_URL ||
-//     "https://ecommerce-mern-backend-1.onrender.com";
-
-//   // ✅ FIX: get userId from stored user
-//   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-//   const userId = storedUser?._id;
-
-//   // ================= FETCH PRODUCT =================
-//   const fetchProduct = async () => {
-//     try {
-//       const res = await axios.get(`${backendURL}/api/products/${id}`);
-//       setProduct(res.data);
-//     } catch (err) {
-//       console.error("Fetch product error:", err);
-//     }
-//   };
-
-//   // ================= FETCH REVIEWS =================
-//   const fetchReviews = async () => {
-//     try {
-//       const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
-//       setReviews(res.data);
-//     } catch (err) {
-//       console.error("Fetch reviews error:", err);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchProduct();
-//     fetchReviews();
-//   }, [id]);
-
-//   if (!product) return <div className="p-10 text-center">Loading...</div>;
-
-//   // ================= IMAGE =================
-//   const imageUrl =
-//     product.images && product.images[0]
-//       ? product.images[0].startsWith("http")
-//         ? product.images[0]
-//         : product.images[0].startsWith("/uploads/")
-//         ? `${backendURL}${product.images[0]}`
-//         : `${backendURL}/uploads/${product.images[0]}`
-//       : "/placeholder.png";
-
-//   // ================= ADD / UPDATE REVIEW =================
-//   const handleSubmitReview = async () => {
-//     try {
-//       const token = localStorage.getItem("token");
-
-//       if (!token) {
-//         alert("Please login first");
-//         return;
-//       }
-
-//       if (!comment.trim()) {
-//         alert("Please write a review");
-//         return;
-//       }
-
-//       if (editingReviewId) {
-//         await axios.put(
-//           `${backendURL}/api/reviews/${editingReviewId}`,
-//           { rating: Number(rating), comment },
-//           { headers: { Authorization: `Bearer ${token}` } }
-//         );
-//       } else {
-//         await axios.post(
-//           `${backendURL}/api/reviews`,
-//           { productId: id, rating: Number(rating), comment },
-//           { headers: { Authorization: `Bearer ${token}` } }
-//         );
-//       }
-
-//       alert("Review submitted successfully!");
-//       setShowForm(false);
-//       setComment("");
-//       setRating(5);
-//       setEditingReviewId(null);
-//       fetchReviews();
-//     } catch (err) {
-//       console.error("Review error:", err.response?.data || err.message);
-//       alert(err.response?.data?.message || "Review failed");
-//     }
-//   };
-
-//   // ================= DELETE =================
-//   const handleDelete = async (reviewId) => {
-//     try {
-//       const token = localStorage.getItem("token");
-
-//       await axios.delete(`${backendURL}/api/reviews/${reviewId}`, {
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
-
-//       fetchReviews();
-//     } catch (err) {
-//       console.error("Delete review error:", err);
-//     }
-//   };
-
-//   // ================= EDIT =================
-//   const handleEdit = (review) => {
-//     setShowForm(true);
-//     setRating(review.rating);
-//     setComment(review.comment);
-//     setEditingReviewId(review._id);
-//   };
-
-//   return (
-//     <div className="bg-gray-50 min-h-screen">
-//       <div className="max-w-6xl mx-auto p-4">
-
-//         {/* TOP */}
-//         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-lg shadow">
-//           <img
-//             src={imageUrl}
-//             alt={product.title}
-//             className="h-[400px] w-full object-contain"
-//           />
-
-//           <div>
-//             <h1 className="text-xl font-semibold">{product.title}</h1>
-//             <p className="text-gray-600 mt-2">{product.description}</p>
-//             <p className="text-2xl font-bold mt-2">₹{product.price}</p>
-
-//             <div className="flex gap-3 mt-4">
-//               <button
-//                 onClick={() => addToCart({ ...product, quantity: 1 })}
-//                 className="bg-pink-500 text-white px-6 py-3 rounded w-full"
-//               >
-//                 Add to Bag
-//               </button>
-//               <button
-//                 onClick={() => addToWishlist(product)}
-//                 className="border px-4 py-3 rounded"
-//               >
-//                 ❤️
-//               </button>
-//             </div>
-//           </div>
-//         </div>
-
-//         {/* TABS */}
-//         <div className="bg-white mt-6 rounded-lg shadow">
-//           <div className="flex border-b">
-//             <button
-//               onClick={() => setActiveTab("details")}
-//               className={`px-6 py-3 ${
-//                 activeTab === "details" && "border-b-2 border-pink-500"
-//               }`}
-//             >
-//               Product Details
-//             </button>
-//             <button
-//               onClick={() => setActiveTab("reviews")}
-//               className={`px-6 py-3 ${
-//                 activeTab === "reviews" && "border-b-2 border-pink-500"
-//               }`}
-//             >
-//               Ratings & Reviews
-//             </button>
-//           </div>
-
-//           <div className="p-6">
-//             {activeTab === "details" && (
-//               <p className="text-gray-600">{product.description}</p>
-//             )}
-
-//             {activeTab === "reviews" && (
-//               <div>
-//                 {/* HEADER */}
-//                 <div className="flex justify-between mb-4">
-//                   <h2 className="font-semibold">Customer Reviews</h2>
-//                   <button
-//                     onClick={() => {
-//                       setShowForm(true);
-//                       setEditingReviewId(null);
-//                       setComment("");
-//                       setRating(5);
-//                     }}
-//                     className="border px-4 py-2 text-pink-500 rounded"
-//                   >
-//                     Write Review
-//                   </button>
-//                 </div>
-
-//                 {/* FORM */}
-//                 {showForm && (
-//                   <div className="border p-4 mb-4 rounded">
-//                     <select
-//                       value={rating}
-//                       onChange={(e) => setRating(Number(e.target.value))}
-//                       className="border p-2 mb-2 w-full"
-//                     >
-//                       {[5, 4, 3, 2, 1].map((r) => (
-//                         <option key={r} value={r}>
-//                           {r} Stars
-//                         </option>
-//                       ))}
-//                     </select>
-
-//                     <textarea
-//                       value={comment}
-//                       onChange={(e) => setComment(e.target.value)}
-//                       placeholder="Write your review..."
-//                       className="border p-2 w-full mb-2"
-//                     />
-
-//                     <button
-//                       onClick={handleSubmitReview}
-//                       className="bg-pink-500 text-white px-4 py-2 rounded"
-//                     >
-//                       {editingReviewId ? "Update Review" : "Submit Review"}
-//                     </button>
-//                   </div>
-//                 )}
-
-//                 {/* LIST */}
-//                 {reviews.length === 0 && <p>No reviews yet</p>}
-
-//                 {reviews.map((review) => (
-//                   <div
-//                     key={review._id}
-//                     className="border-b py-3 flex justify-between"
-//                   >
-//                     <div>
-//                       <p className="font-semibold">⭐ {review.rating}</p>
-//                       <p>{review.comment}</p>
-//                       <p className="text-xs text-gray-500">
-//                         by {review.user?.name}
-//                       </p>
-//                     </div>
-
-//                     {/* ✅ FIXED CONDITION */}
-//                     {String(review.user?._id) === String(userId) && (
-//                       <div className="flex gap-2">
-//                         <button
-//                           onClick={() => handleEdit(review)}
-//                           className="text-blue-500"
-//                         >
-//                           Edit
-//                         </button>
-//                         <button
-//                           onClick={() => handleDelete(review._id)}
-//                           className="text-red-500"
-//                         >
-//                           Delete
-//                         </button>
-//                       </div>
-//                     )}
-//                   </div>
-//                 ))}
-//               </div>
-//             )}
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ProductDetails;
-
-
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../../utils/axios";
@@ -2436,17 +2151,28 @@ const ProductDetails = () => {
     import.meta.env.VITE_BACKEND_URL ||
     "https://ecommerce-mern-backend-1.onrender.com";
 
+  // ✅ FIX: get userId from stored user
   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = storedUser?._id;
 
+  // ================= FETCH PRODUCT =================
   const fetchProduct = async () => {
-    const res = await axios.get(`${backendURL}/api/products/${id}`);
-    setProduct(res.data);
+    try {
+      const res = await axios.get(`${backendURL}/api/products/${id}`);
+      setProduct(res.data);
+    } catch (err) {
+      console.error("Fetch product error:", err);
+    }
   };
 
+  // ================= FETCH REVIEWS =================
   const fetchReviews = async () => {
-    const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
-    setReviews(res.data);
+    try {
+      const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
+      setReviews(res.data);
+    } catch (err) {
+      console.error("Fetch reviews error:", err);
+    }
   };
 
   useEffect(() => {
@@ -2454,88 +2180,109 @@ const ProductDetails = () => {
     fetchReviews();
   }, [id]);
 
-  if (!product)
-    return <div className="p-10 text-center animate-pulse">Loading...</div>;
+  if (!product) return <div className="p-10 text-center">Loading...</div>;
 
+  // ================= IMAGE =================
   const imageUrl =
-  product.images && product.images[0]
+    product.images && product.images[0]
       ? product.images[0].startsWith("http")
         ? product.images[0]
         : product.images[0].startsWith("/uploads/")
         ? `${backendURL}${product.images[0]}`
         : `${backendURL}/uploads/${product.images[0]}`
       : "/placeholder.png";
-    // product.images && product.images[0]
-    //   ? product.images[0].startsWith("http")
-    //     ? product.images[0]
-    //     : `${backendURL}/${product.images[0]}`
-    //   : "/placeholder.png";
 
+  // ================= ADD / UPDATE REVIEW =================
   const handleSubmitReview = async () => {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    if (!token) return alert("Login required");
-    if (!comment.trim()) return alert("Write review");
+      if (!token) {
+        alert("Please login first");
+        return;
+      }
 
-    if (editingReviewId) {
-      await axios.put(
-        `${backendURL}/api/reviews/${editingReviewId}`,
-        { rating, comment },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-    } else {
-      await axios.post(
-        `${backendURL}/api/reviews`,
-        { productId: id, rating, comment },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      if (!comment.trim()) {
+        alert("Please write a review");
+        return;
+      }
+
+      if (editingReviewId) {
+        await axios.put(
+          `${backendURL}/api/reviews/${editingReviewId}`,
+          { rating: Number(rating), comment },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      } else {
+        await axios.post(
+          `${backendURL}/api/reviews`,
+          { productId: id, rating: Number(rating), comment },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      }
+
+      alert("Review submitted successfully!");
+      setShowForm(false);
+      setComment("");
+      setRating(5);
+      setEditingReviewId(null);
+      fetchReviews();
+    } catch (err) {
+      console.error("Review error:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "Review failed");
     }
+  };
 
-    setShowForm(false);
-    setComment("");
-    setRating(5);
-    setEditingReviewId(null);
-    fetchReviews();
+  // ================= DELETE =================
+  const handleDelete = async (reviewId) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      await axios.delete(`${backendURL}/api/reviews/${reviewId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      fetchReviews();
+    } catch (err) {
+      console.error("Delete review error:", err);
+    }
+  };
+
+  // ================= EDIT =================
+  const handleEdit = (review) => {
+    setShowForm(true);
+    setRating(review.rating);
+    setComment(review.comment);
+    setEditingReviewId(review._id);
   };
 
   return (
-    <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen p-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="bg-gray-50 min-h-screen">
+      <div className="max-w-6xl mx-auto p-4">
 
-        {/* PRODUCT CARD */}
-        <div className="grid md:grid-cols-2 gap-8 bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition duration-300">
+        {/* TOP */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-lg shadow">
+          <img
+            src={imageUrl}
+            alt={product.title}
+            className="h-[400px] w-full object-contain"
+          />
 
-          {/* IMAGE */}
-          <div className="overflow-hidden rounded-xl">
-            <img
-              src={imageUrl}
-              alt={product.title}
-              className="h-[400px] w-full object-contain transform hover:scale-110 transition duration-500"
-            />
-          </div>
+          <div>
+            <h1 className="text-xl font-semibold">{product.title}</h1>
+            <p className="text-gray-600 mt-2">{product.description}</p>
+            <p className="text-2xl font-bold mt-2">₹{product.price}</p>
 
-          {/* DETAILS */}
-          <div className="flex flex-col justify-between">
-            <div>
-              <h1 className="text-2xl font-bold">{product.title}</h1>
-              <p className="text-gray-600 mt-2">{product.description}</p>
-              <p className="text-3xl font-bold mt-4 text-pink-500">
-                ₹{product.price}
-              </p>
-            </div>
-
-            {/* BUTTONS */}
-            <div className="flex gap-4 mt-6">
+            <div className="flex gap-3 mt-4">
               <button
                 onClick={() => addToCart({ ...product, quantity: 1 })}
-                className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-lg w-full transform hover:scale-105 active:scale-95 transition duration-200 shadow-md"
+                className="bg-pink-500 text-white px-6 py-3 rounded w-full"
               >
-                Add to Bag 🛍️
+                Add to Bag
               </button>
-
               <button
                 onClick={() => addToWishlist(product)}
-                className="border px-4 py-3 rounded-lg hover:bg-pink-100 transform hover:scale-110 transition"
+                className="border px-4 py-3 rounded"
               >
                 ❤️
               </button>
@@ -2544,41 +2291,44 @@ const ProductDetails = () => {
         </div>
 
         {/* TABS */}
-        <div className="bg-white mt-6 rounded-2xl shadow-lg overflow-hidden">
+        <div className="bg-white mt-6 rounded-lg shadow">
           <div className="flex border-b">
-            {["details", "reviews"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`flex-1 py-3 text-center font-medium transition ${
-                  activeTab === tab
-                    ? "border-b-4 border-pink-500 text-pink-500"
-                    : "hover:bg-gray-100"
-                }`}
-              >
-                {tab === "details" ? "Product Details" : "Reviews"}
-              </button>
-            ))}
+            <button
+              onClick={() => setActiveTab("details")}
+              className={`px-6 py-3 ${
+                activeTab === "details" && "border-b-2 border-pink-500"
+              }`}
+            >
+              Product Details
+            </button>
+            <button
+              onClick={() => setActiveTab("reviews")}
+              className={`px-6 py-3 ${
+                activeTab === "reviews" && "border-b-2 border-pink-500"
+              }`}
+            >
+              Ratings & Reviews
+            </button>
           </div>
 
-          <div className="p-6 animate-fadeIn">
+          <div className="p-6">
             {activeTab === "details" && (
-              <p className="text-gray-600 leading-relaxed">
-                {product.description}
-              </p>
+              <p className="text-gray-600">{product.description}</p>
             )}
 
             {activeTab === "reviews" && (
               <div>
-
+                {/* HEADER */}
                 <div className="flex justify-between mb-4">
-                  <h2 className="font-semibold text-lg">
-                    Customer Reviews
-                  </h2>
-
+                  <h2 className="font-semibold">Customer Reviews</h2>
                   <button
-                    onClick={() => setShowForm(true)}
-                    className="border px-4 py-2 rounded hover:bg-pink-100 transition"
+                    onClick={() => {
+                      setShowForm(true);
+                      setEditingReviewId(null);
+                      setComment("");
+                      setRating(5);
+                    }}
+                    className="border px-4 py-2 text-pink-500 rounded"
                   >
                     Write Review
                   </button>
@@ -2586,52 +2336,64 @@ const ProductDetails = () => {
 
                 {/* FORM */}
                 {showForm && (
-                  <div className="border p-4 rounded mb-4 animate-slideUp">
+                  <div className="border p-4 mb-4 rounded">
                     <select
                       value={rating}
                       onChange={(e) => setRating(Number(e.target.value))}
-                      className="border p-2 w-full mb-2"
+                      className="border p-2 mb-2 w-full"
                     >
                       {[5, 4, 3, 2, 1].map((r) => (
-                        <option key={r}>{r} Stars</option>
+                        <option key={r} value={r}>
+                          {r} Stars
+                        </option>
                       ))}
                     </select>
 
                     <textarea
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
+                      placeholder="Write your review..."
                       className="border p-2 w-full mb-2"
                     />
 
                     <button
                       onClick={handleSubmitReview}
-                      className="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition"
+                      className="bg-pink-500 text-white px-4 py-2 rounded"
                     >
-                      Submit
+                      {editingReviewId ? "Update Review" : "Submit Review"}
                     </button>
                   </div>
                 )}
 
-                {/* REVIEWS */}
-                {reviews.map((r) => (
+                {/* LIST */}
+                {reviews.length === 0 && <p>No reviews yet</p>}
+
+                {reviews.map((review) => (
                   <div
-                    key={r._id}
-                    className="border-b py-3 flex justify-between animate-fadeIn"
+                    key={review._id}
+                    className="border-b py-3 flex justify-between"
                   >
                     <div>
-                      <p className="font-semibold">⭐ {r.rating}</p>
-                      <p>{r.comment}</p>
+                      <p className="font-semibold">⭐ {review.rating}</p>
+                      <p>{review.comment}</p>
                       <p className="text-xs text-gray-500">
-                        by {r.user?.name}
+                        by {review.user?.name}
                       </p>
                     </div>
 
-                    {String(r.user?._id) === String(userId) && (
+                    {/* ✅ FIXED CONDITION */}
+                    {String(review.user?._id) === String(userId) && (
                       <div className="flex gap-2">
-                        <button className="text-blue-500 hover:underline">
+                        <button
+                          onClick={() => handleEdit(review)}
+                          className="text-blue-500"
+                        >
                           Edit
                         </button>
-                        <button className="text-red-500 hover:underline">
+                        <button
+                          onClick={() => handleDelete(review._id)}
+                          className="text-red-500"
+                        >
                           Delete
                         </button>
                       </div>
@@ -2643,28 +2405,266 @@ const ProductDetails = () => {
           </div>
         </div>
       </div>
-
-      {/* CUSTOM ANIMATIONS */}
-      <style>
-        {`
-          .animate-fadeIn {
-            animation: fadeIn 0.4s ease-in;
-          }
-          .animate-slideUp {
-            animation: slideUp 0.4s ease;
-          }
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-          @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-        `}
-      </style>
     </div>
   );
 };
 
 export default ProductDetails;
+
+
+// import React, { useEffect, useState } from "react";
+// import { useParams } from "react-router-dom";
+// import axios from "../../utils/axios";
+// import { useCart } from "../../context/CartContext";
+// import { useWishlist } from "../../context/WishlistContext";
+
+// const ProductDetails = () => {
+//   const { id } = useParams();
+//   const { addToCart } = useCart();
+//   const { addToWishlist } = useWishlist();
+
+//   const [product, setProduct] = useState(null);
+//   const [reviews, setReviews] = useState([]);
+//   const [activeTab, setActiveTab] = useState("details");
+
+//   const [showForm, setShowForm] = useState(false);
+//   const [rating, setRating] = useState(5);
+//   const [comment, setComment] = useState("");
+//   const [editingReviewId, setEditingReviewId] = useState(null);
+
+//   const backendURL =
+//     import.meta.env.VITE_BACKEND_URL ||
+//     "https://ecommerce-mern-backend-1.onrender.com";
+
+//   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+//   const userId = storedUser?._id;
+
+//   const fetchProduct = async () => {
+//     const res = await axios.get(`${backendURL}/api/products/${id}`);
+//     setProduct(res.data);
+//   };
+
+//   const fetchReviews = async () => {
+//     const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
+//     setReviews(res.data);
+//   };
+
+//   useEffect(() => {
+//     fetchProduct();
+//     fetchReviews();
+//   }, [id]);
+
+//   if (!product)
+//     return <div className="p-10 text-center animate-pulse">Loading...</div>;
+
+//   const imageUrl =
+//   product.images && product.images[0]
+//       ? product.images[0].startsWith("http")
+//         ? product.images[0]
+//         : product.images[0].startsWith("/uploads/")
+//         ? `${backendURL}${product.images[0]}`
+//         : `${backendURL}/uploads/${product.images[0]}`
+//       : "/placeholder.png";
+//     // product.images && product.images[0]
+//     //   ? product.images[0].startsWith("http")
+//     //     ? product.images[0]
+//     //     : `${backendURL}/${product.images[0]}`
+//     //   : "/placeholder.png";
+
+//   const handleSubmitReview = async () => {
+//     const token = localStorage.getItem("token");
+
+//     if (!token) return alert("Login required");
+//     if (!comment.trim()) return alert("Write review");
+
+//     if (editingReviewId) {
+//       await axios.put(
+//         `${backendURL}/api/reviews/${editingReviewId}`,
+//         { rating, comment },
+//         { headers: { Authorization: `Bearer ${token}` } }
+//       );
+//     } else {
+//       await axios.post(
+//         `${backendURL}/api/reviews`,
+//         { productId: id, rating, comment },
+//         { headers: { Authorization: `Bearer ${token}` } }
+//       );
+//     }
+
+//     setShowForm(false);
+//     setComment("");
+//     setRating(5);
+//     setEditingReviewId(null);
+//     fetchReviews();
+//   };
+
+//   return (
+//     <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen p-4">
+//       <div className="max-w-6xl mx-auto">
+
+//         {/* PRODUCT CARD */}
+//         <div className="grid md:grid-cols-2 gap-8 bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition duration-300">
+
+//           {/* IMAGE */}
+//           <div className="overflow-hidden rounded-xl">
+//             <img
+//               src={imageUrl}
+//               alt={product.title}
+//               className="h-[400px] w-full object-contain transform hover:scale-110 transition duration-500"
+//             />
+//           </div>
+
+//           {/* DETAILS */}
+//           <div className="flex flex-col justify-between">
+//             <div>
+//               <h1 className="text-2xl font-bold">{product.title}</h1>
+//               <p className="text-gray-600 mt-2">{product.description}</p>
+//               <p className="text-3xl font-bold mt-4 text-pink-500">
+//                 ₹{product.price}
+//               </p>
+//             </div>
+
+//             {/* BUTTONS */}
+//             <div className="flex gap-4 mt-6">
+//               <button
+//                 onClick={() => addToCart({ ...product, quantity: 1 })}
+//                 className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-lg w-full transform hover:scale-105 active:scale-95 transition duration-200 shadow-md"
+//               >
+//                 Add to Bag 🛍️
+//               </button>
+
+//               <button
+//                 onClick={() => addToWishlist(product)}
+//                 className="border px-4 py-3 rounded-lg hover:bg-pink-100 transform hover:scale-110 transition"
+//               >
+//                 ❤️
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* TABS */}
+//         <div className="bg-white mt-6 rounded-2xl shadow-lg overflow-hidden">
+//           <div className="flex border-b">
+//             {["details", "reviews"].map((tab) => (
+//               <button
+//                 key={tab}
+//                 onClick={() => setActiveTab(tab)}
+//                 className={`flex-1 py-3 text-center font-medium transition ${
+//                   activeTab === tab
+//                     ? "border-b-4 border-pink-500 text-pink-500"
+//                     : "hover:bg-gray-100"
+//                 }`}
+//               >
+//                 {tab === "details" ? "Product Details" : "Reviews"}
+//               </button>
+//             ))}
+//           </div>
+
+//           <div className="p-6 animate-fadeIn">
+//             {activeTab === "details" && (
+//               <p className="text-gray-600 leading-relaxed">
+//                 {product.description}
+//               </p>
+//             )}
+
+//             {activeTab === "reviews" && (
+//               <div>
+
+//                 <div className="flex justify-between mb-4">
+//                   <h2 className="font-semibold text-lg">
+//                     Customer Reviews
+//                   </h2>
+
+//                   <button
+//                     onClick={() => setShowForm(true)}
+//                     className="border px-4 py-2 rounded hover:bg-pink-100 transition"
+//                   >
+//                     Write Review
+//                   </button>
+//                 </div>
+
+//                 {/* FORM */}
+//                 {showForm && (
+//                   <div className="border p-4 rounded mb-4 animate-slideUp">
+//                     <select
+//                       value={rating}
+//                       onChange={(e) => setRating(Number(e.target.value))}
+//                       className="border p-2 w-full mb-2"
+//                     >
+//                       {[5, 4, 3, 2, 1].map((r) => (
+//                         <option key={r}>{r} Stars</option>
+//                       ))}
+//                     </select>
+
+//                     <textarea
+//                       value={comment}
+//                       onChange={(e) => setComment(e.target.value)}
+//                       className="border p-2 w-full mb-2"
+//                     />
+
+//                     <button
+//                       onClick={handleSubmitReview}
+//                       className="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition"
+//                     >
+//                       Submit
+//                     </button>
+//                   </div>
+//                 )}
+
+//                 {/* REVIEWS */}
+//                 {reviews.map((r) => (
+//                   <div
+//                     key={r._id}
+//                     className="border-b py-3 flex justify-between animate-fadeIn"
+//                   >
+//                     <div>
+//                       <p className="font-semibold">⭐ {r.rating}</p>
+//                       <p>{r.comment}</p>
+//                       <p className="text-xs text-gray-500">
+//                         by {r.user?.name}
+//                       </p>
+//                     </div>
+
+//                     {String(r.user?._id) === String(userId) && (
+//                       <div className="flex gap-2">
+//                         <button className="text-blue-500 hover:underline">
+//                           Edit
+//                         </button>
+//                         <button className="text-red-500 hover:underline">
+//                           Delete
+//                         </button>
+//                       </div>
+//                     )}
+//                   </div>
+//                 ))}
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* CUSTOM ANIMATIONS */}
+//       <style>
+//         {`
+//           .animate-fadeIn {
+//             animation: fadeIn 0.4s ease-in;
+//           }
+//           .animate-slideUp {
+//             animation: slideUp 0.4s ease;
+//           }
+//           @keyframes fadeIn {
+//             from { opacity: 0; transform: translateY(10px); }
+//             to { opacity: 1; transform: translateY(0); }
+//           }
+//           @keyframes slideUp {
+//             from { opacity: 0; transform: translateY(30px); }
+//             to { opacity: 1; transform: translateY(0); }
+//           }
+//         `}
+//       </style>
+//     </div>
+//   );
+// };
+
+// export default ProductDetails;
