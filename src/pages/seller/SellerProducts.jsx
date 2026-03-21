@@ -200,14 +200,14 @@ const SellerProducts = () => {
               <p>₹{p.price}</p>
 
               <div className="flex space-x-2 mt-2">
-                <button
+                {/* <button
                   className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
                   onClick={() =>
                     navigate(`/seller/edit-product/${p._id}`)
                   }
                 >
                   Edit
-                </button>
+                </button> */}
 
                 <button
                   className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"

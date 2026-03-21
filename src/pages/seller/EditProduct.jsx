@@ -295,6 +295,7 @@ const EditProduct = () => {
 
     try {
       await axios.put(`/products/${id}`, formData, {
+      // await axios.put(`/seller/products/${id}`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -303,6 +304,7 @@ const EditProduct = () => {
       alert("Product updated successfully");
 
       navigate("/seller/products");
+      // navigate("/seller/products", { replace: true });
     } catch (err) {
       console.error(err);
       alert("Failed to update product");
