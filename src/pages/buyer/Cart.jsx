@@ -940,12 +940,17 @@ const Cart = () => {
             return (
               <div
                 key={item._id}
-                className="bg-white rounded-xl p-4 flex gap-4 shadow-sm"
+                // className="bg-white rounded-xl p-4 flex gap-4 shadow-sm"
+                 className="bg-white rounded-xl p-4 flex gap-4 shadow-sm 
+  hover:shadow-xl hover:-translate-y-1 
+  transition-all duration-300 ease-in-out"
               >
                 <img
                   src={imageUrl}
                   alt={item.title}
-                  className="w-70 h-90 object-cover rounded"
+                  // className="w-70 h-90 object-cover rounded"
+                   className="w-70 h-90 object-cover rounded 
+  transition-transform duration-300 hover:scale-105"
                 />
                 <div className="flex-1">
                   <h3 className="font-medium text-gray-800">{item.title}</h3>
@@ -957,7 +962,10 @@ const Cart = () => {
                       onChange={(e) =>
                         handleQuantityChange(item._id, e.target.value)
                       }
-                      className="border rounded px-2 py-1"
+                      // className="border rounded px-2 py-1"
+                      className="border rounded px-2 py-1 
+focus:outline-none focus:ring-2 focus:ring-pink-400 
+transition"
                     >
                       {[...Array(10).keys()].map((i) => (
                         <option key={i + 1} value={i + 1}>
@@ -968,7 +976,11 @@ const Cart = () => {
                   </div>
                   <button
                     onClick={() => removeFromCart(item._id)}
-                    className="text-red-500 text-sm mt-3"
+                    // className="text-red-500 text-sm mt-3"
+                    className="text-red-500 text-sm mt-3 
+  hover:text-red-700 hover:underline 
+  transition duration-200"
+                    
                   >
                     Remove
                   </button>
@@ -980,7 +992,9 @@ const Cart = () => {
 
         {/* RIGHT - PRICE PANEL */}
         <div className="space-y-4">
-          <div className="bg-white p-4 rounded-xl shadow-sm">
+          {/* <div className="bg-white p-4 rounded-xl shadow-sm"> */}
+          <div className="bg-white p-4 rounded-xl shadow-sm 
+hover:shadow-md transition duration-300">
             <h2 className="font-semibold mb-3">Price Details</h2>
             <div className="flex justify-between text-sm mb-2">
               <span>Bag MRP</span>
@@ -1008,7 +1022,11 @@ const Cart = () => {
             </div>
             <button
               onClick={() => navigate("/checkout")}
-              className="bg-pink-600 text-white px-6 py-2 rounded-lg"
+              // className="bg-pink-600 text-white px-6 py-2 rounded-lg"
+                className="bg-pink-600 text-white px-6 py-2 rounded-lg 
+  hover:bg-pink-700 hover:scale-105 
+  active:scale-95 
+  transition transform duration-200"
             >
               Proceed
             </button>
