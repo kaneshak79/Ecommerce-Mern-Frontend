@@ -436,12 +436,12 @@
 // export default App;
 
 
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React from "react"; 
+import { Routes, Route } from "react-router-dom"; // <-- no Router here
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// 👇 Import your pages
+// Pages
 import Home from "./pages/buyer/Home";
 import Cart from "./pages/buyer/Cart";
 import Checkout from "./pages/buyer/Checkout";
@@ -450,11 +450,7 @@ import OrderConfirmation from "./pages/buyer/OrderConfirmation";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 
-// 👇 Context
-import { CartProvider } from "./context/CartContext";
-import { AuthProvider } from "./context/AuthContext";
-
-// 👇 Protected route wrapper
+// Protected route wrapper
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
   return token ? children : <Login />;
@@ -462,73 +458,70 @@ const ProtectedRoute = ({ children }) => {
 
 const App = () => {
   return (
-    <AuthProvider>
-      <CartProvider>
-        <Router>
-          {/* Global Toast Notifications */}
-          <ToastContainer position="top-right" autoClose={3000} />
+    <>
+      {/* Toast notifications */}
+      <ToastContainer position="top-right" autoClose={3000} />
 
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+      {/* Routes */}
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-            {/* Buyer Routes */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/home"
-              element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/cart"
-              element={
-                <ProtectedRoute>
-                  <Cart />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/checkout"
-              element={
-                <ProtectedRoute>
-                  <Checkout />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/payment"
-              element={
-                <ProtectedRoute>
-                  <Payment />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/order-confirmation"
-              element={
-                <ProtectedRoute>
-                  <OrderConfirmation />
-                </ProtectedRoute>
-              }
-            />
+        {/* Buyer Routes */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <Cart />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/payment"
+          element={
+            <ProtectedRoute>
+              <Payment />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/order-confirmation"
+          element={
+            <ProtectedRoute>
+              <OrderConfirmation />
+            </ProtectedRoute>
+          }
+        />
 
-            {/* Fallback Route */}
-            <Route path="*" element={<Home />} />
-          </Routes>
-        </Router>
-      </CartProvider>
-    </AuthProvider>
+        {/* Fallback */}
+        <Route path="*" element={<Home />} />
+      </Routes>
+    </>
   );
 };
 
