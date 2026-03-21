@@ -461,7 +461,7 @@ const App = () => {
     <>
       {/* Toast notifications */}
       <ToastContainer position="top-right" autoClose={3000} />
-
+      <Navbar />
       {/* Routes */}
       <Routes>
         {/* Public Routes */}
@@ -473,7 +473,7 @@ const App = () => {
           path="/"
           element={
             <ProtectedRoute>
-              <Navbar />
+              
               <Home />
             </ProtectedRoute>
           }
