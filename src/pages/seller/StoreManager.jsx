@@ -131,7 +131,97 @@
 // export default StoreManager;
 
 
-// src/pages/seller/StoreManager.jsx
+// // src/pages/seller/StoreManager.jsx
+// import React, { useState, useEffect } from "react";
+// import axios from "../../utils/axios";
+
+// const StoreManager = () => {
+//   const [storeName, setStoreName] = useState("");
+//   const [storeDescription, setStoreDescription] = useState("");
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     const fetchStore = async () => {
+//       try {
+//         const res = await axios.get("/seller/store", {
+//           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+//         });
+//         setStoreName(res.data.storeName);
+//         setStoreDescription(res.data.storeDescription);
+//       } catch (err) {
+//         console.error(err);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchStore();
+//   }, []);
+
+//   const handleUpdate = async () => {
+//     try {
+//       await axios.put(
+//         "/seller/store",
+//         { storeName, storeDescription },
+//         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+//       );
+//       alert("Store updated successfully");
+//     } catch (err) {
+//       console.error(err);
+//       alert("Failed to update store");
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen bg-gray-100 p-6">
+//       <div className="container mx-auto max-w-2xl">
+//         <h1 className="text-3xl font-bold mb-6">Store Manager</h1>
+
+//         {loading ? (
+//           <div className="text-center py-10 text-gray-500">Loading store details...</div>
+//         ) : (
+//           <div className="bg-white p-6 rounded shadow-md space-y-4">
+//             {/* Store Name */}
+//             <div>
+//               <label className="block font-semibold mb-1">Store Name</label>
+//               <input
+//                 type="text"
+//                 placeholder="Enter store name"
+//                 className="w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
+//                 value={storeName}
+//                 onChange={(e) => setStoreName(e.target.value)}
+//               />
+//             </div>
+
+//             {/* Store Description */}
+//             <div>
+//               <label className="block font-semibold mb-1">Store Description</label>
+//               <textarea
+//                 placeholder="Enter store description"
+//                 className="w-full border border-gray-300 p-3 rounded h-32 resize-none focus:outline-none focus:ring-2 focus:ring-green-400"
+//                 value={storeDescription}
+//                 onChange={(e) => setStoreDescription(e.target.value)}
+//               />
+//             </div>
+
+//             {/* Update Button */}
+//             <div className="flex justify-end">
+//               <button
+//                 onClick={handleUpdate}
+//                 className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition"
+//               >
+//                 Update Store
+//               </button>
+//             </div>
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default StoreManager;
+
+
 import React, { useState, useEffect } from "react";
 import axios from "../../utils/axios";
 
@@ -172,42 +262,44 @@ const StoreManager = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="container mx-auto max-w-2xl">
-        <h1 className="text-3xl font-bold mb-6">Store Manager</h1>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 p-6 flex items-center justify-center">
+      <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-8 transform transition-all duration-500 hover:scale-105">
+        <h1 className="text-4xl font-bold text-green-700 mb-8 text-center animate-pulse">
+          Store Manager
+        </h1>
 
         {loading ? (
-          <div className="text-center py-10 text-gray-500">Loading store details...</div>
+          <div className="text-center py-12 text-gray-400 text-lg">Loading store details...</div>
         ) : (
-          <div className="bg-white p-6 rounded shadow-md space-y-4">
+          <div className="space-y-6">
             {/* Store Name */}
-            <div>
-              <label className="block font-semibold mb-1">Store Name</label>
+            <div className="transition transform hover:scale-105">
+              <label className="block text-lg font-semibold mb-2 text-gray-700">Store Name</label>
               <input
                 type="text"
                 placeholder="Enter store name"
-                className="w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-green-400"
+                className="w-full border border-gray-300 p-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent shadow-sm transition"
                 value={storeName}
                 onChange={(e) => setStoreName(e.target.value)}
               />
             </div>
 
             {/* Store Description */}
-            <div>
-              <label className="block font-semibold mb-1">Store Description</label>
+            <div className="transition transform hover:scale-105">
+              <label className="block text-lg font-semibold mb-2 text-gray-700">Store Description</label>
               <textarea
                 placeholder="Enter store description"
-                className="w-full border border-gray-300 p-3 rounded h-32 resize-none focus:outline-none focus:ring-2 focus:ring-green-400"
+                className="w-full border border-gray-300 p-4 rounded-xl h-36 resize-none focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent shadow-sm transition"
                 value={storeDescription}
                 onChange={(e) => setStoreDescription(e.target.value)}
               />
             </div>
 
             {/* Update Button */}
-            <div className="flex justify-end">
+            <div className="flex justify-center mt-4">
               <button
                 onClick={handleUpdate}
-                className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition"
+                className="bg-green-500 text-white px-8 py-3 rounded-xl shadow-lg hover:bg-green-600 hover:scale-105 transform transition font-semibold"
               >
                 Update Store
               </button>

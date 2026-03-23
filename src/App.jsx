@@ -1,164 +1,301 @@
-// // // // // import React from "react";
-// // // // // import { Routes, Route } from "react-router-dom";
-
-// // // // // // Pages
-// // // // // import Home from "./pages/buyer/Home";
-// // // // // import ProductDetails from "./pages/buyer/ProductDetails";
-// // // // // import Cart from "./pages/buyer/Cart";
-// // // // // import Wishlist from "./pages/buyer/Wishlist";
-// // // // // import MyOrders from "./pages/buyer/MyOrders";
-// // // // // import Profile from "./pages/buyer/Profile";
-// // // // // import Checkout from "./pages/buyer/Checkout";
-// // // // // import Payment from "./pages/buyer/Payment";
-// // // // // import OrderConfirmation from "./pages/buyer/OrderConfirmation";
-// // // // // import Login from "./pages/auth/Login";
-// // // // // // import LoginSeller from "./pages/auth/Loginseller";
-// // // // // import Register from "./pages/auth/Register";
-// // // // // // import RegisterSeller from "./pages/auth/RegisterSeller";
-// // // // // import ForgotPassword from "./pages/auth/ForgotPassword";
-// // // // // import ResetPassword from "./pages/auth/ResetPassword";
-
-// // // // // // Seller Pages
-// // // // // import Dashboard from "./pages/seller/Dashboard";
-// // // // // import AddProduct from "./pages/seller/AddProduct";
-// // // // // import SellerProducts from "./pages/seller/SellerProducts";
-// // // // // import SellerOrders from "./pages/seller/SellerOrders";
-// // // // // import SalesReport from "./pages/seller/SalesReport";
-// // // // // import StoreManager from "./pages/seller/StoreManager";
-// // // // // import SellerProfile from "./pages/seller/SellerProfile";
-
-// // // // // // // Payment Pages
-// // // // // // import Checkout from "./pages/Payment/Checkout";
-// // // // // // import PaymentSuccess from "./pages/Payment/PaymentSuccess";
-
-// // // // // // Components
-// // // // // import Navbar from "./components/Navbar";
-// // // // // import Footer from "./components/Footer";
-
-// // // // // const App = () => {
-// // // // //   return (
-// // // // //     <div>
-// // // // //       <Navbar /> {/* Always visible */}
-
-// // // // //       <Routes>
-// // // // //         {/* Auth */}
-// // // // //         <Route path="/login" element={<Login />} />
-// // // // //         {/* <Route path="/login-seller" element={<LoginSeller />} /> */}
-// // // // //         <Route path="/register" element={<Register />} />
-// // // // //         {/* <Route path="/register-seller" element={<RegisterSeller />} /> */}
-// // // // //         <Route path="/forgot-password" element={<ForgotPassword />} />
-// // // // //         {/* <Route path="/reset-password" element={<ResetPassword />} /> */}
-// // // // //           <Route path="/reset-password/:token" element={<ResetPassword />} />
-
-// // // // //         {/* Buyer */}
-// // // // //         <Route path="/" element={<Home />} />
-// // // // //         <Route path="/home" element={<Home />} />
-// // // // //         <Route path="/product/:id" element={<ProductDetails />} />
-// // // // //         <Route path="/cart" element={<Cart />} />
-// // // // //         <Route path="/wishlist" element={<Wishlist />} />
-// // // // //         <Route path="/orders" element={<MyOrders />} />
-// // // // //         <Route path="/profile" element={<Profile />} />
-// // // // //         <Route path="/checkout" element={<Checkout />} />
-// // // // //         <Route path="/payment" element={<Payment />}/>
-// // // // //         <Route path="/order-confirmation" element={<OrderConfirmation />}/>
-        
-
-// // // // //         {/* Seller */}
-// // // // //         <Route path="/seller/dashboard" element={<Dashboard />} />
-// // // // //         <Route path="/seller/add-product" element={<AddProduct />} />
-// // // // //         <Route path="/seller/products" element={<SellerProducts />} />
-// // // // //         <Route path="/seller/orders" element={<SellerOrders />} />
-// // // // //         <Route path="/seller/sales-report" element={<SalesReport />} />
-// // // // //         <Route path="/seller/store-manager" element={<StoreManager />} />
-// // // // //         <Route path="/seller/profile" element={<SellerProfile />} />
-
-// // // // //         {/* Payment */}
-// // // // //         {/* <Route path="/checkout" element={<Checkout />} />
-// // // // //         <Route path="/payment-success" element={<PaymentSuccess />} /> */}
-// // // // //       </Routes>
-
-// // // // //       <Footer />
-// // // // //     </div>
-// // // // //   );
-// // // // // };
-
-// // // // // export default App;
-
-
 // // // // // // import React from "react";
-// // // // // // import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+// // // // // // import { Routes, Route } from "react-router-dom";
 
 // // // // // // // Pages
-// // // // // // import Login from "./pages/auth/Login";
-// // // // // // import Register from "./pages/auth/Register";
 // // // // // // import Home from "./pages/buyer/Home";
+// // // // // // import ProductDetails from "./pages/buyer/ProductDetails";
 // // // // // // import Cart from "./pages/buyer/Cart";
 // // // // // // import Wishlist from "./pages/buyer/Wishlist";
 // // // // // // import MyOrders from "./pages/buyer/MyOrders";
 // // // // // // import Profile from "./pages/buyer/Profile";
+// // // // // // import Checkout from "./pages/buyer/Checkout";
+// // // // // // import Payment from "./pages/buyer/Payment";
+// // // // // // import OrderConfirmation from "./pages/buyer/OrderConfirmation";
+// // // // // // import Login from "./pages/auth/Login";
+// // // // // // // import LoginSeller from "./pages/auth/Loginseller";
+// // // // // // import Register from "./pages/auth/Register";
+// // // // // // // import RegisterSeller from "./pages/auth/RegisterSeller";
+// // // // // // import ForgotPassword from "./pages/auth/ForgotPassword";
+// // // // // // import ResetPassword from "./pages/auth/ResetPassword";
 
-// // // // // // // Seller pages
+// // // // // // // Seller Pages
 // // // // // // import Dashboard from "./pages/seller/Dashboard";
 // // // // // // import AddProduct from "./pages/seller/AddProduct";
+// // // // // // import SellerProducts from "./pages/seller/SellerProducts";
+// // // // // // import SellerOrders from "./pages/seller/SellerOrders";
+// // // // // // import SalesReport from "./pages/seller/SalesReport";
+// // // // // // import StoreManager from "./pages/seller/StoreManager";
+// // // // // // import SellerProfile from "./pages/seller/SellerProfile";
 
-// // // // // // function App() {
-// // // // // //   const userRole = localStorage.getItem("userRole"); // buyer or seller
+// // // // // // // // Payment Pages
+// // // // // // // import Checkout from "./pages/Payment/Checkout";
+// // // // // // // import PaymentSuccess from "./pages/Payment/PaymentSuccess";
 
+// // // // // // // Components
+// // // // // // import Navbar from "./components/Navbar";
+// // // // // // import Footer from "./components/Footer";
+
+// // // // // // const App = () => {
 // // // // // //   return (
-// // // // // //     <Router>
+// // // // // //     <div>
+// // // // // //       <Navbar /> {/* Always visible */}
+
 // // // // // //       <Routes>
-// // // // // //         {/* Root route `/` redirects based on login */}
-// // // // // //         <Route
-// // // // // //           path="/"
-// // // // // //           element={
-// // // // // //             userRole === "buyer" ? (
-// // // // // //               <Home />
-// // // // // //             ) : userRole === "seller" ? (
-// // // // // //               <Dashboard />
-// // // // // //             ) : (
-// // // // // //               <Navigate to="/login" />
-// // // // // //             )
-// // // // // //           }
-// // // // // //         />
-
-// // // // // //         {/* Auth routes */}
+// // // // // //         {/* Auth */}
 // // // // // //         <Route path="/login" element={<Login />} />
+// // // // // //         {/* <Route path="/login-seller" element={<LoginSeller />} /> */}
 // // // // // //         <Route path="/register" element={<Register />} />
+// // // // // //         {/* <Route path="/register-seller" element={<RegisterSeller />} /> */}
+// // // // // //         <Route path="/forgot-password" element={<ForgotPassword />} />
+// // // // // //         {/* <Route path="/reset-password" element={<ResetPassword />} /> */}
+// // // // // //           <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-// // // // // //         {/* Buyer routes */}
-// // // // // //         {userRole === "buyer" && (
-// // // // // //           <>
-// // // // // //             <Route path="/cart" element={<Cart />} />
-// // // // // //             <Route path="/wishlist" element={<Wishlist />} />
-// // // // // //             <Route path="/my-orders" element={<MyOrders />} />
-// // // // // //             <Route path="/profile" element={<Profile />} />
-// // // // // //           </>
-// // // // // //         )}
+// // // // // //         {/* Buyer */}
+// // // // // //         <Route path="/" element={<Home />} />
+// // // // // //         <Route path="/home" element={<Home />} />
+// // // // // //         <Route path="/product/:id" element={<ProductDetails />} />
+// // // // // //         <Route path="/cart" element={<Cart />} />
+// // // // // //         <Route path="/wishlist" element={<Wishlist />} />
+// // // // // //         <Route path="/orders" element={<MyOrders />} />
+// // // // // //         <Route path="/profile" element={<Profile />} />
+// // // // // //         <Route path="/checkout" element={<Checkout />} />
+// // // // // //         <Route path="/payment" element={<Payment />}/>
+// // // // // //         <Route path="/order-confirmation" element={<OrderConfirmation />}/>
+        
 
-// // // // // //         {/* Seller routes */}
-// // // // // //         {userRole === "seller" && (
-// // // // // //           <>
-// // // // // //             <Route path="/seller/dashboard" element={<Dashboard />} />
-// // // // // //             <Route path="/seller/add-product" element={<AddProduct />} />
-// // // // // //           </>
-// // // // // //         )}
+// // // // // //         {/* Seller */}
+// // // // // //         <Route path="/seller/dashboard" element={<Dashboard />} />
+// // // // // //         <Route path="/seller/add-product" element={<AddProduct />} />
+// // // // // //         <Route path="/seller/products" element={<SellerProducts />} />
+// // // // // //         <Route path="/seller/orders" element={<SellerOrders />} />
+// // // // // //         <Route path="/seller/sales-report" element={<SalesReport />} />
+// // // // // //         <Route path="/seller/store-manager" element={<StoreManager />} />
+// // // // // //         <Route path="/seller/profile" element={<SellerProfile />} />
 
-// // // // // //         {/* fallback */}
-// // // // // //         <Route path="*" element={<div>Page Not Found</div>} />
+// // // // // //         {/* Payment */}
+// // // // // //         {/* <Route path="/checkout" element={<Checkout />} />
+// // // // // //         <Route path="/payment-success" element={<PaymentSuccess />} /> */}
 // // // // // //       </Routes>
-// // // // // //     </Router>
+
+// // // // // //       <Footer />
+// // // // // //     </div>
 // // // // // //   );
-// // // // // // }
+// // // // // // };
 
 // // // // // // export default App;
 
 
+// // // // // // // import React from "react";
+// // // // // // // import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+
+// // // // // // // // Pages
+// // // // // // // import Login from "./pages/auth/Login";
+// // // // // // // import Register from "./pages/auth/Register";
+// // // // // // // import Home from "./pages/buyer/Home";
+// // // // // // // import Cart from "./pages/buyer/Cart";
+// // // // // // // import Wishlist from "./pages/buyer/Wishlist";
+// // // // // // // import MyOrders from "./pages/buyer/MyOrders";
+// // // // // // // import Profile from "./pages/buyer/Profile";
+
+// // // // // // // // Seller pages
+// // // // // // // import Dashboard from "./pages/seller/Dashboard";
+// // // // // // // import AddProduct from "./pages/seller/AddProduct";
+
+// // // // // // // function App() {
+// // // // // // //   const userRole = localStorage.getItem("userRole"); // buyer or seller
+
+// // // // // // //   return (
+// // // // // // //     <Router>
+// // // // // // //       <Routes>
+// // // // // // //         {/* Root route `/` redirects based on login */}
+// // // // // // //         <Route
+// // // // // // //           path="/"
+// // // // // // //           element={
+// // // // // // //             userRole === "buyer" ? (
+// // // // // // //               <Home />
+// // // // // // //             ) : userRole === "seller" ? (
+// // // // // // //               <Dashboard />
+// // // // // // //             ) : (
+// // // // // // //               <Navigate to="/login" />
+// // // // // // //             )
+// // // // // // //           }
+// // // // // // //         />
+
+// // // // // // //         {/* Auth routes */}
+// // // // // // //         <Route path="/login" element={<Login />} />
+// // // // // // //         <Route path="/register" element={<Register />} />
+
+// // // // // // //         {/* Buyer routes */}
+// // // // // // //         {userRole === "buyer" && (
+// // // // // // //           <>
+// // // // // // //             <Route path="/cart" element={<Cart />} />
+// // // // // // //             <Route path="/wishlist" element={<Wishlist />} />
+// // // // // // //             <Route path="/my-orders" element={<MyOrders />} />
+// // // // // // //             <Route path="/profile" element={<Profile />} />
+// // // // // // //           </>
+// // // // // // //         )}
+
+// // // // // // //         {/* Seller routes */}
+// // // // // // //         {userRole === "seller" && (
+// // // // // // //           <>
+// // // // // // //             <Route path="/seller/dashboard" element={<Dashboard />} />
+// // // // // // //             <Route path="/seller/add-product" element={<AddProduct />} />
+// // // // // // //           </>
+// // // // // // //         )}
+
+// // // // // // //         {/* fallback */}
+// // // // // // //         <Route path="*" element={<div>Page Not Found</div>} />
+// // // // // // //       </Routes>
+// // // // // // //     </Router>
+// // // // // // //   );
+// // // // // // // }
+
+// // // // // // // export default App;
+
+
+
+// // // // // // src/App.jsx
+// // // // // import React from "react";
+// // // // // import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// // // // // import Navbar from "./components/Navbar";
+// // // // // import Footer from "./components/Footer";
+
+// // // // // // Buyer Pages
+// // // // // import Home from "./pages/buyer/Home";
+// // // // // import Cart from "./pages/buyer/Cart";
+// // // // // import Wishlist from "./pages/buyer/Wishlist";
+// // // // // import ProductDetails from "./pages/buyer/ProductDetails";
+// // // // // import Checkout from "./pages/buyer/Checkout";
+// // // // // import Payment from "./pages/buyer/Payment";
+// // // // // import OrderConfirmation from "./pages/buyer/OrderConfirmation";
+
+// // // // // // Auth Pages
+// // // // // import Login from "./pages/auth/Login";
+// // // // // import Register from "./pages/auth/Register";
+
+// // // // // // Seller Pages
+// // // // // import Dashboard from "./pages/seller/Dashboard";
+// // // // // import SellerProducts from "./pages/seller/SellerProducts";
+// // // // // import AddProduct from "./pages/seller/AddProduct";
+// // // // // import EditProduct from "./pages/seller/EditProduct";
+// // // // // import SellerOrders from "./pages/seller/SellerOrders";
+// // // // // import StoreManager from "./pages/seller/StoreManager";
+// // // // // import SalesReport from "./pages/seller/SalesReport";
+// // // // // import SellerProfile from "./pages/seller/SellerProfile";
+
+// // // // // // Protected Route
+// // // // // import SellerRoute from "./pages/seller/SellerRoute";
+
+// // // // // function App() {
+// // // // //   return (
+// // // // //     <div>
+// // // // //      <Navbar />
+  
+// // // // //       <Routes>
+
+// // // // //         {/* ---------- PUBLIC ROUTES ---------- */}
+// // // // //         <Route path="/" element={<Home />} />
+// // // // //         <Route path="/product/:id" element={<ProductDetails />} />
+// // // // //         <Route path="/cart" element={<Cart />} />
+// // // // //         <Route path="/wishlist" element={<Wishlist />} />
+
+// // // // //         <Route path="/checkout" element={<Checkout />} />
+// // // // //         <Route path="/payment" element={<Payment />} />
+// // // // //         <Route path="/order-confirmation" element={<OrderConfirmation />} />
+
+// // // // //         <Route path="/login" element={<Login />} />
+// // // // //         <Route path="/register" element={<Register />} />
+
+// // // // //         {/* ---------- SELLER ROUTES ---------- */}
+// // // // //         <Route
+// // // // //           path="/seller/dashboard"
+// // // // //           element={
+// // // // //             <SellerRoute>
+// // // // //               <Dashboard />
+// // // // //             </SellerRoute>
+// // // // //           }
+// // // // //         />
+
+// // // // //         <Route
+// // // // //           path="/seller/products"
+// // // // //           element={
+// // // // //             <SellerRoute>
+// // // // //               <SellerProducts />
+// // // // //             </SellerRoute>
+// // // // //           }
+// // // // //         />
+
+// // // // //         <Route
+// // // // //           path="/seller/add-product"
+// // // // //           element={
+// // // // //             <SellerRoute>
+// // // // //               <AddProduct />
+// // // // //             </SellerRoute>
+// // // // //           }
+// // // // //         />
+
+// // // // //         <Route
+// // // // //           path="/seller/edit-product/:id"
+// // // // //           element={
+// // // // //             <SellerRoute>
+// // // // //               <EditProduct />
+// // // // //             </SellerRoute>
+// // // // //           }
+// // // // //         />
+
+// // // // //         <Route
+// // // // //           path="/seller/orders"
+// // // // //           element={
+// // // // //             <SellerRoute>
+// // // // //               <SellerOrders />
+// // // // //             </SellerRoute>
+// // // // //           }
+// // // // //         />
+
+// // // // //         <Route
+// // // // //           path="/seller/store"
+// // // // //           element={
+// // // // //             <SellerRoute>
+// // // // //               <StoreManager />
+// // // // //             </SellerRoute>
+// // // // //           }
+// // // // //         />
+
+// // // // //         <Route
+// // // // //           path="/seller/sales"
+// // // // //           element={
+// // // // //             <SellerRoute>
+// // // // //               <SalesReport />
+// // // // //             </SellerRoute>
+// // // // //           }
+// // // // //         />
+
+// // // // //         <Route
+// // // // //           path="/seller/profile"
+// // // // //           element={
+// // // // //             <SellerRoute>
+// // // // //               <SellerProfile />
+// // // // //             </SellerRoute>
+// // // // //           }
+// // // // //         />
+
+// // // // //       </Routes>
+// // // // //       <Footer />
+// // // // //       </div>
+    
+// // // // //   );
+// // // // // }
+
+// // // // // export default App;
+
 
 // // // // // src/App.jsx
 // // // // import React from "react";
-// // // // import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// // // // import { Routes, Route, useLocation } from "react-router-dom";
 
 // // // // import Navbar from "./components/Navbar";
+// // // // import SellerNavbar from "./components/SellerNavbar";
 // // // // import Footer from "./components/Footer";
 
 // // // // // Buyer Pages
@@ -169,8 +306,9 @@
 // // // // import Checkout from "./pages/buyer/Checkout";
 // // // // import Payment from "./pages/buyer/Payment";
 // // // // import OrderConfirmation from "./pages/buyer/OrderConfirmation";
-
-// // // // // Auth Pages
+// // // // import ForgotPassword from "./pages/auth/ForgotPassword";
+// // // // import ResetPassword from "./pages/auth/ResetPassword";
+// // // // // Auth
 // // // // import Login from "./pages/auth/Login";
 // // // // import Register from "./pages/auth/Register";
 
@@ -183,27 +321,36 @@
 // // // // import StoreManager from "./pages/seller/StoreManager";
 // // // // import SalesReport from "./pages/seller/SalesReport";
 // // // // import SellerProfile from "./pages/seller/SellerProfile";
-
-// // // // // Protected Route
+// // // // import Profile from "./pages/buyer/Profile";
 // // // // import SellerRoute from "./pages/seller/SellerRoute";
+// // // // import SearchResults from "./pages/buyer/SearchResults";
 
 // // // // function App() {
+// // // //   const location = useLocation();
+
+// // // //   // ✅ check if route is seller
+// // // //   const isSellerRoute = location.pathname.startsWith("/seller");
+
 // // // //   return (
 // // // //     <div>
-// // // //      <Navbar />
-  
-// // // //       <Routes>
+// // // //       {/* ✅ SWITCH NAVBAR */}
+// // // //       {isSellerRoute ? <SellerNavbar /> : <Navbar />}
 
-// // // //         {/* ---------- PUBLIC ROUTES ---------- */}
+// // // //       <Routes>
+// // // //         {/* ---------- BUYER ROUTES ---------- */}
 // // // //         <Route path="/" element={<Home />} />
 // // // //         <Route path="/product/:id" element={<ProductDetails />} />
 // // // //         <Route path="/cart" element={<Cart />} />
 // // // //         <Route path="/wishlist" element={<Wishlist />} />
-
 // // // //         <Route path="/checkout" element={<Checkout />} />
 // // // //         <Route path="/payment" element={<Payment />} />
 // // // //         <Route path="/order-confirmation" element={<OrderConfirmation />} />
+// // // //         <Route path="/profile" element={<Profile />} />
+// // // //         <Route path="/forgotpassword" element={<ForgotPassword />}/>
+        
 
+// // // // <Route path="/resetpassword/:token" element={<ResetPassword />} />
+// // // // <Route path="/search" element={<SearchResults />} />
 // // // //         <Route path="/login" element={<Login />} />
 // // // //         <Route path="/register" element={<Register />} />
 
@@ -279,161 +426,155 @@
 // // // //             </SellerRoute>
 // // // //           }
 // // // //         />
-
 // // // //       </Routes>
+
 // // // //       <Footer />
-// // // //       </div>
-    
+// // // //     </div>
 // // // //   );
 // // // // }
 
 // // // // export default App;
 
 
-// // // // src/App.jsx
-// // // import React from "react";
-// // // import { Routes, Route, useLocation } from "react-router-dom";
+// // src/App.jsx
+// import React from "react";
+// import { Routes, Route, useLocation } from "react-router-dom";
+// import Navbar from "./components/Navbar";
+// import SellerNavbar from "./components/SellerNavbar";
+// import Footer from "./components/Footer";
 
-// // // import Navbar from "./components/Navbar";
-// // // import SellerNavbar from "./components/SellerNavbar";
-// // // import Footer from "./components/Footer";
+// // Buyer Pages
+// import Home from "./pages/buyer/Home";
+// import Cart from "./pages/buyer/Cart";
+// import Wishlist from "./pages/buyer/Wishlist";
+// import ProductDetails from "./pages/buyer/ProductDetails";
+// import Checkout from "./pages/buyer/Checkout";
+// import Payment from "./pages/buyer/Payment";
+// import OrderConfirmation from "./pages/buyer/OrderConfirmation";
+// import ForgotPassword from "./pages/auth/ForgotPassword";
+// import ResetPassword from "./pages/auth/ResetPassword";
+// import Profile from "./pages/buyer/Profile";
+// import SearchResults from "./pages/buyer/SearchResults";
 
-// // // // Buyer Pages
-// // // import Home from "./pages/buyer/Home";
-// // // import Cart from "./pages/buyer/Cart";
-// // // import Wishlist from "./pages/buyer/Wishlist";
-// // // import ProductDetails from "./pages/buyer/ProductDetails";
-// // // import Checkout from "./pages/buyer/Checkout";
-// // // import Payment from "./pages/buyer/Payment";
-// // // import OrderConfirmation from "./pages/buyer/OrderConfirmation";
-// // // import ForgotPassword from "./pages/auth/ForgotPassword";
-// // // import ResetPassword from "./pages/auth/ResetPassword";
-// // // // Auth
-// // // import Login from "./pages/auth/Login";
-// // // import Register from "./pages/auth/Register";
+// // Auth
+// import Login from "./pages/auth/Login";
+// import Register from "./pages/auth/Register";
 
-// // // // Seller Pages
-// // // import Dashboard from "./pages/seller/Dashboard";
-// // // import SellerProducts from "./pages/seller/SellerProducts";
-// // // import AddProduct from "./pages/seller/AddProduct";
-// // // import EditProduct from "./pages/seller/EditProduct";
-// // // import SellerOrders from "./pages/seller/SellerOrders";
-// // // import StoreManager from "./pages/seller/StoreManager";
-// // // import SalesReport from "./pages/seller/SalesReport";
-// // // import SellerProfile from "./pages/seller/SellerProfile";
-// // // import Profile from "./pages/buyer/Profile";
-// // // import SellerRoute from "./pages/seller/SellerRoute";
-// // // import SearchResults from "./pages/buyer/SearchResults";
+// // Seller Pages
+// import Dashboard from "./pages/seller/Dashboard";
+// import SellerProducts from "./pages/seller/SellerProducts";
+// import AddProduct from "./pages/seller/AddProduct";
+// import EditProduct from "./pages/seller/EditProduct";
+// import SellerOrders from "./pages/seller/SellerOrders";
+// import StoreManager from "./pages/seller/StoreManager";
+// import SalesReport from "./pages/seller/SalesReport";
+// import SellerProfile from "./pages/seller/SellerProfile";
+// import SellerRoute from "./pages/seller/SellerRoute";
 
-// // // function App() {
-// // //   const location = useLocation();
+// import { ToastContainer } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 
-// // //   // ✅ check if route is seller
-// // //   const isSellerRoute = location.pathname.startsWith("/seller");
+// function App() {
+//   const location = useLocation();
 
-// // //   return (
-// // //     <div>
-// // //       {/* ✅ SWITCH NAVBAR */}
-// // //       {isSellerRoute ? <SellerNavbar /> : <Navbar />}
+//   // ✅ Show SellerNavbar for seller routes
+//   const isSellerRoute = location.pathname.startsWith("/seller");
 
-// // //       <Routes>
-// // //         {/* ---------- BUYER ROUTES ---------- */}
-// // //         <Route path="/" element={<Home />} />
-// // //         <Route path="/product/:id" element={<ProductDetails />} />
-// // //         <Route path="/cart" element={<Cart />} />
-// // //         <Route path="/wishlist" element={<Wishlist />} />
-// // //         <Route path="/checkout" element={<Checkout />} />
-// // //         <Route path="/payment" element={<Payment />} />
-// // //         <Route path="/order-confirmation" element={<OrderConfirmation />} />
-// // //         <Route path="/profile" element={<Profile />} />
-// // //         <Route path="/forgotpassword" element={<ForgotPassword />}/>
-        
+//   return (
+//     <div>
+//       <ToastContainer position="top-right" autoClose={2000} />
 
-// // // <Route path="/resetpassword/:token" element={<ResetPassword />} />
-// // // <Route path="/search" element={<SearchResults />} />
-// // //         <Route path="/login" element={<Login />} />
-// // //         <Route path="/register" element={<Register />} />
+//       {isSellerRoute ? <SellerNavbar /> : <Navbar />}
 
-// // //         {/* ---------- SELLER ROUTES ---------- */}
-// // //         <Route
-// // //           path="/seller/dashboard"
-// // //           element={
-// // //             <SellerRoute>
-// // //               <Dashboard />
-// // //             </SellerRoute>
-// // //           }
-// // //         />
+//       <Routes>
+//         {/* ---------- BUYER ROUTES ---------- */}
+//         <Route path="/" element={<Home />} />
+//         <Route path="/product/:id" element={<ProductDetails />} />
+//         <Route path="/cart" element={<Cart />} />
+//         <Route path="/wishlist" element={<Wishlist />} />
+//         <Route path="/checkout" element={<Checkout />} />
+//         <Route path="/payment" element={<Payment />} />
+//         <Route path="/order-confirmation" element={<OrderConfirmation />} />
+//         <Route path="/profile" element={<Profile />} />
+//         <Route path="/forgotpassword" element={<ForgotPassword />} />
+//         <Route path="/resetpassword/:token" element={<ResetPassword />} />
+//         <Route path="/search" element={<SearchResults />} />
+//         <Route path="/login" element={<Login />} />
+//         <Route path="/register" element={<Register />} />
 
-// // //         <Route
-// // //           path="/seller/products"
-// // //           element={
-// // //             <SellerRoute>
-// // //               <SellerProducts />
-// // //             </SellerRoute>
-// // //           }
-// // //         />
+//         {/* ---------- SELLER ROUTES ---------- */}
+//         <Route
+//           path="/seller/dashboard"
+//           element={
+//             <SellerRoute>
+//               <Dashboard />
+//             </SellerRoute>
+//           }
+//         />
+//         <Route
+//           path="/seller/products"
+//           element={
+//             <SellerRoute>
+//               <SellerProducts />
+//             </SellerRoute>
+//           }
+//         />
+//         <Route
+//           path="/seller/add-product"
+//           element={
+//             <SellerRoute>
+//               <AddProduct />
+//             </SellerRoute>
+//           }
+//         />
+//         <Route
+//           path="/seller/edit-product/:id"
+//           element={
+//             <SellerRoute>
+//               <EditProduct />
+//             </SellerRoute>
+//           }
+//         />
+//         <Route
+//           path="/seller/orders"
+//           element={
+//             <SellerRoute>
+//               <SellerOrders />
+//             </SellerRoute>
+//           }
+//         />
+//         <Route
+//           path="/seller/store"
+//           element={
+//             <SellerRoute>
+//               <StoreManager />
+//             </SellerRoute>
+//           }
+//         />
+//         <Route
+//           path="/seller/sales"
+//           element={
+//             <SellerRoute>
+//               <SalesReport />
+//             </SellerRoute>
+//           }
+//         />
+//         <Route
+//           path="/seller/profile"
+//           element={
+//             <SellerRoute>
+//               <SellerProfile />
+//             </SellerRoute>
+//           }
+//         />
+//       </Routes>
 
-// // //         <Route
-// // //           path="/seller/add-product"
-// // //           element={
-// // //             <SellerRoute>
-// // //               <AddProduct />
-// // //             </SellerRoute>
-// // //           }
-// // //         />
+//       <Footer />
+//     </div>
+//   );
+// }
 
-// // //         <Route
-// // //           path="/seller/edit-product/:id"
-// // //           element={
-// // //             <SellerRoute>
-// // //               <EditProduct />
-// // //             </SellerRoute>
-// // //           }
-// // //         />
-
-// // //         <Route
-// // //           path="/seller/orders"
-// // //           element={
-// // //             <SellerRoute>
-// // //               <SellerOrders />
-// // //             </SellerRoute>
-// // //           }
-// // //         />
-
-// // //         <Route
-// // //           path="/seller/store"
-// // //           element={
-// // //             <SellerRoute>
-// // //               <StoreManager />
-// // //             </SellerRoute>
-// // //           }
-// // //         />
-
-// // //         <Route
-// // //           path="/seller/sales"
-// // //           element={
-// // //             <SellerRoute>
-// // //               <SalesReport />
-// // //             </SellerRoute>
-// // //           }
-// // //         />
-
-// // //         <Route
-// // //           path="/seller/profile"
-// // //           element={
-// // //             <SellerRoute>
-// // //               <SellerProfile />
-// // //             </SellerRoute>
-// // //           }
-// // //         />
-// // //       </Routes>
-
-// // //       <Footer />
-// // //     </div>
-// // //   );
-// // // }
-
-// // // export default App;
+// export default App;
 
 
 // src/App.jsx
@@ -451,14 +592,15 @@ import ProductDetails from "./pages/buyer/ProductDetails";
 import Checkout from "./pages/buyer/Checkout";
 import Payment from "./pages/buyer/Payment";
 import OrderConfirmation from "./pages/buyer/OrderConfirmation";
-import ForgotPassword from "./pages/auth/ForgotPassword";
-import ResetPassword from "./pages/auth/ResetPassword";
 import Profile from "./pages/buyer/Profile";
+import Orders from "./pages/buyer/Orders"; // ✅ added
 import SearchResults from "./pages/buyer/SearchResults";
 
 // Auth
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 // Seller Pages
 import Dashboard from "./pages/seller/Dashboard";
@@ -471,36 +613,81 @@ import SalesReport from "./pages/seller/SalesReport";
 import SellerProfile from "./pages/seller/SellerProfile";
 import SellerRoute from "./pages/seller/SellerRoute";
 
+// ✅ Protected Route
+import ProtectedRoute from "./components/ProtectedRoute";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const location = useLocation();
 
-  // ✅ Show SellerNavbar for seller routes
+  // Show SellerNavbar for seller routes
   const isSellerRoute = location.pathname.startsWith("/seller");
 
   return (
     <div>
       <ToastContainer position="top-right" autoClose={2000} />
-      
+
       {isSellerRoute ? <SellerNavbar /> : <Navbar />}
 
       <Routes>
-        {/* ---------- BUYER ROUTES ---------- */}
+        {/* ---------- PUBLIC ROUTES ---------- */}
         <Route path="/" element={<Home />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/payment" element={<Payment />} />
-        <Route path="/order-confirmation" element={<OrderConfirmation />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/forgotpassword" element={<ForgotPassword />} />
-        <Route path="/resetpassword/:token" element={<ResetPassword />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
+        <Route path="/resetpassword/:token" element={<ResetPassword />} />
+
+        {/* ---------- PROTECTED BUYER ROUTES ---------- */}
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/payment"
+          element={
+            <ProtectedRoute>
+              <Payment />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/order-confirmation"
+          element={
+            <ProtectedRoute>
+              <OrderConfirmation />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <Orders />
+            </ProtectedRoute>
+          }
+        />
 
         {/* ---------- SELLER ROUTES ---------- */}
         <Route

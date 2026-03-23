@@ -1648,8 +1648,8 @@ const Dashboard = () => {
                         <th className="border px-4 py-2 text-left">Product</th>
                         <th className="border px-4 py-2 text-left">Quantity</th>
                         <th className="border px-4 py-2 text-left">Price</th>
-                        <th className="border px-4 py-2 text-left">Status</th>
-                        <th className="border px-4 py-2 text-left">Update Status</th>
+                        {/* <th className="border px-4 py-2 text-left">Status</th> */}
+                        {/* <th className="border px-4 py-2 text-left">Update Status</th> */}
                       </tr>
                     </thead>
                     <tbody>
@@ -1668,8 +1668,8 @@ const Dashboard = () => {
                               <td className="border px-4 py-2">{productName}</td>
                               <td className="border px-4 py-2">{quantity}</td>
                               <td className="border px-4 py-2">${price}</td>
-                              <td className="border px-4 py-2">{status}</td>
-                              <td className="border px-4 py-2">
+                              {/* <td className="border px-4 py-2">{status}</td> */}
+                              {/* <td className="border px-4 py-2">
                                 <select
                                   value={status}
                                   disabled={updatingStatus[productId]}
@@ -1680,7 +1680,7 @@ const Dashboard = () => {
                                   <option value="shipped">Shipped</option>
                                   <option value="delivered">Delivered</option>
                                 </select>
-                              </td>
+                              </td> */}
                             </tr>
                           );
                         })
