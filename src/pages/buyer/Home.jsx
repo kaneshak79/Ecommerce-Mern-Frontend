@@ -1,22 +1,91 @@
+// // // // // // // // // // // // // // // // // // import React, { useEffect, useState } from "react";
+// // // // // // // // // // // // // // // // // // import axios from "../../utils/axios";
+// // // // // // // // // // // // // // // // // // import ProductCard from "../../components/ProductCard";
+
+// // // // // // // // // // // // // // // // // // const Home = () => {
+// // // // // // // // // // // // // // // // // //   const [products, setProducts] = useState([]);
+// // // // // // // // // // // // // // // // // //   const [categories, setCategories] = useState(["Electronics", "Fashion", "Books"]);
+
+// // // // // // // // // // // // // // // // // //   useEffect(() => {
+// // // // // // // // // // // // // // // // // //     const fetchProducts = async () => {
+// // // // // // // // // // // // // // // // // //       try {
+// // // // // // // // // // // // // // // // // //         const res = await axios.get("/products");
+// // // // // // // // // // // // // // // // // //         setProducts(res.data.products);
+// // // // // // // // // // // // // // // // // //       } catch (err) {
+// // // // // // // // // // // // // // // // // //         console.log(err);
+// // // // // // // // // // // // // // // // // //       }
+// // // // // // // // // // // // // // // // // //     };
+// // // // // // // // // // // // // // // // // //     fetchProducts();
+// // // // // // // // // // // // // // // // // //   }, []);
+
+// // // // // // // // // // // // // // // // // //   return (
+// // // // // // // // // // // // // // // // // //     <div className="container mx-auto p-4">
+// // // // // // // // // // // // // // // // // //       <h1 className="text-3xl font-bold mb-4">Shop by Category</h1>
+// // // // // // // // // // // // // // // // // //       <div className="flex space-x-4 mb-6">
+// // // // // // // // // // // // // // // // // //         {categories.map((cat) => (
+// // // // // // // // // // // // // // // // // //           <button
+// // // // // // // // // // // // // // // // // //             key={cat}
+// // // // // // // // // // // // // // // // // //             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+// // // // // // // // // // // // // // // // // //           >
+// // // // // // // // // // // // // // // // // //             {cat}
+// // // // // // // // // // // // // // // // // //           </button>
+// // // // // // // // // // // // // // // // // //         ))}
+// // // // // // // // // // // // // // // // // //       </div>
+
+// // // // // // // // // // // // // // // // // //       <h2 className="text-2xl font-semibold mb-4">Products</h2>
+// // // // // // // // // // // // // // // // // //       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+// // // // // // // // // // // // // // // // // //         {products.map((product) => (
+// // // // // // // // // // // // // // // // // //           <ProductCard key={product._id} product={product} />
+// // // // // // // // // // // // // // // // // //         ))}
+// // // // // // // // // // // // // // // // // //       </div>
+// // // // // // // // // // // // // // // // // //     </div>
+// // // // // // // // // // // // // // // // // //   );
+// // // // // // // // // // // // // // // // // // };
+
+// // // // // // // // // // // // // // // // // // export default Home;
+
+
 // // // // // // // // // // // // // // // // import React, { useEffect, useState } from "react";
 // // // // // // // // // // // // // // // // import axios from "../../utils/axios";
 // // // // // // // // // // // // // // // // import ProductCard from "../../components/ProductCard";
 
 // // // // // // // // // // // // // // // // const Home = () => {
-// // // // // // // // // // // // // // // //   const [products, setProducts] = useState([]);
+// // // // // // // // // // // // // // // //   const [products, setProducts] = useState([]); // always initialize as array
 // // // // // // // // // // // // // // // //   const [categories, setCategories] = useState(["Electronics", "Fashion", "Books"]);
+// // // // // // // // // // // // // // // //   const [loading, setLoading] = useState(true); // loading state
+// // // // // // // // // // // // // // // //   const [error, setError] = useState(null); // error state
 
 // // // // // // // // // // // // // // // //   useEffect(() => {
 // // // // // // // // // // // // // // // //     const fetchProducts = async () => {
-// // // // // // // // // // // // // // // //       try {
+// // // // // // // // // // // // // // // //            try {
 // // // // // // // // // // // // // // // //         const res = await axios.get("/products");
-// // // // // // // // // // // // // // // //         setProducts(res.data.products);
+// // // // // // // // // // // // // // // //         // Check if res.data is valid and has products array
+// // // // // // // // // // // // // // // //         if (res.data && Array.isArray(res.data.products)) {
+// // // // // // // // // // // // // // // //           setProducts(res.data.products);
+// // // // // // // // // // // // // // // //         } else if (Array.isArray(res.data)) {
+// // // // // // // // // // // // // // // //           // fallback if API returns array directly
+// // // // // // // // // // // // // // // //           setProducts(res.data);
+// // // // // // // // // // // // // // // //         } else {
+// // // // // // // // // // // // // // // //           setProducts([]); // fallback empty
+// // // // // // // // // // // // // // // //         }
 // // // // // // // // // // // // // // // //       } catch (err) {
-// // // // // // // // // // // // // // // //         console.log(err);
+// // // // // // // // // // // // // // // //         console.error("Failed to fetch products:", err);
+// // // // // // // // // // // // // // // //         setError("Failed to load products.");
+// // // // // // // // // // // // // // // //       } finally {
+// // // // // // // // // // // // // // // //         setLoading(false);
 // // // // // // // // // // // // // // // //       }
 // // // // // // // // // // // // // // // //     };
+
 // // // // // // // // // // // // // // // //     fetchProducts();
 // // // // // // // // // // // // // // // //   }, []);
+
+// // // // // // // // // // // // // // // //   if (loading) {
+// // // // // // // // // // // // // // // //     return <div className="text-center p-10">Loading products...</div>;
+// // // // // // // // // // // // // // // //   }
+
+// // // // // // // // // // // // // // // //   if (error) {
+// // // // // // // // // // // // // // // //     return <div className="text-center p-10 text-red-500">{error}</div>;
+// // // // // // // // // // // // // // // //   }
 
 // // // // // // // // // // // // // // // //   return (
 // // // // // // // // // // // // // // // //     <div className="container mx-auto p-4">
@@ -33,11 +102,15 @@
 // // // // // // // // // // // // // // // //       </div>
 
 // // // // // // // // // // // // // // // //       <h2 className="text-2xl font-semibold mb-4">Products</h2>
-// // // // // // // // // // // // // // // //       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-// // // // // // // // // // // // // // // //         {products.map((product) => (
-// // // // // // // // // // // // // // // //           <ProductCard key={product._id} product={product} />
-// // // // // // // // // // // // // // // //         ))}
-// // // // // // // // // // // // // // // //       </div>
+// // // // // // // // // // // // // // // //       {products.length === 0 ? (
+// // // // // // // // // // // // // // // //         <p>No products available.</p>
+// // // // // // // // // // // // // // // //       ) : (
+// // // // // // // // // // // // // // // //         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+// // // // // // // // // // // // // // // //           {products.map((product) => (
+// // // // // // // // // // // // // // // //             <ProductCard key={product._id || product.id} product={product} />
+// // // // // // // // // // // // // // // //           ))}
+// // // // // // // // // // // // // // // //         </div>
+// // // // // // // // // // // // // // // //       )}
 // // // // // // // // // // // // // // // //     </div>
 // // // // // // // // // // // // // // // //   );
 // // // // // // // // // // // // // // // // };
@@ -50,23 +123,21 @@
 // // // // // // // // // // // // // // import ProductCard from "../../components/ProductCard";
 
 // // // // // // // // // // // // // // const Home = () => {
-// // // // // // // // // // // // // //   const [products, setProducts] = useState([]); // always initialize as array
-// // // // // // // // // // // // // //   const [categories, setCategories] = useState(["Electronics", "Fashion", "Books"]);
-// // // // // // // // // // // // // //   const [loading, setLoading] = useState(true); // loading state
-// // // // // // // // // // // // // //   const [error, setError] = useState(null); // error state
+// // // // // // // // // // // // // //   const [products, setProducts] = useState([]);
+// // // // // // // // // // // // // //   const [categories] = useState(["Electronics", "Fashion", "Books"]);
+// // // // // // // // // // // // // //   const [loading, setLoading] = useState(true);
+// // // // // // // // // // // // // //   const [error, setError] = useState(null);
 
 // // // // // // // // // // // // // //   useEffect(() => {
 // // // // // // // // // // // // // //     const fetchProducts = async () => {
-// // // // // // // // // // // // // //            try {
+// // // // // // // // // // // // // //       try {
 // // // // // // // // // // // // // //         const res = await axios.get("/products");
-// // // // // // // // // // // // // //         // Check if res.data is valid and has products array
 // // // // // // // // // // // // // //         if (res.data && Array.isArray(res.data.products)) {
 // // // // // // // // // // // // // //           setProducts(res.data.products);
 // // // // // // // // // // // // // //         } else if (Array.isArray(res.data)) {
-// // // // // // // // // // // // // //           // fallback if API returns array directly
 // // // // // // // // // // // // // //           setProducts(res.data);
 // // // // // // // // // // // // // //         } else {
-// // // // // // // // // // // // // //           setProducts([]); // fallback empty
+// // // // // // // // // // // // // //           setProducts([]);
 // // // // // // // // // // // // // //         }
 // // // // // // // // // // // // // //       } catch (err) {
 // // // // // // // // // // // // // //         console.error("Failed to fetch products:", err);
@@ -79,13 +150,8 @@
 // // // // // // // // // // // // // //     fetchProducts();
 // // // // // // // // // // // // // //   }, []);
 
-// // // // // // // // // // // // // //   if (loading) {
-// // // // // // // // // // // // // //     return <div className="text-center p-10">Loading products...</div>;
-// // // // // // // // // // // // // //   }
-
-// // // // // // // // // // // // // //   if (error) {
-// // // // // // // // // // // // // //     return <div className="text-center p-10 text-red-500">{error}</div>;
-// // // // // // // // // // // // // //   }
+// // // // // // // // // // // // // //   if (loading) return <div className="text-center p-10">Loading products...</div>;
+// // // // // // // // // // // // // //   if (error) return <div className="text-center p-10 text-red-500">{error}</div>;
 
 // // // // // // // // // // // // // //   return (
 // // // // // // // // // // // // // //     <div className="container mx-auto p-4">
@@ -118,11 +184,96 @@
 // // // // // // // // // // // // // // export default Home;
 
 
+
+
+
+// // // // // // // // // // // // // // src/pages/buyer/Home.jsx
+// // // // // // // // // // // // // import React, { useEffect, useState } from "react";
+// // // // // // // // // // // // // import { useNavigate } from "react-router-dom";
+// // // // // // // // // // // // // import axios from "../../utils/axios";
+// // // // // // // // // // // // // import ProductCard from "../../components/ProductCard";
+
+// // // // // // // // // // // // // const Home = () => {
+// // // // // // // // // // // // //   const navigate = useNavigate();
+// // // // // // // // // // // // //   const [products, setProducts] = useState([]);
+// // // // // // // // // // // // //   const [categories] = useState(["Electronics", "Fashion", "Books"]);
+// // // // // // // // // // // // //   const [loading, setLoading] = useState(true);
+// // // // // // // // // // // // //   const [error, setError] = useState(null);
+
+// // // // // // // // // // // // //   useEffect(() => {
+// // // // // // // // // // // // //     const fetchProducts = async () => {
+// // // // // // // // // // // // //       try {
+// // // // // // // // // // // // //         const res = await axios.get("/products");
+// // // // // // // // // // // // //         if (res.data && Array.isArray(res.data.products)) {
+// // // // // // // // // // // // //           setProducts(res.data.products);
+// // // // // // // // // // // // //         } else if (Array.isArray(res.data)) {
+// // // // // // // // // // // // //           setProducts(res.data);
+// // // // // // // // // // // // //         } else {
+// // // // // // // // // // // // //           setProducts([]);
+// // // // // // // // // // // // //         }
+// // // // // // // // // // // // //       } catch (err) {
+// // // // // // // // // // // // //         console.error("Failed to fetch products:", err);
+// // // // // // // // // // // // //         setError("Failed to load products.");
+// // // // // // // // // // // // //       } finally {
+// // // // // // // // // // // // //         setLoading(false);
+// // // // // // // // // // // // //       }
+// // // // // // // // // // // // //     };
+
+// // // // // // // // // // // // //     fetchProducts();
+// // // // // // // // // // // // //   }, []);
+
+// // // // // // // // // // // // //   if (loading) return <div className="text-center p-10">Loading products...</div>;
+// // // // // // // // // // // // //   if (error) return <div className="text-center p-10 text-red-500">{error}</div>;
+
+// // // // // // // // // // // // //   return (
+// // // // // // // // // // // // //     <div className="container mx-auto p-4">
+// // // // // // // // // // // // //       <h1 className="text-3xl font-bold mb-4">Shop by Category</h1>
+// // // // // // // // // // // // //       <div className="flex space-x-4 mb-6">
+// // // // // // // // // // // // //         {categories.map((cat) => (
+// // // // // // // // // // // // //           <button
+// // // // // // // // // // // // //             key={cat}
+// // // // // // // // // // // // //             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+// // // // // // // // // // // // //           >
+// // // // // // // // // // // // //             {cat}
+// // // // // // // // // // // // //           </button>
+// // // // // // // // // // // // //         ))}
+// // // // // // // // // // // // //       </div>
+
+// // // // // // // // // // // // //       <h2 className="text-2xl font-semibold mb-4">Products</h2>
+// // // // // // // // // // // // //       {products.length === 0 ? (
+// // // // // // // // // // // // //         <p>No products available.</p>
+// // // // // // // // // // // // //       ) : (
+// // // // // // // // // // // // //         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+// // // // // // // // // // // // //           {products.map((product) => (
+// // // // // // // // // // // // //             <div
+// // // // // // // // // // // // //               key={product._id}
+// // // // // // // // // // // // //               className="cursor-pointer"
+// // // // // // // // // // // // //               onClick={() => navigate(`/product/${product._id}`)}
+// // // // // // // // // // // // //             >
+// // // // // // // // // // // // //               <ProductCard product={product} />
+// // // // // // // // // // // // //             </div>
+// // // // // // // // // // // // //           ))}
+// // // // // // // // // // // // //         </div>
+// // // // // // // // // // // // //       )}
+// // // // // // // // // // // // //     </div>
+// // // // // // // // // // // // //   );
+// // // // // // // // // // // // // };
+
+// // // // // // // // // // // // // export default Home;
+
+
+
+
+
+
+// // // // // // // // // // // // // src/pages/buyer/Home.jsx
 // // // // // // // // // // // // import React, { useEffect, useState } from "react";
+// // // // // // // // // // // // import { useNavigate } from "react-router-dom";
 // // // // // // // // // // // // import axios from "../../utils/axios";
 // // // // // // // // // // // // import ProductCard from "../../components/ProductCard";
 
 // // // // // // // // // // // // const Home = () => {
+// // // // // // // // // // // //   const navigate = useNavigate();
 // // // // // // // // // // // //   const [products, setProducts] = useState([]);
 // // // // // // // // // // // //   const [categories] = useState(["Electronics", "Fashion", "Books"]);
 // // // // // // // // // // // //   const [loading, setLoading] = useState(true);
@@ -156,6 +307,7 @@
 // // // // // // // // // // // //   return (
 // // // // // // // // // // // //     <div className="container mx-auto p-4">
 // // // // // // // // // // // //       <h1 className="text-3xl font-bold mb-4">Shop by Category</h1>
+
 // // // // // // // // // // // //       <div className="flex space-x-4 mb-6">
 // // // // // // // // // // // //         {categories.map((cat) => (
 // // // // // // // // // // // //           <button
@@ -168,12 +320,19 @@
 // // // // // // // // // // // //       </div>
 
 // // // // // // // // // // // //       <h2 className="text-2xl font-semibold mb-4">Products</h2>
+
 // // // // // // // // // // // //       {products.length === 0 ? (
 // // // // // // // // // // // //         <p>No products available.</p>
 // // // // // // // // // // // //       ) : (
 // // // // // // // // // // // //         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 // // // // // // // // // // // //           {products.map((product) => (
-// // // // // // // // // // // //             <ProductCard key={product._id || product.id} product={product} />
+// // // // // // // // // // // //             <div
+// // // // // // // // // // // //               key={product._id}
+// // // // // // // // // // // //               className="cursor-pointer"
+// // // // // // // // // // // //               onClick={() => navigate(`/product/${product._id}`)}
+// // // // // // // // // // // //             >
+// // // // // // // // // // // //               <ProductCard product={product} />
+// // // // // // // // // // // //             </div>
 // // // // // // // // // // // //           ))}
 // // // // // // // // // // // //         </div>
 // // // // // // // // // // // //       )}
@@ -182,8 +341,6 @@
 // // // // // // // // // // // // };
 
 // // // // // // // // // // // // export default Home;
-
-
 
 
 
@@ -204,6 +361,7 @@
 // // // // // // // // // // //     const fetchProducts = async () => {
 // // // // // // // // // // //       try {
 // // // // // // // // // // //         const res = await axios.get("/products");
+
 // // // // // // // // // // //         if (res.data && Array.isArray(res.data.products)) {
 // // // // // // // // // // //           setProducts(res.data.products);
 // // // // // // // // // // //         } else if (Array.isArray(res.data)) {
@@ -247,7 +405,6 @@
 // // // // // // // // // // //           {products.map((product) => (
 // // // // // // // // // // //             <div
 // // // // // // // // // // //               key={product._id}
-// // // // // // // // // // //               className="cursor-pointer"
 // // // // // // // // // // //               onClick={() => navigate(`/product/${product._id}`)}
 // // // // // // // // // // //             >
 // // // // // // // // // // //               <ProductCard product={product} />
@@ -260,9 +417,6 @@
 // // // // // // // // // // // };
 
 // // // // // // // // // // // export default Home;
-
-
-
 
 
 
@@ -279,10 +433,21 @@
 // // // // // // // // // //   const [loading, setLoading] = useState(true);
 // // // // // // // // // //   const [error, setError] = useState(null);
 
+// // // // // // // // // //   // ✅ SELLER REDIRECT FIX
+// // // // // // // // // //   useEffect(() => {
+// // // // // // // // // //     const user = JSON.parse(localStorage.getItem("user"));
+
+// // // // // // // // // //     if (user?.role === "seller") {
+// // // // // // // // // //       navigate("/seller/dashboard");
+// // // // // // // // // //     }
+// // // // // // // // // //   }, [navigate]);
+
+// // // // // // // // // //   // ✅ FETCH PRODUCTS
 // // // // // // // // // //   useEffect(() => {
 // // // // // // // // // //     const fetchProducts = async () => {
 // // // // // // // // // //       try {
 // // // // // // // // // //         const res = await axios.get("/products");
+
 // // // // // // // // // //         if (res.data && Array.isArray(res.data.products)) {
 // // // // // // // // // //           setProducts(res.data.products);
 // // // // // // // // // //         } else if (Array.isArray(res.data)) {
@@ -301,13 +466,17 @@
 // // // // // // // // // //     fetchProducts();
 // // // // // // // // // //   }, []);
 
+// // // // // // // // // //   // ✅ LOADING
 // // // // // // // // // //   if (loading) return <div className="text-center p-10">Loading products...</div>;
+
+// // // // // // // // // //   // ✅ ERROR
 // // // // // // // // // //   if (error) return <div className="text-center p-10 text-red-500">{error}</div>;
 
 // // // // // // // // // //   return (
 // // // // // // // // // //     <div className="container mx-auto p-4">
 // // // // // // // // // //       <h1 className="text-3xl font-bold mb-4">Shop by Category</h1>
 
+// // // // // // // // // //       {/* Categories */}
 // // // // // // // // // //       <div className="flex space-x-4 mb-6">
 // // // // // // // // // //         {categories.map((cat) => (
 // // // // // // // // // //           <button
@@ -319,6 +488,7 @@
 // // // // // // // // // //         ))}
 // // // // // // // // // //       </div>
 
+// // // // // // // // // //       {/* Products */}
 // // // // // // // // // //       <h2 className="text-2xl font-semibold mb-4">Products</h2>
 
 // // // // // // // // // //       {products.length === 0 ? (
@@ -343,12 +513,13 @@
 // // // // // // // // // // export default Home;
 
 
+// // // // // // // // // //after clone 2nd code
 
-// // // // // // // // // // src/pages/buyer/Home.jsx
 // // // // // // // // // import React, { useEffect, useState } from "react";
 // // // // // // // // // import { useNavigate } from "react-router-dom";
 // // // // // // // // // import axios from "../../utils/axios";
 // // // // // // // // // import ProductCard from "../../components/ProductCard";
+// // // // // // // // // import BannerSlider from "../../components/BannerSlider";
 
 // // // // // // // // // const Home = () => {
 // // // // // // // // //   const navigate = useNavigate();
@@ -358,19 +529,19 @@
 // // // // // // // // //   const [error, setError] = useState(null);
 
 // // // // // // // // //   useEffect(() => {
+// // // // // // // // //     const user = JSON.parse(localStorage.getItem("user"));
+// // // // // // // // //     if (user?.role === "seller") navigate("/seller/dashboard");
+// // // // // // // // //   }, [navigate]);
+
+// // // // // // // // //   useEffect(() => {
 // // // // // // // // //     const fetchProducts = async () => {
 // // // // // // // // //       try {
 // // // // // // // // //         const res = await axios.get("/products");
 
-// // // // // // // // //         if (res.data && Array.isArray(res.data.products)) {
-// // // // // // // // //           setProducts(res.data.products);
-// // // // // // // // //         } else if (Array.isArray(res.data)) {
-// // // // // // // // //           setProducts(res.data);
-// // // // // // // // //         } else {
-// // // // // // // // //           setProducts([]);
-// // // // // // // // //         }
-// // // // // // // // //       } catch (err) {
-// // // // // // // // //         console.error("Failed to fetch products:", err);
+// // // // // // // // //         if (res.data?.products) setProducts(res.data.products);
+// // // // // // // // //         else if (Array.isArray(res.data)) setProducts(res.data);
+// // // // // // // // //         else setProducts([]);
+// // // // // // // // //       } catch {
 // // // // // // // // //         setError("Failed to load products.");
 // // // // // // // // //       } finally {
 // // // // // // // // //         setLoading(false);
@@ -380,38 +551,71 @@
 // // // // // // // // //     fetchProducts();
 // // // // // // // // //   }, []);
 
-// // // // // // // // //   if (loading) return <div className="text-center p-10">Loading products...</div>;
+// // // // // // // // //   if (loading) return <div className="text-center p-10">Loading...</div>;
 // // // // // // // // //   if (error) return <div className="text-center p-10 text-red-500">{error}</div>;
 
 // // // // // // // // //   return (
-// // // // // // // // //     <div className="container mx-auto p-4">
-// // // // // // // // //       <h1 className="text-3xl font-bold mb-4">Shop by Category</h1>
-// // // // // // // // //       <div className="flex space-x-4 mb-6">
-// // // // // // // // //         {categories.map((cat) => (
-// // // // // // // // //           <button
-// // // // // // // // //             key={cat}
-// // // // // // // // //             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-// // // // // // // // //           >
-// // // // // // // // //             {cat}
-// // // // // // // // //           </button>
-// // // // // // // // //         ))}
-// // // // // // // // //       </div>
+// // // // // // // // //     <div className="bg-gray-50 min-h-screen">
 
-// // // // // // // // //       <h2 className="text-2xl font-semibold mb-4">Products</h2>
-// // // // // // // // //       {products.length === 0 ? (
-// // // // // // // // //         <p>No products available.</p>
-// // // // // // // // //       ) : (
-// // // // // // // // //         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-// // // // // // // // //           {products.map((product) => (
-// // // // // // // // //             <div
-// // // // // // // // //               key={product._id}
-// // // // // // // // //               onClick={() => navigate(`/product/${product._id}`)}
+// // // // // // // // //       {/* 🔥 BANNER */}
+// // // // // // // // //       <BannerSlider />
+
+// // // // // // // // //       {/* 🧩 CATEGORY */}
+// // // // // // // // //       <div className="container mx-auto px-4 py-6">
+// // // // // // // // //         <h2 className="text-xl font-bold mb-4">Shop by Category</h2>
+
+// // // // // // // // //         <div className="flex gap-4 flex-wrap">
+// // // // // // // // //           {categories.map((cat) => (
+// // // // // // // // //             <button
+// // // // // // // // //               key={cat}
+// // // // // // // // //               className="px-5 py-2 bg-white border rounded-full shadow hover:bg-pink-500 hover:text-white transition"
 // // // // // // // // //             >
-// // // // // // // // //               <ProductCard product={product} />
-// // // // // // // // //             </div>
+// // // // // // // // //               {cat}
+// // // // // // // // //             </button>
 // // // // // // // // //           ))}
 // // // // // // // // //         </div>
-// // // // // // // // //       )}
+// // // // // // // // //       </div>
+
+// // // // // // // // //       {/* 🛍 PRODUCTS */}
+// // // // // // // // //       <div className="container mx-auto px-4 pb-10">
+// // // // // // // // //         <h2 className="text-xl font-bold mb-6">Trending Products</h2>
+
+// // // // // // // // //         {products.length === 0 ? (
+// // // // // // // // //           <p>No products available.</p>
+// // // // // // // // //         ) : (
+// // // // // // // // //           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+// // // // // // // // //             {products.map((product) => (
+// // // // // // // // //               <div
+// // // // // // // // //                 key={product._id}
+// // // // // // // // //                 className="cursor-pointer hover:scale-105 transition"
+// // // // // // // // //                 onClick={() => navigate(`/product/${product._id}`)}
+// // // // // // // // //               >
+// // // // // // // // //                 <ProductCard product={product} />
+// // // // // // // // //               </div>
+// // // // // // // // //             ))}
+// // // // // // // // //           </div>
+// // // // // // // // //         )}
+// // // // // // // // //       </div>
+
+// // // // // // // // //       {/* 📦 FEATURE STRIP */}
+// // // // // // // // //       <div className="bg-white py-6 border-t grid grid-cols-2 md:grid-cols-4 text-center">
+// // // // // // // // //         <div>
+// // // // // // // // //           <p className="font-semibold">🚚 FREE SHIPPING</p>
+// // // // // // // // //           <small>Above ₹299</small>
+// // // // // // // // //         </div>
+// // // // // // // // //         <div>
+// // // // // // // // //           <p className="font-semibold">🔄 EASY RETURNS</p>
+// // // // // // // // //           <small>15 Days Policy</small>
+// // // // // // // // //         </div>
+// // // // // // // // //         <div>
+// // // // // // // // //           <p className="font-semibold">✔ AUTHENTIC</p>
+// // // // // // // // //           <small>100% Genuine</small>
+// // // // // // // // //         </div>
+// // // // // // // // //         <div>
+// // // // // // // // //           <p className="font-semibold">🏷 BRANDS</p>
+// // // // // // // // //           <small>1000+ Brands</small>
+// // // // // // // // //         </div>
+// // // // // // // // //       </div>
 // // // // // // // // //     </div>
 // // // // // // // // //   );
 // // // // // // // // // };
@@ -420,43 +624,58 @@
 
 
 
-// // // // // // // // // src/pages/buyer/Home.jsx
 // // // // // // // // import React, { useEffect, useState } from "react";
-// // // // // // // // import { useNavigate } from "react-router-dom";
+// // // // // // // // import { useNavigate, useLocation } from "react-router-dom";
 // // // // // // // // import axios from "../../utils/axios";
 // // // // // // // // import ProductCard from "../../components/ProductCard";
+// // // // // // // // import BannerSlider from "../../components/BannerSlider";
 
 // // // // // // // // const Home = () => {
 // // // // // // // //   const navigate = useNavigate();
+// // // // // // // //   const location = useLocation();
+
 // // // // // // // //   const [products, setProducts] = useState([]);
 // // // // // // // //   const [categories] = useState(["Electronics", "Fashion", "Books"]);
 // // // // // // // //   const [loading, setLoading] = useState(true);
 // // // // // // // //   const [error, setError] = useState(null);
 
-// // // // // // // //   // ✅ SELLER REDIRECT FIX
+// // // // // // // //   // 🔐 Redirect seller
 // // // // // // // //   useEffect(() => {
 // // // // // // // //     const user = JSON.parse(localStorage.getItem("user"));
-
-// // // // // // // //     if (user?.role === "seller") {
-// // // // // // // //       navigate("/seller/dashboard");
-// // // // // // // //     }
+// // // // // // // //     if (user?.role === "seller") navigate("/seller/dashboard");
 // // // // // // // //   }, [navigate]);
 
-// // // // // // // //   // ✅ FETCH PRODUCTS
+// // // // // // // //   // 🔍 FETCH PRODUCTS (WITH SEARCH SUPPORT)
 // // // // // // // //   useEffect(() => {
 // // // // // // // //     const fetchProducts = async () => {
 // // // // // // // //       try {
-// // // // // // // //         const res = await axios.get("/products");
+// // // // // // // //         setLoading(true);
 
-// // // // // // // //         if (res.data && Array.isArray(res.data.products)) {
-// // // // // // // //           setProducts(res.data.products);
-// // // // // // // //         } else if (Array.isArray(res.data)) {
-// // // // // // // //           setProducts(res.data);
-// // // // // // // //         } else {
-// // // // // // // //           setProducts([]);
-// // // // // // // //         }
-// // // // // // // //       } catch (err) {
-// // // // // // // //         console.error("Failed to fetch products:", err);
+// // // // // // // //         const query = new URLSearchParams(location.search).get("search");
+
+// // // // // // // //         const url = query
+// // // // // // // //           ? `/products?search=${query}`
+// // // // // // // //           : "/products";
+
+// // // // // // // //         const res = await axios.get(url);
+
+// // // // // // // //         let data = [];
+// // // // // // // //         if (res.data?.products) data = res.data.products;
+// // // // // // // //         else if (Array.isArray(res.data)) data = res.data;
+
+// // // // // // // //         // 🖼 FIX IMAGE URL HERE (NO UI CHANGE)
+// // // // // // // //         const BASE_URL = "https://ecommerce-mern-backend-1.onrender.com"; // change to render URL if deployed
+
+// // // // // // // //         const updatedProducts = data.map((p) => ({
+// // // // // // // //           ...p,
+// // // // // // // //           image: p.image?.startsWith("http")
+// // // // // // // //             ? p.image
+// // // // // // // //             : `${BASE_URL}/${p.image}`,
+// // // // // // // //         }));
+
+// // // // // // // //         setProducts(updatedProducts);
+
+// // // // // // // //       } catch {
 // // // // // // // //         setError("Failed to load products.");
 // // // // // // // //       } finally {
 // // // // // // // //         setLoading(false);
@@ -464,48 +683,73 @@
 // // // // // // // //     };
 
 // // // // // // // //     fetchProducts();
-// // // // // // // //   }, []);
+// // // // // // // //   }, [location.search]);
 
-// // // // // // // //   // ✅ LOADING
-// // // // // // // //   if (loading) return <div className="text-center p-10">Loading products...</div>;
-
-// // // // // // // //   // ✅ ERROR
+// // // // // // // //   if (loading) return <div className="text-center p-10">Loading...</div>;
 // // // // // // // //   if (error) return <div className="text-center p-10 text-red-500">{error}</div>;
 
 // // // // // // // //   return (
-// // // // // // // //     <div className="container mx-auto p-4">
-// // // // // // // //       <h1 className="text-3xl font-bold mb-4">Shop by Category</h1>
+// // // // // // // //     <div className="bg-gray-50 min-h-screen">
 
-// // // // // // // //       {/* Categories */}
-// // // // // // // //       <div className="flex space-x-4 mb-6">
-// // // // // // // //         {categories.map((cat) => (
-// // // // // // // //           <button
-// // // // // // // //             key={cat}
-// // // // // // // //             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-// // // // // // // //           >
-// // // // // // // //             {cat}
-// // // // // // // //           </button>
-// // // // // // // //         ))}
-// // // // // // // //       </div>
+// // // // // // // //       {/* 🔥 BANNER */}
+// // // // // // // //       <BannerSlider />
 
-// // // // // // // //       {/* Products */}
-// // // // // // // //       <h2 className="text-2xl font-semibold mb-4">Products</h2>
+// // // // // // // //       {/* 🧩 CATEGORY */}
+// // // // // // // //       <div className="container mx-auto px-4 py-6">
+// // // // // // // //         <h2 className="text-xl font-bold mb-4">Shop by Category</h2>
 
-// // // // // // // //       {products.length === 0 ? (
-// // // // // // // //         <p>No products available.</p>
-// // // // // // // //       ) : (
-// // // // // // // //         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-// // // // // // // //           {products.map((product) => (
-// // // // // // // //             <div
-// // // // // // // //               key={product._id}
-// // // // // // // //               className="cursor-pointer"
-// // // // // // // //               onClick={() => navigate(`/product/${product._id}`)}
+// // // // // // // //         <div className="flex gap-4 flex-wrap">
+// // // // // // // //           {categories.map((cat) => (
+// // // // // // // //             <button
+// // // // // // // //               key={cat}
+// // // // // // // //               className="px-5 py-2 bg-white border rounded-full shadow hover:bg-pink-500 hover:text-white transition"
 // // // // // // // //             >
-// // // // // // // //               <ProductCard product={product} />
-// // // // // // // //             </div>
+// // // // // // // //               {cat}
+// // // // // // // //             </button>
 // // // // // // // //           ))}
 // // // // // // // //         </div>
-// // // // // // // //       )}
+// // // // // // // //       </div>
+
+// // // // // // // //       {/* 🛍 PRODUCTS */}
+// // // // // // // //       <div className="container mx-auto px-4 pb-10">
+// // // // // // // //         <h2 className="text-xl font-bold mb-6">Trending Products</h2>
+
+// // // // // // // //         {products.length === 0 ? (
+// // // // // // // //           <p>No products available.</p>
+// // // // // // // //         ) : (
+// // // // // // // //           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+// // // // // // // //             {products.map((product) => (
+// // // // // // // //               <div
+// // // // // // // //                 key={product._id}
+// // // // // // // //                 className="cursor-pointer hover:scale-105 transition"
+// // // // // // // //                 onClick={() => navigate(`/product/${product._id}`)}
+// // // // // // // //               >
+// // // // // // // //                 <ProductCard product={product} />
+// // // // // // // //               </div>
+// // // // // // // //             ))}
+// // // // // // // //           </div>
+// // // // // // // //         )}
+// // // // // // // //       </div>
+
+// // // // // // // //       {/* 📦 FEATURE STRIP */}
+// // // // // // // //       <div className="bg-white py-6 border-t grid grid-cols-2 md:grid-cols-4 text-center">
+// // // // // // // //         <div>
+// // // // // // // //           <p className="font-semibold">🚚 FREE SHIPPING</p>
+// // // // // // // //           <small>Above ₹299</small>
+// // // // // // // //         </div>
+// // // // // // // //         <div>
+// // // // // // // //           <p className="font-semibold">🔄 EASY RETURNS</p>
+// // // // // // // //           <small>15 Days Policy</small>
+// // // // // // // //         </div>
+// // // // // // // //         <div>
+// // // // // // // //           <p className="font-semibold">✔ AUTHENTIC</p>
+// // // // // // // //           <small>100% Genuine</small>
+// // // // // // // //         </div>
+// // // // // // // //         <div>
+// // // // // // // //           <p className="font-semibold">🏷 BRANDS</p>
+// // // // // // // //           <small>1000+ Brands</small>
+// // // // // // // //         </div>
+// // // // // // // //       </div>
 // // // // // // // //     </div>
 // // // // // // // //   );
 // // // // // // // // };
@@ -513,57 +757,82 @@
 // // // // // // // // export default Home;
 
 
-// // // // // // // //after clone 2nd code
-
 // // // // // // // import React, { useEffect, useState } from "react";
-// // // // // // // import { useNavigate } from "react-router-dom";
+// // // // // // // import { useNavigate, useLocation } from "react-router-dom";
 // // // // // // // import axios from "../../utils/axios";
 // // // // // // // import ProductCard from "../../components/ProductCard";
 // // // // // // // import BannerSlider from "../../components/BannerSlider";
 
 // // // // // // // const Home = () => {
 // // // // // // //   const navigate = useNavigate();
+// // // // // // //   const location = useLocation();
+
 // // // // // // //   const [products, setProducts] = useState([]);
 // // // // // // //   const [categories] = useState(["Electronics", "Fashion", "Books"]);
 // // // // // // //   const [loading, setLoading] = useState(true);
 // // // // // // //   const [error, setError] = useState(null);
 
+// // // // // // //   // 🔐 Redirect seller
 // // // // // // //   useEffect(() => {
 // // // // // // //     const user = JSON.parse(localStorage.getItem("user"));
 // // // // // // //     if (user?.role === "seller") navigate("/seller/dashboard");
 // // // // // // //   }, [navigate]);
 
+// // // // // // //   // 🔍 FETCH PRODUCTS (WITH SEARCH SUPPORT)
 // // // // // // //   useEffect(() => {
 // // // // // // //     const fetchProducts = async () => {
 // // // // // // //       try {
-// // // // // // //         const res = await axios.get("/products");
+// // // // // // //         setLoading(true);
 
-// // // // // // //         if (res.data?.products) setProducts(res.data.products);
-// // // // // // //         else if (Array.isArray(res.data)) setProducts(res.data);
-// // // // // // //         else setProducts([]);
-// // // // // // //       } catch {
-// // // // // // //         setError("Failed to load products.");
+// // // // // // //         const query = new URLSearchParams(location.search).get("search");
+// // // // // // //         const url = query ? `/products?search=${query}` : "/products";
+
+// // // // // // //         const res = await axios.get(url);
+
+// // // // // // //         let data = [];
+// // // // // // //         if (res.data?.products) data = res.data.products;
+// // // // // // //         else if (Array.isArray(res.data)) data = res.data;
+
+// // // // // // //         // 🖼 FIX IMAGE URL (using images array)
+// // // // // // //         const BASE_URL =
+// // // // // // //           import.meta.env.VITE_BACKEND_URL ||
+// // // // // // //           "https://ecommerce-mern-backend-1.onrender.com";
+
+// // // // // // //         const updatedProducts = data.map((p) => ({
+// // // // // // //           ...p,
+// // // // // // //           image:
+// // // // // // //             p.images?.[0]?.startsWith("http")
+// // // // // // //               ? p.images[0]
+// // // // // // //               : `${BASE_URL}/uploads/${p.images?.[0]}`,
+// // // // // // //         }));
+
+// // // // // // //         setProducts(updatedProducts);
+// // // // // // //         setError(null); // clear any previous error
+// // // // // // //       } catch (err) {
+// // // // // // //         console.error("Fetch products error:", err);
+// // // // // // //         setError(
+// // // // // // //           "Failed to load products. Check your backend URL or server status."
+// // // // // // //         );
 // // // // // // //       } finally {
 // // // // // // //         setLoading(false);
 // // // // // // //       }
 // // // // // // //     };
 
 // // // // // // //     fetchProducts();
-// // // // // // //   }, []);
+// // // // // // //   }, [location.search]);
 
 // // // // // // //   if (loading) return <div className="text-center p-10">Loading...</div>;
-// // // // // // //   if (error) return <div className="text-center p-10 text-red-500">{error}</div>;
+// // // // // // //   if (error)
+// // // // // // //     return <div className="text-center p-10 text-red-500">{error}</div>;
 
 // // // // // // //   return (
 // // // // // // //     <div className="bg-gray-50 min-h-screen">
-
 // // // // // // //       {/* 🔥 BANNER */}
 // // // // // // //       <BannerSlider />
 
 // // // // // // //       {/* 🧩 CATEGORY */}
 // // // // // // //       <div className="container mx-auto px-4 py-6">
 // // // // // // //         <h2 className="text-xl font-bold mb-4">Shop by Category</h2>
-
 // // // // // // //         <div className="flex gap-4 flex-wrap">
 // // // // // // //           {categories.map((cat) => (
 // // // // // // //             <button
@@ -579,7 +848,6 @@
 // // // // // // //       {/* 🛍 PRODUCTS */}
 // // // // // // //       <div className="container mx-auto px-4 pb-10">
 // // // // // // //         <h2 className="text-xl font-bold mb-6">Trending Products</h2>
-
 // // // // // // //         {products.length === 0 ? (
 // // // // // // //           <p>No products available.</p>
 // // // // // // //         ) : (
@@ -623,7 +891,6 @@
 // // // // // // // export default Home;
 
 
-
 // // // // // // import React, { useEffect, useState } from "react";
 // // // // // // import { useNavigate, useLocation } from "react-router-dom";
 // // // // // // import axios from "../../utils/axios";
@@ -639,13 +906,12 @@
 // // // // // //   const [loading, setLoading] = useState(true);
 // // // // // //   const [error, setError] = useState(null);
 
-// // // // // //   // 🔐 Redirect seller
+// // // // // //   // Redirect seller
 // // // // // //   useEffect(() => {
 // // // // // //     const user = JSON.parse(localStorage.getItem("user"));
 // // // // // //     if (user?.role === "seller") navigate("/seller/dashboard");
 // // // // // //   }, [navigate]);
 
-// // // // // //   // 🔍 FETCH PRODUCTS (WITH SEARCH SUPPORT)
 // // // // // //   useEffect(() => {
 // // // // // //     const fetchProducts = async () => {
 // // // // // //       try {
@@ -653,9 +919,13 @@
 
 // // // // // //         const query = new URLSearchParams(location.search).get("search");
 
+// // // // // //         const BASE_URL =
+// // // // // //           import.meta.env.VITE_BACKEND_URL ||
+// // // // // //           "https://ecommerce-mern-backend-1.onrender.com/api";
+
 // // // // // //         const url = query
-// // // // // //           ? `/products?search=${query}`
-// // // // // //           : "/products";
+// // // // // //           ? `${BASE_URL}/products?search=${query}`
+// // // // // //           : `${BASE_URL}/products`;
 
 // // // // // //         const res = await axios.get(url);
 
@@ -663,20 +933,21 @@
 // // // // // //         if (res.data?.products) data = res.data.products;
 // // // // // //         else if (Array.isArray(res.data)) data = res.data;
 
-// // // // // //         // 🖼 FIX IMAGE URL HERE (NO UI CHANGE)
-// // // // // //         const BASE_URL = "https://ecommerce-mern-backend-1.onrender.com"; // change to render URL if deployed
-
 // // // // // //         const updatedProducts = data.map((p) => ({
 // // // // // //           ...p,
-// // // // // //           image: p.image?.startsWith("http")
-// // // // // //             ? p.image
-// // // // // //             : `${BASE_URL}/${p.image}`,
+// // // // // //           image:
+// // // // // //             p.images?.[0]?.startsWith("http")
+// // // // // //               ? p.images[0]
+// // // // // //               : `${BASE_URL}/uploads/${p.images[0]}`,
 // // // // // //         }));
 
 // // // // // //         setProducts(updatedProducts);
-
-// // // // // //       } catch {
-// // // // // //         setError("Failed to load products.");
+// // // // // //         setError(null);
+// // // // // //       } catch (err) {
+// // // // // //         console.error("Fetch products error:", err);
+// // // // // //         setError(
+// // // // // //           "Failed to load products. Check your backend URL or server status."
+// // // // // //         );
 // // // // // //       } finally {
 // // // // // //         setLoading(false);
 // // // // // //       }
@@ -686,18 +957,16 @@
 // // // // // //   }, [location.search]);
 
 // // // // // //   if (loading) return <div className="text-center p-10">Loading...</div>;
-// // // // // //   if (error) return <div className="text-center p-10 text-red-500">{error}</div>;
+// // // // // //   if (error)
+// // // // // //     return <div className="text-center p-10 text-red-500">{error}</div>;
 
 // // // // // //   return (
 // // // // // //     <div className="bg-gray-50 min-h-screen">
-
-// // // // // //       {/* 🔥 BANNER */}
 // // // // // //       <BannerSlider />
 
-// // // // // //       {/* 🧩 CATEGORY */}
+// // // // // //       {/* CATEGORY */}
 // // // // // //       <div className="container mx-auto px-4 py-6">
 // // // // // //         <h2 className="text-xl font-bold mb-4">Shop by Category</h2>
-
 // // // // // //         <div className="flex gap-4 flex-wrap">
 // // // // // //           {categories.map((cat) => (
 // // // // // //             <button
@@ -710,10 +979,9 @@
 // // // // // //         </div>
 // // // // // //       </div>
 
-// // // // // //       {/* 🛍 PRODUCTS */}
+// // // // // //       {/* PRODUCTS */}
 // // // // // //       <div className="container mx-auto px-4 pb-10">
 // // // // // //         <h2 className="text-xl font-bold mb-6">Trending Products</h2>
-
 // // // // // //         {products.length === 0 ? (
 // // // // // //           <p>No products available.</p>
 // // // // // //         ) : (
@@ -731,7 +999,7 @@
 // // // // // //         )}
 // // // // // //       </div>
 
-// // // // // //       {/* 📦 FEATURE STRIP */}
+// // // // // //       {/* FEATURE STRIP */}
 // // // // // //       <div className="bg-white py-6 border-t grid grid-cols-2 md:grid-cols-4 text-center">
 // // // // // //         <div>
 // // // // // //           <p className="font-semibold">🚚 FREE SHIPPING</p>
@@ -757,272 +1025,158 @@
 // // // // // // export default Home;
 
 
-// // // // // import React, { useEffect, useState } from "react";
-// // // // // import { useNavigate, useLocation } from "react-router-dom";
-// // // // // import axios from "../../utils/axios";
-// // // // // import ProductCard from "../../components/ProductCard";
-// // // // // import BannerSlider from "../../components/BannerSlider";
 
-// // // // // const Home = () => {
-// // // // //   const navigate = useNavigate();
-// // // // //   const location = useLocation();
+// // // import React, { useEffect, useState } from "react";
+// // // import { useNavigate, useLocation } from "react-router-dom";
+// // // import axios from "../../utils/axios";
+// // // import ProductCard from "../../components/ProductCard";
+// // // import BannerSlider from "../../components/BannerSlider";
 
-// // // // //   const [products, setProducts] = useState([]);
-// // // // //   const [categories] = useState(["Electronics", "Fashion", "Books"]);
-// // // // //   const [loading, setLoading] = useState(true);
-// // // // //   const [error, setError] = useState(null);
+// // // const Home = () => {
+// // //   const navigate = useNavigate();
+// // //   const location = useLocation();
 
-// // // // //   // 🔐 Redirect seller
-// // // // //   useEffect(() => {
-// // // // //     const user = JSON.parse(localStorage.getItem("user"));
-// // // // //     if (user?.role === "seller") navigate("/seller/dashboard");
-// // // // //   }, [navigate]);
+// // //   const [products, setProducts] = useState([]);
+// // //   const [categories] = useState(["Electronics", "Fashion", "Books"]);
+// // //   const [loading, setLoading] = useState(true);
+// // //   const [error, setError] = useState(null);
 
-// // // // //   // 🔍 FETCH PRODUCTS (WITH SEARCH SUPPORT)
-// // // // //   useEffect(() => {
-// // // // //     const fetchProducts = async () => {
-// // // // //       try {
-// // // // //         setLoading(true);
+// // //   const BASE_URL =
+// // //     import.meta.env.VITE_BACKEND_URL ||
+// // //     "https://ecommerce-mern-backend-1.onrender.com";
 
-// // // // //         const query = new URLSearchParams(location.search).get("search");
-// // // // //         const url = query ? `/products?search=${query}` : "/products";
+// // //   // 🔐 Redirect seller
+// // //   useEffect(() => {
+// // //     const user = JSON.parse(localStorage.getItem("user"));
+// // //     if (user?.role === "seller") navigate("/seller/dashboard");
+// // //   }, [navigate]);
 
-// // // // //         const res = await axios.get(url);
+// // //   useEffect(() => {
+// // //     const fetchProducts = async () => {
+// // //       try {
+// // //         setLoading(true);
 
-// // // // //         let data = [];
-// // // // //         if (res.data?.products) data = res.data.products;
-// // // // //         else if (Array.isArray(res.data)) data = res.data;
+// // //         const query = new URLSearchParams(location.search).get("search");
+// // //         const url = query
+// // //           ? `${BASE_URL}/api/products?search=${query}`
+// // //           : `${BASE_URL}/api/products`;
 
-// // // // //         // 🖼 FIX IMAGE URL (using images array)
-// // // // //         const BASE_URL =
-// // // // //           import.meta.env.VITE_BACKEND_URL ||
-// // // // //           "https://ecommerce-mern-backend-1.onrender.com";
+// // //         const res = await axios.get(url);
 
-// // // // //         const updatedProducts = data.map((p) => ({
-// // // // //           ...p,
-// // // // //           image:
-// // // // //             p.images?.[0]?.startsWith("http")
-// // // // //               ? p.images[0]
-// // // // //               : `${BASE_URL}/uploads/${p.images?.[0]}`,
-// // // // //         }));
+// // //         let data = [];
+// // //         if (res.data?.products) data = res.data.products;
+// // //         else if (Array.isArray(res.data)) data = res.data;
 
-// // // // //         setProducts(updatedProducts);
-// // // // //         setError(null); // clear any previous error
-// // // // //       } catch (err) {
-// // // // //         console.error("Fetch products error:", err);
-// // // // //         setError(
-// // // // //           "Failed to load products. Check your backend URL or server status."
-// // // // //         );
-// // // // //       } finally {
-// // // // //         setLoading(false);
-// // // // //       }
-// // // // //     };
+// // //         const updatedProducts = data.map((p) => ({
+// // //           ...p,
+// // //           image: p.images?.[0]?.startsWith("http")
+// // //             ? p.images[0]
+// // //             : `${BASE_URL}/uploads/${p.images?.[0]}`,
+// // //         }));
 
-// // // // //     fetchProducts();
-// // // // //   }, [location.search]);
+// // //         setProducts(updatedProducts);
+// // //         setError(null);
+// // //       } catch (err) {
+// // //         console.error("Fetch products error:", err);
+// // //         setError(
+// // //           "Failed to load products. Check your backend URL or server status."
+// // //         );
+// // //       } finally {
+// // //         setLoading(false);
+// // //       }
+// // //     };
 
-// // // // //   if (loading) return <div className="text-center p-10">Loading...</div>;
-// // // // //   if (error)
-// // // // //     return <div className="text-center p-10 text-red-500">{error}</div>;
+// // //     fetchProducts();
+// // //   }, [location.search, BASE_URL]);
 
-// // // // //   return (
-// // // // //     <div className="bg-gray-50 min-h-screen">
-// // // // //       {/* 🔥 BANNER */}
-// // // // //       <BannerSlider />
+// // //   if (loading) return <div className="text-center p-10">Loading...</div>;
+// // //   if (error)
+// // //     return <div className="text-center p-10 text-red-500">{error}</div>;
 
-// // // // //       {/* 🧩 CATEGORY */}
-// // // // //       <div className="container mx-auto px-4 py-6">
-// // // // //         <h2 className="text-xl font-bold mb-4">Shop by Category</h2>
-// // // // //         <div className="flex gap-4 flex-wrap">
-// // // // //           {categories.map((cat) => (
-// // // // //             <button
-// // // // //               key={cat}
-// // // // //               className="px-5 py-2 bg-white border rounded-full shadow hover:bg-pink-500 hover:text-white transition"
-// // // // //             >
-// // // // //               {cat}
-// // // // //             </button>
-// // // // //           ))}
-// // // // //         </div>
-// // // // //       </div>
+// // //   return (
+// // //     <div className="bg-gray-50 min-h-screen">
+// // //       <BannerSlider />
 
-// // // // //       {/* 🛍 PRODUCTS */}
-// // // // //       <div className="container mx-auto px-4 pb-10">
-// // // // //         <h2 className="text-xl font-bold mb-6">Trending Products</h2>
-// // // // //         {products.length === 0 ? (
-// // // // //           <p>No products available.</p>
-// // // // //         ) : (
-// // // // //           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-// // // // //             {products.map((product) => (
-// // // // //               <div
-// // // // //                 key={product._id}
-// // // // //                 className="cursor-pointer hover:scale-105 transition"
-// // // // //                 onClick={() => navigate(`/product/${product._id}`)}
-// // // // //               >
-// // // // //                 <ProductCard product={product} />
-// // // // //               </div>
-// // // // //             ))}
-// // // // //           </div>
-// // // // //         )}
-// // // // //       </div>
+// // //       {/* CATEGORY */}
+// // //       <div className="container mx-auto px-4 py-6">
+// // //         <h2 className="text-xl font-bold mb-4">Shop by Category</h2>
+// // //         <div className="flex gap-4 flex-wrap">
+// // //           {categories.map((cat) => (
+// // //             <button
+// // //               key={cat}
+// // //               className="px-5 py-2 bg-white border rounded-full shadow hover:bg-pink-500 hover:text-white transition"
+// // //             >
+// // //               {cat}
+// // //             </button>
+// // //           ))}
+// // //         </div>
+// // //       </div>
 
-// // // // //       {/* 📦 FEATURE STRIP */}
-// // // // //       <div className="bg-white py-6 border-t grid grid-cols-2 md:grid-cols-4 text-center">
-// // // // //         <div>
-// // // // //           <p className="font-semibold">🚚 FREE SHIPPING</p>
-// // // // //           <small>Above ₹299</small>
-// // // // //         </div>
-// // // // //         <div>
-// // // // //           <p className="font-semibold">🔄 EASY RETURNS</p>
-// // // // //           <small>15 Days Policy</small>
-// // // // //         </div>
-// // // // //         <div>
-// // // // //           <p className="font-semibold">✔ AUTHENTIC</p>
-// // // // //           <small>100% Genuine</small>
-// // // // //         </div>
-// // // // //         <div>
-// // // // //           <p className="font-semibold">🏷 BRANDS</p>
-// // // // //           <small>1000+ Brands</small>
-// // // // //         </div>
-// // // // //       </div>
-// // // // //     </div>
-// // // // //   );
-// // // // // };
+// // //       {/* PRODUCTS */}
+// // //       <div className="container mx-auto px-4 pb-10">
+// // //         <h2 className="text-xl font-bold mb-6">Trending Products</h2>
+// // //         {products.length === 0 ? (
+// // //           <p>No products available.</p>
+// // //         ) : (
+// // //           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+// // //             {products.map((product) => (
+// // //               <div
+// // //                 key={product._id}
+// // //                 className="cursor-pointer hover:scale-105 transition"
+// // //                 onClick={() => navigate(`/product/${product._id}`)}
+// // //               >
+// // //                 <ProductCard product={product} />
+// // //               </div>
+// // //             ))}
+// // //           </div>
+// // //         )}
+// // //       </div>
 
-// // // // // export default Home;
+// // // {/* VIDEO BANNER */}
+// // // <div className="container mx-auto px-4 pb-12">
+// // //   <h2 className="text-xl font-bold mb-4 text-center">
+// // //     Experience Luxora
+// // //   </h2>
+
+// // //   <div className="w-full rounded-3xl overflow-hidden shadow-xl">
+// // //     <video
+// // //       className="w-full h-[350px] md:h-[450px] object-cover"
+// // //       autoPlay
+// // //       loop
+// // //       muted
+// // //       playsInline
+// // //     >
+// // //       <source src="/videos/dress.mp4" type="video/mp4" />
+// // //     </video>
+// // //   </div>
+// // // </div>
 
 
-// // // // import React, { useEffect, useState } from "react";
-// // // // import { useNavigate, useLocation } from "react-router-dom";
-// // // // import axios from "../../utils/axios";
-// // // // import ProductCard from "../../components/ProductCard";
-// // // // import BannerSlider from "../../components/BannerSlider";
 
-// // // // const Home = () => {
-// // // //   const navigate = useNavigate();
-// // // //   const location = useLocation();
+// // //       {/* FEATURE STRIP */}
+// // //       <div className="bg-white py-6 border-t grid grid-cols-2 md:grid-cols-4 text-center">
+// // //         <div>
+// // //           <p className="font-semibold">🚚 FREE SHIPPING</p>
+// // //           <small>Above ₹299</small>
+// // //         </div>
+// // //         <div>
+// // //           <p className="font-semibold">🔄 EASY RETURNS</p>
+// // //           <small>15 Days Policy</small>
+// // //         </div>
+// // //         <div>
+// // //           <p className="font-semibold">✔ AUTHENTIC</p>
+// // //           <small>100% Genuine</small>
+// // //         </div>
+// // //         <div>
+// // //           <p className="font-semibold">🏷 BRANDS</p>
+// // //           <small>1000+ Brands</small>
+// // //         </div>
+// // //       </div>
+// // //     </div>
+// // //   );
+// // // };
 
-// // // //   const [products, setProducts] = useState([]);
-// // // //   const [categories] = useState(["Electronics", "Fashion", "Books"]);
-// // // //   const [loading, setLoading] = useState(true);
-// // // //   const [error, setError] = useState(null);
-
-// // // //   // Redirect seller
-// // // //   useEffect(() => {
-// // // //     const user = JSON.parse(localStorage.getItem("user"));
-// // // //     if (user?.role === "seller") navigate("/seller/dashboard");
-// // // //   }, [navigate]);
-
-// // // //   useEffect(() => {
-// // // //     const fetchProducts = async () => {
-// // // //       try {
-// // // //         setLoading(true);
-
-// // // //         const query = new URLSearchParams(location.search).get("search");
-
-// // // //         const BASE_URL =
-// // // //           import.meta.env.VITE_BACKEND_URL ||
-// // // //           "https://ecommerce-mern-backend-1.onrender.com/api";
-
-// // // //         const url = query
-// // // //           ? `${BASE_URL}/products?search=${query}`
-// // // //           : `${BASE_URL}/products`;
-
-// // // //         const res = await axios.get(url);
-
-// // // //         let data = [];
-// // // //         if (res.data?.products) data = res.data.products;
-// // // //         else if (Array.isArray(res.data)) data = res.data;
-
-// // // //         const updatedProducts = data.map((p) => ({
-// // // //           ...p,
-// // // //           image:
-// // // //             p.images?.[0]?.startsWith("http")
-// // // //               ? p.images[0]
-// // // //               : `${BASE_URL}/uploads/${p.images[0]}`,
-// // // //         }));
-
-// // // //         setProducts(updatedProducts);
-// // // //         setError(null);
-// // // //       } catch (err) {
-// // // //         console.error("Fetch products error:", err);
-// // // //         setError(
-// // // //           "Failed to load products. Check your backend URL or server status."
-// // // //         );
-// // // //       } finally {
-// // // //         setLoading(false);
-// // // //       }
-// // // //     };
-
-// // // //     fetchProducts();
-// // // //   }, [location.search]);
-
-// // // //   if (loading) return <div className="text-center p-10">Loading...</div>;
-// // // //   if (error)
-// // // //     return <div className="text-center p-10 text-red-500">{error}</div>;
-
-// // // //   return (
-// // // //     <div className="bg-gray-50 min-h-screen">
-// // // //       <BannerSlider />
-
-// // // //       {/* CATEGORY */}
-// // // //       <div className="container mx-auto px-4 py-6">
-// // // //         <h2 className="text-xl font-bold mb-4">Shop by Category</h2>
-// // // //         <div className="flex gap-4 flex-wrap">
-// // // //           {categories.map((cat) => (
-// // // //             <button
-// // // //               key={cat}
-// // // //               className="px-5 py-2 bg-white border rounded-full shadow hover:bg-pink-500 hover:text-white transition"
-// // // //             >
-// // // //               {cat}
-// // // //             </button>
-// // // //           ))}
-// // // //         </div>
-// // // //       </div>
-
-// // // //       {/* PRODUCTS */}
-// // // //       <div className="container mx-auto px-4 pb-10">
-// // // //         <h2 className="text-xl font-bold mb-6">Trending Products</h2>
-// // // //         {products.length === 0 ? (
-// // // //           <p>No products available.</p>
-// // // //         ) : (
-// // // //           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-// // // //             {products.map((product) => (
-// // // //               <div
-// // // //                 key={product._id}
-// // // //                 className="cursor-pointer hover:scale-105 transition"
-// // // //                 onClick={() => navigate(`/product/${product._id}`)}
-// // // //               >
-// // // //                 <ProductCard product={product} />
-// // // //               </div>
-// // // //             ))}
-// // // //           </div>
-// // // //         )}
-// // // //       </div>
-
-// // // //       {/* FEATURE STRIP */}
-// // // //       <div className="bg-white py-6 border-t grid grid-cols-2 md:grid-cols-4 text-center">
-// // // //         <div>
-// // // //           <p className="font-semibold">🚚 FREE SHIPPING</p>
-// // // //           <small>Above ₹299</small>
-// // // //         </div>
-// // // //         <div>
-// // // //           <p className="font-semibold">🔄 EASY RETURNS</p>
-// // // //           <small>15 Days Policy</small>
-// // // //         </div>
-// // // //         <div>
-// // // //           <p className="font-semibold">✔ AUTHENTIC</p>
-// // // //           <small>100% Genuine</small>
-// // // //         </div>
-// // // //         <div>
-// // // //           <p className="font-semibold">🏷 BRANDS</p>
-// // // //           <small>1000+ Brands</small>
-// // // //         </div>
-// // // //       </div>
-// // // //     </div>
-// // // //   );
-// // // // };
-
-// // // // export default Home;
+// // // export default Home;
 
 
 
@@ -1045,17 +1199,17 @@
 //     import.meta.env.VITE_BACKEND_URL ||
 //     "https://ecommerce-mern-backend-1.onrender.com";
 
-//   // 🔐 Redirect seller
+//   // Redirect seller
 //   useEffect(() => {
 //     const user = JSON.parse(localStorage.getItem("user"));
 //     if (user?.role === "seller") navigate("/seller/dashboard");
 //   }, [navigate]);
 
+//   // Fetch products
 //   useEffect(() => {
 //     const fetchProducts = async () => {
 //       try {
 //         setLoading(true);
-
 //         const query = new URLSearchParams(location.search).get("search");
 //         const url = query
 //           ? `${BASE_URL}/api/products?search=${query}`
@@ -1067,12 +1221,21 @@
 //         if (res.data?.products) data = res.data.products;
 //         else if (Array.isArray(res.data)) data = res.data;
 
-//         const updatedProducts = data.map((p) => ({
-//           ...p,
-//           image: p.images?.[0]?.startsWith("http")
-//             ? p.images[0]
-//             : `${BASE_URL}/uploads/${p.images?.[0]}`,
-//         }));
+//         // ✅ Fix: handle both Base64 frontend images and backend uploads
+//         const updatedProducts = data.map((p) => {
+//           const imgPath = p.images?.[0];
+//           let imageUrl = "/placeholder.png"; // fallback if no image
+
+//           if (imgPath) {
+//             if (imgPath.startsWith("data:")) {
+//               imageUrl = imgPath; // frontend Base64
+//             } else {
+//               imageUrl = `${BASE_URL}/${imgPath.replace(/^\/+/, "")}`; // backend uploads
+//             }
+//           }
+
+//           return { ...p, image: imageUrl };
+//         });
 
 //         setProducts(updatedProducts);
 //         setError(null);
@@ -1090,14 +1253,13 @@
 //   }, [location.search, BASE_URL]);
 
 //   if (loading) return <div className="text-center p-10">Loading...</div>;
-//   if (error)
-//     return <div className="text-center p-10 text-red-500">{error}</div>;
+//   if (error) return <div className="text-center p-10 text-red-500">{error}</div>;
 
 //   return (
 //     <div className="bg-gray-50 min-h-screen">
 //       <BannerSlider />
 
-//       {/* CATEGORY */}
+//       {/* Categories */}
 //       <div className="container mx-auto px-4 py-6">
 //         <h2 className="text-xl font-bold mb-4">Shop by Category</h2>
 //         <div className="flex gap-4 flex-wrap">
@@ -1112,19 +1274,24 @@
 //         </div>
 //       </div>
 
-//       {/* PRODUCTS */}
+//       {/* Products */}
 //       <div className="container mx-auto px-4 pb-10">
 //         <h2 className="text-xl font-bold mb-6">Trending Products</h2>
 //         {products.length === 0 ? (
 //           <p>No products available.</p>
 //         ) : (
 //           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-//             {products.map((product) => (
+//             {products.map((product, index) => (
 //               <div
 //                 key={product._id}
-//                 className="cursor-pointer hover:scale-105 transition"
+//                 className="cursor-pointer hover:scale-105 transition transform"
+//                 style={{
+//                   animation: `fadeIn 0.5s ease ${(index + 1) * 0.1}s forwards`,
+//                   opacity: 0,
+//                 }}
 //                 onClick={() => navigate(`/product/${product._id}`)}
 //               >
+//                 {/* Use the final image */}
 //                 <ProductCard product={product} />
 //               </div>
 //             ))}
@@ -1132,28 +1299,23 @@
 //         )}
 //       </div>
 
-// {/* VIDEO BANNER */}
-// <div className="container mx-auto px-4 pb-12">
-//   <h2 className="text-xl font-bold mb-4 text-center">
-//     Experience Luxora
-//   </h2>
+//       {/* Video Banner */}
+//       <div className="container mx-auto px-4 pb-12">
+//         <h2 className="text-xl font-bold mb-4 text-center">Experience Luxora</h2>
+//         <div className="w-full rounded-3xl overflow-hidden shadow-xl">
+//           <video
+//             className="w-full h-[350px] md:h-[450px] object-cover"
+//             autoPlay
+//             loop
+//             muted
+//             playsInline
+//           >
+//             <source src="/videos/dress.mp4" type="video/mp4" />
+//           </video>
+//         </div>
+//       </div>
 
-//   <div className="w-full rounded-3xl overflow-hidden shadow-xl">
-//     <video
-//       className="w-full h-[350px] md:h-[450px] object-cover"
-//       autoPlay
-//       loop
-//       muted
-//       playsInline
-//     >
-//       <source src="/videos/dress.mp4" type="video/mp4" />
-//     </video>
-//   </div>
-// </div>
-
-
-
-//       {/* FEATURE STRIP */}
+//       {/* Feature Strip */}
 //       <div className="bg-white py-6 border-t grid grid-cols-2 md:grid-cols-4 text-center">
 //         <div>
 //           <p className="font-semibold">🚚 FREE SHIPPING</p>
@@ -1172,6 +1334,14 @@
 //           <small>1000+ Brands</small>
 //         </div>
 //       </div>
+
+//       <style>
+//         {`
+//           @keyframes fadeIn {
+//             to { opacity: 1; }
+//           }
+//         `}
+//       </style>
 //     </div>
 //   );
 // };
@@ -1221,20 +1391,21 @@ const Home = () => {
         if (res.data?.products) data = res.data.products;
         else if (Array.isArray(res.data)) data = res.data;
 
-        // ✅ Fix: handle both Base64 frontend images and backend uploads
+        // Handle both Base64 frontend images and backend uploads
         const updatedProducts = data.map((p) => {
           const imgPath = p.images?.[0];
-          let imageUrl = "/placeholder.png"; // fallback if no image
+          let imageUrl = "/placeholder.png"; // fallback
 
           if (imgPath) {
             if (imgPath.startsWith("data:")) {
-              imageUrl = imgPath; // frontend Base64
+              imageUrl = imgPath; // Base64 from frontend
             } else {
-              imageUrl = `${BASE_URL}/${imgPath.replace(/^\/+/, "")}`; // backend uploads
+              // backend upload
+              imageUrl = `${BASE_URL}/${imgPath.replace(/^\/+/, "")}`;
             }
           }
 
-          return { ...p, image: imageUrl };
+          return { ...p, images: [imageUrl] }; // keep images array consistent
         });
 
         setProducts(updatedProducts);
@@ -1291,7 +1462,7 @@ const Home = () => {
                 }}
                 onClick={() => navigate(`/product/${product._id}`)}
               >
-                {/* Use the final image */}
+                {/* ProductCard uses images[0] for display */}
                 <ProductCard product={product} />
               </div>
             ))}
