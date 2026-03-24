@@ -1100,11 +1100,11 @@ const Navbar = () => {
           {/* Cart */}
           <Link to="/cart" className="relative text-xl hover:scale-110 transition">
             🛒
-            {cart.length > 0 && (
+            {/* {cart.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-xs px-2 rounded-full">
-                {cart.length}
-              </span>
-            )}
+                {cart.length} */}
+              {/* </span> */}
+            {/* )} */}
           </Link>
 
           {/* Wishlist */}

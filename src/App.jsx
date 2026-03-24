@@ -618,6 +618,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const location = useLocation();
@@ -628,7 +629,17 @@ function App() {
   return (
     <div>
       <ToastContainer position="top-right" autoClose={2000} />
-
+        {/* <ToastContainer
+        position="top-right"
+        autoClose={2000}       // toast disappears after 2s
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnHover
+        draggable
+        theme="colored"        // colorful toast for success/error
+      /> */}
       {isSellerRoute ? <SellerNavbar /> : <Navbar />}
 
       <Routes>

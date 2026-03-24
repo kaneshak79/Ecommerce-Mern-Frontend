@@ -1,305 +1,10 @@
 
 
-// // // // // // // // // import React, { useEffect, useState } from "react";
-// // // // // // // // // import { useParams } from "react-router-dom";
-// // // // // // // // // import axios from "../../utils/axios";
-// // // // // // // // // import { useCart } from "../../context/CartContext";
-// // // // // // // // // import { useWishlist } from "../../context/WishlistContext";
-
-// // // // // // // // // const ProductDetails = () => {
-// // // // // // // // //   const { id } = useParams();
-// // // // // // // // //   const { addToCart } = useCart();
-// // // // // // // // //   const { addToWishlist } = useWishlist();
-
-// // // // // // // // //   const [product, setProduct] = useState(null);
-// // // // // // // // //   const [reviews, setReviews] = useState([]);
-// // // // // // // // //   const [activeTab, setActiveTab] = useState("details");
-
-// // // // // // // // //   const [showForm, setShowForm] = useState(false);
-// // // // // // // // //   const [rating, setRating] = useState(5);
-// // // // // // // // //   const [comment, setComment] = useState("");
-// // // // // // // // //   const [editingReviewId, setEditingReviewId] = useState(null);
-
-// // // // // // // // //   // ✅ SAFE USER ID
-// // // // // // // // //   const userId = String(localStorage.getItem("userId") || "");
-
-// // // // // // // // //   // ================= FETCH PRODUCT =================
-// // // // // // // // //   const fetchProduct = async () => {
-// // // // // // // // //     try {
-// // // // // // // // //       const res = await axios.get(`/products/${id}`);
-// // // // // // // // //       setProduct(res.data);
-// // // // // // // // //     } catch (err) {
-// // // // // // // // //       console.error(err);
-// // // // // // // // //     }
-// // // // // // // // //   };
-
-// // // // // // // // //   // ================= FETCH REVIEWS =================
-// // // // // // // // //   const fetchReviews = async () => {
-// // // // // // // // //     try {
-// // // // // // // // //       const res = await axios.get(`/reviews?productId=${id}`);
-// // // // // // // // //       setReviews(res.data);
-// // // // // // // // //     } catch (err) {
-// // // // // // // // //       console.error(err);
-// // // // // // // // //     }
-// // // // // // // // //   };
-
-// // // // // // // // //   useEffect(() => {
-// // // // // // // // //     fetchProduct();
-// // // // // // // // //     fetchReviews();
-// // // // // // // // //   }, [id]);
-
-// // // // // // // // //   if (!product) return <div className="p-10 text-center">Loading...</div>;
-
-// // // // // // // // //   const imageUrl = product.image?.startsWith("http")
-// // // // // // // // //     ? product.image
-// // // // // // // // //     : `http://localhost:5000/${product.image}`;
-
-// // // // // // // // //   // ================= ADD / UPDATE =================
-// // // // // // // // //   const handleSubmitReview = async () => {
-// // // // // // // // //     try {
-// // // // // // // // //       const token = localStorage.getItem("token");
-
-// // // // // // // // //       if (!token) {
-// // // // // // // // //         alert("Please login first");
-// // // // // // // // //         return;
-// // // // // // // // //       }
-
-// // // // // // // // //       if (!comment.trim()) {
-// // // // // // // // //         alert("Please write review");
-// // // // // // // // //         return;
-// // // // // // // // //       }
-
-// // // // // // // // //       if (editingReviewId) {
-// // // // // // // // //         await axios.put(
-// // // // // // // // //           `/reviews/${editingReviewId}`,
-// // // // // // // // //           { rating: Number(rating), comment },
-// // // // // // // // //           {
-// // // // // // // // //             headers: {
-// // // // // // // // //               Authorization: `Bearer ${token}`,
-// // // // // // // // //             },
-// // // // // // // // //           }
-// // // // // // // // //         );
-// // // // // // // // //       } else {
-// // // // // // // // //         await axios.post(
-// // // // // // // // //           "/reviews",
-// // // // // // // // //           {
-// // // // // // // // //             productId: id,
-// // // // // // // // //             rating: Number(rating),
-// // // // // // // // //             comment,
-// // // // // // // // //           },
-// // // // // // // // //           {
-// // // // // // // // //             headers: {
-// // // // // // // // //               Authorization: `Bearer ${token}`,
-// // // // // // // // //             },
-// // // // // // // // //           }
-// // // // // // // // //         );
-// // // // // // // // //       }
-
-// // // // // // // // //       alert("Review submitted successfully!");
-
-// // // // // // // // //       // RESET
-// // // // // // // // //       setShowForm(false);
-// // // // // // // // //       setComment("");
-// // // // // // // // //       setRating(5);
-// // // // // // // // //       setEditingReviewId(null);
-
-// // // // // // // // //       fetchReviews();
-// // // // // // // // //     } catch (err) {
-// // // // // // // // //       console.error("REVIEW ERROR:", err.response?.data || err.message);
-// // // // // // // // //       alert(err.response?.data?.message || "Review failed");
-// // // // // // // // //     }
-// // // // // // // // //   };
-
-// // // // // // // // //   // ================= DELETE =================
-// // // // // // // // //   const handleDelete = async (reviewId) => {
-// // // // // // // // //     try {
-// // // // // // // // //       await axios.delete(`/reviews/${reviewId}`, {
-// // // // // // // // //         headers: {
-// // // // // // // // //           Authorization: `Bearer ${localStorage.getItem("token")}`,
-// // // // // // // // //         },
-// // // // // // // // //       });
-
-// // // // // // // // //       fetchReviews();
-// // // // // // // // //     } catch (err) {
-// // // // // // // // //       console.error(err);
-// // // // // // // // //     }
-// // // // // // // // //   };
-
-// // // // // // // // //   // ================= EDIT =================
-// // // // // // // // //   const handleEdit = (review) => {
-// // // // // // // // //     setShowForm(true);
-// // // // // // // // //     setRating(review.rating);
-// // // // // // // // //     setComment(review.comment);
-// // // // // // // // //     setEditingReviewId(review._id);
-// // // // // // // // //   };
-
-// // // // // // // // //   return (
-// // // // // // // // //     <div className="bg-gray-50 min-h-screen">
-// // // // // // // // //       <div className="max-w-6xl mx-auto p-4">
-
-// // // // // // // // //         {/* TOP */}
-// // // // // // // // //         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-lg shadow">
-// // // // // // // // //           <img src={imageUrl} className="h-[400px] object-contain" />
-
-// // // // // // // // //           <div>
-// // // // // // // // //             <h1 className="text-xl font-semibold">{product.title}</h1>
-// // // // // // // // //             <p className="text-2xl font-bold mt-2">₹{product.price}</p>
-
-// // // // // // // // //             <div className="flex gap-3 mt-4">
-// // // // // // // // //               <button
-// // // // // // // // //                 onClick={() => addToCart(product)}
-// // // // // // // // //                 className="bg-pink-500 text-white px-6 py-3 rounded w-full"
-// // // // // // // // //               >
-// // // // // // // // //                 Add to Bag
-// // // // // // // // //               </button>
-
-// // // // // // // // //               <button
-// // // // // // // // //                 onClick={() => addToWishlist(product)}
-// // // // // // // // //                 className="border px-4 py-3 rounded"
-// // // // // // // // //               >
-// // // // // // // // //                 ❤️
-// // // // // // // // //               </button>
-// // // // // // // // //             </div>
-// // // // // // // // //           </div>
-// // // // // // // // //         </div>
-
-// // // // // // // // //         {/* TABS */}
-// // // // // // // // //         <div className="bg-white mt-6 rounded-lg shadow">
-// // // // // // // // //           <div className="flex border-b">
-// // // // // // // // //             <button
-// // // // // // // // //               onClick={() => setActiveTab("details")}
-// // // // // // // // //               className={`px-6 py-3 ${
-// // // // // // // // //                 activeTab === "details" && "border-b-2 border-pink-500"
-// // // // // // // // //               }`}
-// // // // // // // // //             >
-// // // // // // // // //               Product Details
-// // // // // // // // //             </button>
-
-// // // // // // // // //             <button
-// // // // // // // // //               onClick={() => setActiveTab("reviews")}
-// // // // // // // // //               className={`px-6 py-3 ${
-// // // // // // // // //                 activeTab === "reviews" && "border-b-2 border-pink-500"
-// // // // // // // // //               }`}
-// // // // // // // // //             >
-// // // // // // // // //               Ratings & Reviews
-// // // // // // // // //             </button>
-// // // // // // // // //           </div>
-
-// // // // // // // // //           <div className="p-6">
-
-// // // // // // // // //             {/* DETAILS */}
-// // // // // // // // //             {activeTab === "details" && (
-// // // // // // // // //               <p className="text-gray-600">{product.description}</p>
-// // // // // // // // //             )}
-
-// // // // // // // // //             {/* REVIEWS */}
-// // // // // // // // //             {activeTab === "reviews" && (
-// // // // // // // // //               <div>
-
-// // // // // // // // //                 {/* HEADER */}
-// // // // // // // // //                 <div className="flex justify-between mb-4">
-// // // // // // // // //                   <h2 className="font-semibold">Customer Reviews</h2>
-
-// // // // // // // // //                   <button
-// // // // // // // // //                     onClick={() => {
-// // // // // // // // //                       setShowForm(true);
-// // // // // // // // //                       setEditingReviewId(null);
-// // // // // // // // //                       setComment("");
-// // // // // // // // //                       setRating(5);
-// // // // // // // // //                     }}
-// // // // // // // // //                     className="border px-4 py-2 text-pink-500 rounded"
-// // // // // // // // //                   >
-// // // // // // // // //                     Write Review
-// // // // // // // // //                   </button>
-// // // // // // // // //                 </div>
-
-// // // // // // // // //                 {/* FORM */}
-// // // // // // // // //                 {showForm && (
-// // // // // // // // //                   <div className="border p-4 mb-4 rounded">
-// // // // // // // // //                     <select
-// // // // // // // // //                       value={rating}
-// // // // // // // // //                       onChange={(e) => setRating(Number(e.target.value))}
-// // // // // // // // //                       className="border p-2 mb-2 w-full"
-// // // // // // // // //                     >
-// // // // // // // // //                       {[5, 4, 3, 2, 1].map((r) => (
-// // // // // // // // //                         <option key={r} value={r}>
-// // // // // // // // //                           {r} Stars
-// // // // // // // // //                         </option>
-// // // // // // // // //                       ))}
-// // // // // // // // //                     </select>
-
-// // // // // // // // //                     <textarea
-// // // // // // // // //                       value={comment}
-// // // // // // // // //                       onChange={(e) => setComment(e.target.value)}
-// // // // // // // // //                       placeholder="Write your review..."
-// // // // // // // // //                       className="border p-2 w-full mb-2"
-// // // // // // // // //                     />
-
-// // // // // // // // //                     <button
-// // // // // // // // //                       onClick={handleSubmitReview}
-// // // // // // // // //                       className="bg-pink-500 text-white px-4 py-2 rounded"
-// // // // // // // // //                     >
-// // // // // // // // //                       {editingReviewId ? "Update Review" : "Submit Review"}
-// // // // // // // // //                     </button>
-// // // // // // // // //                   </div>
-// // // // // // // // //                 )}
-
-// // // // // // // // //                 {/* LIST */}
-// // // // // // // // //                 {reviews.length === 0 && <p>No reviews yet</p>}
-
-// // // // // // // // //                 {reviews.map((review) => (
-// // // // // // // // //                   <div
-// // // // // // // // //                     key={review._id}
-// // // // // // // // //                     className="border-b py-3 flex justify-between"
-// // // // // // // // //                   >
-// // // // // // // // //                     <div>
-// // // // // // // // //                       <p className="font-semibold">⭐ {review.rating}</p>
-// // // // // // // // //                       <p>{review.comment}</p>
-// // // // // // // // //                       <p className="text-xs text-gray-500">
-// // // // // // // // //                         by {review.user?.name}
-// // // // // // // // //                       </p>
-// // // // // // // // //                     </div>
-
-// // // // // // // // //                     {/* ✅ FIXED USER MATCH */}
-// // // // // // // // //                     {String(review.user?._id) === userId && (
-// // // // // // // // //                       <div className="flex gap-2">
-// // // // // // // // //                         <button
-// // // // // // // // //                           onClick={() => handleEdit(review)}
-// // // // // // // // //                           className="text-blue-500"
-// // // // // // // // //                         >
-// // // // // // // // //                           Edit
-// // // // // // // // //                         </button>
-
-// // // // // // // // //                         <button
-// // // // // // // // //                           onClick={() => handleDelete(review._id)}
-// // // // // // // // //                           className="text-red-500"
-// // // // // // // // //                         >
-// // // // // // // // //                           Delete
-// // // // // // // // //                         </button>
-// // // // // // // // //                       </div>
-// // // // // // // // //                     )}
-// // // // // // // // //                   </div>
-// // // // // // // // //                 ))}
-
-// // // // // // // // //               </div>
-// // // // // // // // //             )}
-// // // // // // // // //           </div>
-// // // // // // // // //         </div>
-// // // // // // // // //       </div>
-// // // // // // // // //     </div>
-// // // // // // // // //   );
-// // // // // // // // // };
-
-// // // // // // // // // export default ProductDetails;
-
-
-
 // // // // // // // // // // // // // // // import React, { useEffect, useState } from "react";
 // // // // // // // // // // // // // // // import { useParams } from "react-router-dom";
 // // // // // // // // // // // // // // // import axios from "../../utils/axios";
 // // // // // // // // // // // // // // // import { useCart } from "../../context/CartContext";
 // // // // // // // // // // // // // // // import { useWishlist } from "../../context/WishlistContext";
-// // // // // // // // // // // // // // // import { FiEdit } from "react-icons/fi";
 
 // // // // // // // // // // // // // // // const ProductDetails = () => {
 // // // // // // // // // // // // // // //   const { id } = useParams();
@@ -315,8 +20,8 @@
 // // // // // // // // // // // // // // //   const [comment, setComment] = useState("");
 // // // // // // // // // // // // // // //   const [editingReviewId, setEditingReviewId] = useState(null);
 
-// // // // // // // // // // // // // // //   // ✅ current logged user name (TEMP FIX)
-// // // // // // // // // // // // // // //   const userName = localStorage.getItem("name");
+// // // // // // // // // // // // // // //   // ✅ SAFE USER ID
+// // // // // // // // // // // // // // //   const userId = String(localStorage.getItem("userId") || "");
 
 // // // // // // // // // // // // // // //   // ================= FETCH PRODUCT =================
 // // // // // // // // // // // // // // //   const fetchProduct = async () => {
@@ -349,32 +54,32 @@
 // // // // // // // // // // // // // // //     ? product.image
 // // // // // // // // // // // // // // //     : `http://localhost:5000/${product.image}`;
 
-// // // // // // // // // // // // // // //   // ================= ADD / UPDATE REVIEW =================
+// // // // // // // // // // // // // // //   // ================= ADD / UPDATE =================
 // // // // // // // // // // // // // // //   const handleSubmitReview = async () => {
 // // // // // // // // // // // // // // //     try {
 // // // // // // // // // // // // // // //       const token = localStorage.getItem("token");
 
 // // // // // // // // // // // // // // //       if (!token) {
-// // // // // // // // // // // // // // //         alert("Login required");
+// // // // // // // // // // // // // // //         alert("Please login first");
 // // // // // // // // // // // // // // //         return;
 // // // // // // // // // // // // // // //       }
 
 // // // // // // // // // // // // // // //       if (!comment.trim()) {
-// // // // // // // // // // // // // // //         alert("Write something...");
+// // // // // // // // // // // // // // //         alert("Please write review");
 // // // // // // // // // // // // // // //         return;
 // // // // // // // // // // // // // // //       }
 
 // // // // // // // // // // // // // // //       if (editingReviewId) {
-// // // // // // // // // // // // // // //         // UPDATE
 // // // // // // // // // // // // // // //         await axios.put(
 // // // // // // // // // // // // // // //           `/reviews/${editingReviewId}`,
 // // // // // // // // // // // // // // //           { rating: Number(rating), comment },
 // // // // // // // // // // // // // // //           {
-// // // // // // // // // // // // // // //             headers: { Authorization: `Bearer ${token}` },
+// // // // // // // // // // // // // // //             headers: {
+// // // // // // // // // // // // // // //               Authorization: `Bearer ${token}`,
+// // // // // // // // // // // // // // //             },
 // // // // // // // // // // // // // // //           }
 // // // // // // // // // // // // // // //         );
 // // // // // // // // // // // // // // //       } else {
-// // // // // // // // // // // // // // //         // ADD
 // // // // // // // // // // // // // // //         await axios.post(
 // // // // // // // // // // // // // // //           "/reviews",
 // // // // // // // // // // // // // // //           {
@@ -383,20 +88,24 @@
 // // // // // // // // // // // // // // //             comment,
 // // // // // // // // // // // // // // //           },
 // // // // // // // // // // // // // // //           {
-// // // // // // // // // // // // // // //             headers: { Authorization: `Bearer ${token}` },
+// // // // // // // // // // // // // // //             headers: {
+// // // // // // // // // // // // // // //               Authorization: `Bearer ${token}`,
+// // // // // // // // // // // // // // //             },
 // // // // // // // // // // // // // // //           }
 // // // // // // // // // // // // // // //         );
 // // // // // // // // // // // // // // //       }
 
+// // // // // // // // // // // // // // //       alert("Review submitted successfully!");
+
 // // // // // // // // // // // // // // //       // RESET
 // // // // // // // // // // // // // // //       setShowForm(false);
-// // // // // // // // // // // // // // //       setRating(5);
 // // // // // // // // // // // // // // //       setComment("");
+// // // // // // // // // // // // // // //       setRating(5);
 // // // // // // // // // // // // // // //       setEditingReviewId(null);
 
 // // // // // // // // // // // // // // //       fetchReviews();
 // // // // // // // // // // // // // // //     } catch (err) {
-// // // // // // // // // // // // // // //       console.error(err.response?.data || err.message);
+// // // // // // // // // // // // // // //       console.error("REVIEW ERROR:", err.response?.data || err.message);
 // // // // // // // // // // // // // // //       alert(err.response?.data?.message || "Review failed");
 // // // // // // // // // // // // // // //     }
 // // // // // // // // // // // // // // //   };
@@ -413,7 +122,6 @@
 // // // // // // // // // // // // // // //       fetchReviews();
 // // // // // // // // // // // // // // //     } catch (err) {
 // // // // // // // // // // // // // // //       console.error(err);
-// // // // // // // // // // // // // // //       alert("Delete failed");
 // // // // // // // // // // // // // // //     }
 // // // // // // // // // // // // // // //   };
 
@@ -429,8 +137,8 @@
 // // // // // // // // // // // // // // //     <div className="bg-gray-50 min-h-screen">
 // // // // // // // // // // // // // // //       <div className="max-w-6xl mx-auto p-4">
 
-// // // // // // // // // // // // // // //         {/* TOP SECTION */}
-// // // // // // // // // // // // // // //         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded shadow">
+// // // // // // // // // // // // // // //         {/* TOP */}
+// // // // // // // // // // // // // // //         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-lg shadow">
 // // // // // // // // // // // // // // //           <img src={imageUrl} className="h-[400px] object-contain" />
 
 // // // // // // // // // // // // // // //           <div>
@@ -456,7 +164,7 @@
 // // // // // // // // // // // // // // //         </div>
 
 // // // // // // // // // // // // // // //         {/* TABS */}
-// // // // // // // // // // // // // // //         <div className="bg-white mt-6 rounded shadow">
+// // // // // // // // // // // // // // //         <div className="bg-white mt-6 rounded-lg shadow">
 // // // // // // // // // // // // // // //           <div className="flex border-b">
 // // // // // // // // // // // // // // //             <button
 // // // // // // // // // // // // // // //               onClick={() => setActiveTab("details")}
@@ -479,12 +187,12 @@
 
 // // // // // // // // // // // // // // //           <div className="p-6">
 
-// // // // // // // // // // // // // // //             {/* DETAILS TAB */}
+// // // // // // // // // // // // // // //             {/* DETAILS */}
 // // // // // // // // // // // // // // //             {activeTab === "details" && (
 // // // // // // // // // // // // // // //               <p className="text-gray-600">{product.description}</p>
 // // // // // // // // // // // // // // //             )}
 
-// // // // // // // // // // // // // // //             {/* REVIEWS TAB */}
+// // // // // // // // // // // // // // //             {/* REVIEWS */}
 // // // // // // // // // // // // // // //             {activeTab === "reviews" && (
 // // // // // // // // // // // // // // //               <div>
 
@@ -539,68 +247,40 @@
 // // // // // // // // // // // // // // //                 {/* LIST */}
 // // // // // // // // // // // // // // //                 {reviews.length === 0 && <p>No reviews yet</p>}
 
-// // // // // // // // // // // // // // // {reviews.map((review) => {
-// // // // // // // // // // // // // // //   const isOwner =
-// // // // // // // // // // // // // // //     review.user?.name === userName;
+// // // // // // // // // // // // // // //                 {reviews.map((review) => (
+// // // // // // // // // // // // // // //                   <div
+// // // // // // // // // // // // // // //                     key={review._id}
+// // // // // // // // // // // // // // //                     className="border-b py-3 flex justify-between"
+// // // // // // // // // // // // // // //                   >
+// // // // // // // // // // // // // // //                     <div>
+// // // // // // // // // // // // // // //                       <p className="font-semibold">⭐ {review.rating}</p>
+// // // // // // // // // // // // // // //                       <p>{review.comment}</p>
+// // // // // // // // // // // // // // //                       <p className="text-xs text-gray-500">
+// // // // // // // // // // // // // // //                         by {review.user?.name}
+// // // // // // // // // // // // // // //                       </p>
+// // // // // // // // // // // // // // //                     </div>
 
-// // // // // // // // // // // // // // //   return (
-// // // // // // // // // // // // // // //     <div
-// // // // // // // // // // // // // // //       key={review._id}
-// // // // // // // // // // // // // // //       className="border-b py-3 flex justify-between items-start"
-// // // // // // // // // // // // // // //     >
-// // // // // // // // // // // // // // //       {/* LEFT */}
-// // // // // // // // // // // // // // //       <div>
-// // // // // // // // // // // // // // //         <p className="font-semibold">⭐ {review.rating}</p>
-// // // // // // // // // // // // // // //         <p>{review.comment}</p>
-// // // // // // // // // // // // // // //         <p className="text-xs text-gray-500">
-// // // // // // // // // // // // // // //           by {review.user?.name}
-// // // // // // // // // // // // // // //         </p>
-// // // // // // // // // // // // // // //       </div>
+// // // // // // // // // // // // // // //                     {/* ✅ FIXED USER MATCH */}
+// // // // // // // // // // // // // // //                     {String(review.user?._id) === userId && (
+// // // // // // // // // // // // // // //                       <div className="flex gap-2">
+// // // // // // // // // // // // // // //                         <button
+// // // // // // // // // // // // // // //                           onClick={() => handleEdit(review)}
+// // // // // // // // // // // // // // //                           className="text-blue-500"
+// // // // // // // // // // // // // // //                         >
+// // // // // // // // // // // // // // //                           Edit
+// // // // // // // // // // // // // // //                         </button>
 
-// // // // // // // // // // // // // // //       {/* RIGHT */}
-// // // // // // // // // // // // // // //       {isOwner && (
-// // // // // // // // // // // // // // //         <div className="relative">
-// // // // // // // // // // // // // // //           {/* ✏️ ICON */}
-// // // // // // // // // // // // // // //           <button
-// // // // // // // // // // // // // // //             onClick={() =>
-// // // // // // // // // // // // // // //               setOpenMenuId(
-// // // // // // // // // // // // // // //                 openMenuId === review._id ? null : review._id
-// // // // // // // // // // // // // // //               )
-// // // // // // // // // // // // // // //             }
-// // // // // // // // // // // // // // //             className="text-gray-500 hover:text-black text-lg"
-// // // // // // // // // // // // // // //           >
-// // // // // // // // // // // // // // //             <FiEdit />
-// // // // // // // // // // // // // // //           </button>
+// // // // // // // // // // // // // // //                         <button
+// // // // // // // // // // // // // // //                           onClick={() => handleDelete(review._id)}
+// // // // // // // // // // // // // // //                           className="text-red-500"
+// // // // // // // // // // // // // // //                         >
+// // // // // // // // // // // // // // //                           Delete
+// // // // // // // // // // // // // // //                         </button>
+// // // // // // // // // // // // // // //                       </div>
+// // // // // // // // // // // // // // //                     )}
+// // // // // // // // // // // // // // //                   </div>
+// // // // // // // // // // // // // // //                 ))}
 
-// // // // // // // // // // // // // // //           {/* DROPDOWN */}
-// // // // // // // // // // // // // // //           {openMenuId === review._id && (
-// // // // // // // // // // // // // // //             <div className="absolute right-0 mt-2 bg-white border shadow rounded w-28">
-// // // // // // // // // // // // // // //               <button
-// // // // // // // // // // // // // // //                 onClick={() => {
-// // // // // // // // // // // // // // //                   handleEdit(review);
-// // // // // // // // // // // // // // //                   setOpenMenuId(null);
-// // // // // // // // // // // // // // //                 }}
-// // // // // // // // // // // // // // //                 className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-sm"
-// // // // // // // // // // // // // // //               >
-// // // // // // // // // // // // // // //                 Edit
-// // // // // // // // // // // // // // //               </button>
-
-// // // // // // // // // // // // // // //               <button
-// // // // // // // // // // // // // // //                 onClick={() => {
-// // // // // // // // // // // // // // //                   handleDelete(review._id);
-// // // // // // // // // // // // // // //                   setOpenMenuId(null);
-// // // // // // // // // // // // // // //                 }}
-// // // // // // // // // // // // // // //                 className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-red-500 text-sm"
-// // // // // // // // // // // // // // //               >
-// // // // // // // // // // // // // // //                 Delete
-// // // // // // // // // // // // // // //               </button>
-// // // // // // // // // // // // // // //             </div>
-// // // // // // // // // // // // // // //           )}
-// // // // // // // // // // // // // // //         </div>
-// // // // // // // // // // // // // // //       )}
-// // // // // // // // // // // // // // //     </div>
-// // // // // // // // // // // // // // //   );
-// // // // // // // // // // // // // // // })}
 // // // // // // // // // // // // // // //               </div>
 // // // // // // // // // // // // // // //             )}
 // // // // // // // // // // // // // // //           </div>
@@ -613,12 +293,1295 @@
 // // // // // // // // // // // // // // // export default ProductDetails;
 
 
+
+// // // // // // // // // // // // // // // // // // // // // import React, { useEffect, useState } from "react";
+// // // // // // // // // // // // // // // // // // // // // import { useParams } from "react-router-dom";
+// // // // // // // // // // // // // // // // // // // // // import axios from "../../utils/axios";
+// // // // // // // // // // // // // // // // // // // // // import { useCart } from "../../context/CartContext";
+// // // // // // // // // // // // // // // // // // // // // import { useWishlist } from "../../context/WishlistContext";
+// // // // // // // // // // // // // // // // // // // // // import { FiEdit } from "react-icons/fi";
+
+// // // // // // // // // // // // // // // // // // // // // const ProductDetails = () => {
+// // // // // // // // // // // // // // // // // // // // //   const { id } = useParams();
+// // // // // // // // // // // // // // // // // // // // //   const { addToCart } = useCart();
+// // // // // // // // // // // // // // // // // // // // //   const { addToWishlist } = useWishlist();
+
+// // // // // // // // // // // // // // // // // // // // //   const [product, setProduct] = useState(null);
+// // // // // // // // // // // // // // // // // // // // //   const [reviews, setReviews] = useState([]);
+// // // // // // // // // // // // // // // // // // // // //   const [activeTab, setActiveTab] = useState("details");
+
+// // // // // // // // // // // // // // // // // // // // //   const [showForm, setShowForm] = useState(false);
+// // // // // // // // // // // // // // // // // // // // //   const [rating, setRating] = useState(5);
+// // // // // // // // // // // // // // // // // // // // //   const [comment, setComment] = useState("");
+// // // // // // // // // // // // // // // // // // // // //   const [editingReviewId, setEditingReviewId] = useState(null);
+
+// // // // // // // // // // // // // // // // // // // // //   // ✅ current logged user name (TEMP FIX)
+// // // // // // // // // // // // // // // // // // // // //   const userName = localStorage.getItem("name");
+
+// // // // // // // // // // // // // // // // // // // // //   // ================= FETCH PRODUCT =================
+// // // // // // // // // // // // // // // // // // // // //   const fetchProduct = async () => {
+// // // // // // // // // // // // // // // // // // // // //     try {
+// // // // // // // // // // // // // // // // // // // // //       const res = await axios.get(`/products/${id}`);
+// // // // // // // // // // // // // // // // // // // // //       setProduct(res.data);
+// // // // // // // // // // // // // // // // // // // // //     } catch (err) {
+// // // // // // // // // // // // // // // // // // // // //       console.error(err);
+// // // // // // // // // // // // // // // // // // // // //     }
+// // // // // // // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // // // // // // //   // ================= FETCH REVIEWS =================
+// // // // // // // // // // // // // // // // // // // // //   const fetchReviews = async () => {
+// // // // // // // // // // // // // // // // // // // // //     try {
+// // // // // // // // // // // // // // // // // // // // //       const res = await axios.get(`/reviews?productId=${id}`);
+// // // // // // // // // // // // // // // // // // // // //       setReviews(res.data);
+// // // // // // // // // // // // // // // // // // // // //     } catch (err) {
+// // // // // // // // // // // // // // // // // // // // //       console.error(err);
+// // // // // // // // // // // // // // // // // // // // //     }
+// // // // // // // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // // // // // // //   useEffect(() => {
+// // // // // // // // // // // // // // // // // // // // //     fetchProduct();
+// // // // // // // // // // // // // // // // // // // // //     fetchReviews();
+// // // // // // // // // // // // // // // // // // // // //   }, [id]);
+
+// // // // // // // // // // // // // // // // // // // // //   if (!product) return <div className="p-10 text-center">Loading...</div>;
+
+// // // // // // // // // // // // // // // // // // // // //   const imageUrl = product.image?.startsWith("http")
+// // // // // // // // // // // // // // // // // // // // //     ? product.image
+// // // // // // // // // // // // // // // // // // // // //     : `http://localhost:5000/${product.image}`;
+
+// // // // // // // // // // // // // // // // // // // // //   // ================= ADD / UPDATE REVIEW =================
+// // // // // // // // // // // // // // // // // // // // //   const handleSubmitReview = async () => {
+// // // // // // // // // // // // // // // // // // // // //     try {
+// // // // // // // // // // // // // // // // // // // // //       const token = localStorage.getItem("token");
+
+// // // // // // // // // // // // // // // // // // // // //       if (!token) {
+// // // // // // // // // // // // // // // // // // // // //         alert("Login required");
+// // // // // // // // // // // // // // // // // // // // //         return;
+// // // // // // // // // // // // // // // // // // // // //       }
+
+// // // // // // // // // // // // // // // // // // // // //       if (!comment.trim()) {
+// // // // // // // // // // // // // // // // // // // // //         alert("Write something...");
+// // // // // // // // // // // // // // // // // // // // //         return;
+// // // // // // // // // // // // // // // // // // // // //       }
+
+// // // // // // // // // // // // // // // // // // // // //       if (editingReviewId) {
+// // // // // // // // // // // // // // // // // // // // //         // UPDATE
+// // // // // // // // // // // // // // // // // // // // //         await axios.put(
+// // // // // // // // // // // // // // // // // // // // //           `/reviews/${editingReviewId}`,
+// // // // // // // // // // // // // // // // // // // // //           { rating: Number(rating), comment },
+// // // // // // // // // // // // // // // // // // // // //           {
+// // // // // // // // // // // // // // // // // // // // //             headers: { Authorization: `Bearer ${token}` },
+// // // // // // // // // // // // // // // // // // // // //           }
+// // // // // // // // // // // // // // // // // // // // //         );
+// // // // // // // // // // // // // // // // // // // // //       } else {
+// // // // // // // // // // // // // // // // // // // // //         // ADD
+// // // // // // // // // // // // // // // // // // // // //         await axios.post(
+// // // // // // // // // // // // // // // // // // // // //           "/reviews",
+// // // // // // // // // // // // // // // // // // // // //           {
+// // // // // // // // // // // // // // // // // // // // //             productId: id,
+// // // // // // // // // // // // // // // // // // // // //             rating: Number(rating),
+// // // // // // // // // // // // // // // // // // // // //             comment,
+// // // // // // // // // // // // // // // // // // // // //           },
+// // // // // // // // // // // // // // // // // // // // //           {
+// // // // // // // // // // // // // // // // // // // // //             headers: { Authorization: `Bearer ${token}` },
+// // // // // // // // // // // // // // // // // // // // //           }
+// // // // // // // // // // // // // // // // // // // // //         );
+// // // // // // // // // // // // // // // // // // // // //       }
+
+// // // // // // // // // // // // // // // // // // // // //       // RESET
+// // // // // // // // // // // // // // // // // // // // //       setShowForm(false);
+// // // // // // // // // // // // // // // // // // // // //       setRating(5);
+// // // // // // // // // // // // // // // // // // // // //       setComment("");
+// // // // // // // // // // // // // // // // // // // // //       setEditingReviewId(null);
+
+// // // // // // // // // // // // // // // // // // // // //       fetchReviews();
+// // // // // // // // // // // // // // // // // // // // //     } catch (err) {
+// // // // // // // // // // // // // // // // // // // // //       console.error(err.response?.data || err.message);
+// // // // // // // // // // // // // // // // // // // // //       alert(err.response?.data?.message || "Review failed");
+// // // // // // // // // // // // // // // // // // // // //     }
+// // // // // // // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // // // // // // //   // ================= DELETE =================
+// // // // // // // // // // // // // // // // // // // // //   const handleDelete = async (reviewId) => {
+// // // // // // // // // // // // // // // // // // // // //     try {
+// // // // // // // // // // // // // // // // // // // // //       await axios.delete(`/reviews/${reviewId}`, {
+// // // // // // // // // // // // // // // // // // // // //         headers: {
+// // // // // // // // // // // // // // // // // // // // //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+// // // // // // // // // // // // // // // // // // // // //         },
+// // // // // // // // // // // // // // // // // // // // //       });
+
+// // // // // // // // // // // // // // // // // // // // //       fetchReviews();
+// // // // // // // // // // // // // // // // // // // // //     } catch (err) {
+// // // // // // // // // // // // // // // // // // // // //       console.error(err);
+// // // // // // // // // // // // // // // // // // // // //       alert("Delete failed");
+// // // // // // // // // // // // // // // // // // // // //     }
+// // // // // // // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // // // // // // //   // ================= EDIT =================
+// // // // // // // // // // // // // // // // // // // // //   const handleEdit = (review) => {
+// // // // // // // // // // // // // // // // // // // // //     setShowForm(true);
+// // // // // // // // // // // // // // // // // // // // //     setRating(review.rating);
+// // // // // // // // // // // // // // // // // // // // //     setComment(review.comment);
+// // // // // // // // // // // // // // // // // // // // //     setEditingReviewId(review._id);
+// // // // // // // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // // // // // // //   return (
+// // // // // // // // // // // // // // // // // // // // //     <div className="bg-gray-50 min-h-screen">
+// // // // // // // // // // // // // // // // // // // // //       <div className="max-w-6xl mx-auto p-4">
+
+// // // // // // // // // // // // // // // // // // // // //         {/* TOP SECTION */}
+// // // // // // // // // // // // // // // // // // // // //         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded shadow">
+// // // // // // // // // // // // // // // // // // // // //           <img src={imageUrl} className="h-[400px] object-contain" />
+
+// // // // // // // // // // // // // // // // // // // // //           <div>
+// // // // // // // // // // // // // // // // // // // // //             <h1 className="text-xl font-semibold">{product.title}</h1>
+// // // // // // // // // // // // // // // // // // // // //             <p className="text-2xl font-bold mt-2">₹{product.price}</p>
+
+// // // // // // // // // // // // // // // // // // // // //             <div className="flex gap-3 mt-4">
+// // // // // // // // // // // // // // // // // // // // //               <button
+// // // // // // // // // // // // // // // // // // // // //                 onClick={() => addToCart(product)}
+// // // // // // // // // // // // // // // // // // // // //                 className="bg-pink-500 text-white px-6 py-3 rounded w-full"
+// // // // // // // // // // // // // // // // // // // // //               >
+// // // // // // // // // // // // // // // // // // // // //                 Add to Bag
+// // // // // // // // // // // // // // // // // // // // //               </button>
+
+// // // // // // // // // // // // // // // // // // // // //               <button
+// // // // // // // // // // // // // // // // // // // // //                 onClick={() => addToWishlist(product)}
+// // // // // // // // // // // // // // // // // // // // //                 className="border px-4 py-3 rounded"
+// // // // // // // // // // // // // // // // // // // // //               >
+// // // // // // // // // // // // // // // // // // // // //                 ❤️
+// // // // // // // // // // // // // // // // // // // // //               </button>
+// // // // // // // // // // // // // // // // // // // // //             </div>
+// // // // // // // // // // // // // // // // // // // // //           </div>
+// // // // // // // // // // // // // // // // // // // // //         </div>
+
+// // // // // // // // // // // // // // // // // // // // //         {/* TABS */}
+// // // // // // // // // // // // // // // // // // // // //         <div className="bg-white mt-6 rounded shadow">
+// // // // // // // // // // // // // // // // // // // // //           <div className="flex border-b">
+// // // // // // // // // // // // // // // // // // // // //             <button
+// // // // // // // // // // // // // // // // // // // // //               onClick={() => setActiveTab("details")}
+// // // // // // // // // // // // // // // // // // // // //               className={`px-6 py-3 ${
+// // // // // // // // // // // // // // // // // // // // //                 activeTab === "details" && "border-b-2 border-pink-500"
+// // // // // // // // // // // // // // // // // // // // //               }`}
+// // // // // // // // // // // // // // // // // // // // //             >
+// // // // // // // // // // // // // // // // // // // // //               Product Details
+// // // // // // // // // // // // // // // // // // // // //             </button>
+
+// // // // // // // // // // // // // // // // // // // // //             <button
+// // // // // // // // // // // // // // // // // // // // //               onClick={() => setActiveTab("reviews")}
+// // // // // // // // // // // // // // // // // // // // //               className={`px-6 py-3 ${
+// // // // // // // // // // // // // // // // // // // // //                 activeTab === "reviews" && "border-b-2 border-pink-500"
+// // // // // // // // // // // // // // // // // // // // //               }`}
+// // // // // // // // // // // // // // // // // // // // //             >
+// // // // // // // // // // // // // // // // // // // // //               Ratings & Reviews
+// // // // // // // // // // // // // // // // // // // // //             </button>
+// // // // // // // // // // // // // // // // // // // // //           </div>
+
+// // // // // // // // // // // // // // // // // // // // //           <div className="p-6">
+
+// // // // // // // // // // // // // // // // // // // // //             {/* DETAILS TAB */}
+// // // // // // // // // // // // // // // // // // // // //             {activeTab === "details" && (
+// // // // // // // // // // // // // // // // // // // // //               <p className="text-gray-600">{product.description}</p>
+// // // // // // // // // // // // // // // // // // // // //             )}
+
+// // // // // // // // // // // // // // // // // // // // //             {/* REVIEWS TAB */}
+// // // // // // // // // // // // // // // // // // // // //             {activeTab === "reviews" && (
+// // // // // // // // // // // // // // // // // // // // //               <div>
+
+// // // // // // // // // // // // // // // // // // // // //                 {/* HEADER */}
+// // // // // // // // // // // // // // // // // // // // //                 <div className="flex justify-between mb-4">
+// // // // // // // // // // // // // // // // // // // // //                   <h2 className="font-semibold">Customer Reviews</h2>
+
+// // // // // // // // // // // // // // // // // // // // //                   <button
+// // // // // // // // // // // // // // // // // // // // //                     onClick={() => {
+// // // // // // // // // // // // // // // // // // // // //                       setShowForm(true);
+// // // // // // // // // // // // // // // // // // // // //                       setEditingReviewId(null);
+// // // // // // // // // // // // // // // // // // // // //                       setComment("");
+// // // // // // // // // // // // // // // // // // // // //                       setRating(5);
+// // // // // // // // // // // // // // // // // // // // //                     }}
+// // // // // // // // // // // // // // // // // // // // //                     className="border px-4 py-2 text-pink-500 rounded"
+// // // // // // // // // // // // // // // // // // // // //                   >
+// // // // // // // // // // // // // // // // // // // // //                     Write Review
+// // // // // // // // // // // // // // // // // // // // //                   </button>
+// // // // // // // // // // // // // // // // // // // // //                 </div>
+
+// // // // // // // // // // // // // // // // // // // // //                 {/* FORM */}
+// // // // // // // // // // // // // // // // // // // // //                 {showForm && (
+// // // // // // // // // // // // // // // // // // // // //                   <div className="border p-4 mb-4 rounded">
+// // // // // // // // // // // // // // // // // // // // //                     <select
+// // // // // // // // // // // // // // // // // // // // //                       value={rating}
+// // // // // // // // // // // // // // // // // // // // //                       onChange={(e) => setRating(Number(e.target.value))}
+// // // // // // // // // // // // // // // // // // // // //                       className="border p-2 mb-2 w-full"
+// // // // // // // // // // // // // // // // // // // // //                     >
+// // // // // // // // // // // // // // // // // // // // //                       {[5, 4, 3, 2, 1].map((r) => (
+// // // // // // // // // // // // // // // // // // // // //                         <option key={r} value={r}>
+// // // // // // // // // // // // // // // // // // // // //                           {r} Stars
+// // // // // // // // // // // // // // // // // // // // //                         </option>
+// // // // // // // // // // // // // // // // // // // // //                       ))}
+// // // // // // // // // // // // // // // // // // // // //                     </select>
+
+// // // // // // // // // // // // // // // // // // // // //                     <textarea
+// // // // // // // // // // // // // // // // // // // // //                       value={comment}
+// // // // // // // // // // // // // // // // // // // // //                       onChange={(e) => setComment(e.target.value)}
+// // // // // // // // // // // // // // // // // // // // //                       placeholder="Write your review..."
+// // // // // // // // // // // // // // // // // // // // //                       className="border p-2 w-full mb-2"
+// // // // // // // // // // // // // // // // // // // // //                     />
+
+// // // // // // // // // // // // // // // // // // // // //                     <button
+// // // // // // // // // // // // // // // // // // // // //                       onClick={handleSubmitReview}
+// // // // // // // // // // // // // // // // // // // // //                       className="bg-pink-500 text-white px-4 py-2 rounded"
+// // // // // // // // // // // // // // // // // // // // //                     >
+// // // // // // // // // // // // // // // // // // // // //                       {editingReviewId ? "Update Review" : "Submit Review"}
+// // // // // // // // // // // // // // // // // // // // //                     </button>
+// // // // // // // // // // // // // // // // // // // // //                   </div>
+// // // // // // // // // // // // // // // // // // // // //                 )}
+
+// // // // // // // // // // // // // // // // // // // // //                 {/* LIST */}
+// // // // // // // // // // // // // // // // // // // // //                 {reviews.length === 0 && <p>No reviews yet</p>}
+
+// // // // // // // // // // // // // // // // // // // // // {reviews.map((review) => {
+// // // // // // // // // // // // // // // // // // // // //   const isOwner =
+// // // // // // // // // // // // // // // // // // // // //     review.user?.name === userName;
+
+// // // // // // // // // // // // // // // // // // // // //   return (
+// // // // // // // // // // // // // // // // // // // // //     <div
+// // // // // // // // // // // // // // // // // // // // //       key={review._id}
+// // // // // // // // // // // // // // // // // // // // //       className="border-b py-3 flex justify-between items-start"
+// // // // // // // // // // // // // // // // // // // // //     >
+// // // // // // // // // // // // // // // // // // // // //       {/* LEFT */}
+// // // // // // // // // // // // // // // // // // // // //       <div>
+// // // // // // // // // // // // // // // // // // // // //         <p className="font-semibold">⭐ {review.rating}</p>
+// // // // // // // // // // // // // // // // // // // // //         <p>{review.comment}</p>
+// // // // // // // // // // // // // // // // // // // // //         <p className="text-xs text-gray-500">
+// // // // // // // // // // // // // // // // // // // // //           by {review.user?.name}
+// // // // // // // // // // // // // // // // // // // // //         </p>
+// // // // // // // // // // // // // // // // // // // // //       </div>
+
+// // // // // // // // // // // // // // // // // // // // //       {/* RIGHT */}
+// // // // // // // // // // // // // // // // // // // // //       {isOwner && (
+// // // // // // // // // // // // // // // // // // // // //         <div className="relative">
+// // // // // // // // // // // // // // // // // // // // //           {/* ✏️ ICON */}
+// // // // // // // // // // // // // // // // // // // // //           <button
+// // // // // // // // // // // // // // // // // // // // //             onClick={() =>
+// // // // // // // // // // // // // // // // // // // // //               setOpenMenuId(
+// // // // // // // // // // // // // // // // // // // // //                 openMenuId === review._id ? null : review._id
+// // // // // // // // // // // // // // // // // // // // //               )
+// // // // // // // // // // // // // // // // // // // // //             }
+// // // // // // // // // // // // // // // // // // // // //             className="text-gray-500 hover:text-black text-lg"
+// // // // // // // // // // // // // // // // // // // // //           >
+// // // // // // // // // // // // // // // // // // // // //             <FiEdit />
+// // // // // // // // // // // // // // // // // // // // //           </button>
+
+// // // // // // // // // // // // // // // // // // // // //           {/* DROPDOWN */}
+// // // // // // // // // // // // // // // // // // // // //           {openMenuId === review._id && (
+// // // // // // // // // // // // // // // // // // // // //             <div className="absolute right-0 mt-2 bg-white border shadow rounded w-28">
+// // // // // // // // // // // // // // // // // // // // //               <button
+// // // // // // // // // // // // // // // // // // // // //                 onClick={() => {
+// // // // // // // // // // // // // // // // // // // // //                   handleEdit(review);
+// // // // // // // // // // // // // // // // // // // // //                   setOpenMenuId(null);
+// // // // // // // // // // // // // // // // // // // // //                 }}
+// // // // // // // // // // // // // // // // // // // // //                 className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-sm"
+// // // // // // // // // // // // // // // // // // // // //               >
+// // // // // // // // // // // // // // // // // // // // //                 Edit
+// // // // // // // // // // // // // // // // // // // // //               </button>
+
+// // // // // // // // // // // // // // // // // // // // //               <button
+// // // // // // // // // // // // // // // // // // // // //                 onClick={() => {
+// // // // // // // // // // // // // // // // // // // // //                   handleDelete(review._id);
+// // // // // // // // // // // // // // // // // // // // //                   setOpenMenuId(null);
+// // // // // // // // // // // // // // // // // // // // //                 }}
+// // // // // // // // // // // // // // // // // // // // //                 className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-red-500 text-sm"
+// // // // // // // // // // // // // // // // // // // // //               >
+// // // // // // // // // // // // // // // // // // // // //                 Delete
+// // // // // // // // // // // // // // // // // // // // //               </button>
+// // // // // // // // // // // // // // // // // // // // //             </div>
+// // // // // // // // // // // // // // // // // // // // //           )}
+// // // // // // // // // // // // // // // // // // // // //         </div>
+// // // // // // // // // // // // // // // // // // // // //       )}
+// // // // // // // // // // // // // // // // // // // // //     </div>
+// // // // // // // // // // // // // // // // // // // // //   );
+// // // // // // // // // // // // // // // // // // // // // })}
+// // // // // // // // // // // // // // // // // // // // //               </div>
+// // // // // // // // // // // // // // // // // // // // //             )}
+// // // // // // // // // // // // // // // // // // // // //           </div>
+// // // // // // // // // // // // // // // // // // // // //         </div>
+// // // // // // // // // // // // // // // // // // // // //       </div>
+// // // // // // // // // // // // // // // // // // // // //     </div>
+// // // // // // // // // // // // // // // // // // // // //   );
+// // // // // // // // // // // // // // // // // // // // // };
+
+// // // // // // // // // // // // // // // // // // // // // export default ProductDetails;
+
+
+// // // // // // // // // // // // // // // // // // // // import React, { useEffect, useState } from "react";
+// // // // // // // // // // // // // // // // // // // // import { useParams } from "react-router-dom";
+// // // // // // // // // // // // // // // // // // // // import axios from "../../utils/axios";
+// // // // // // // // // // // // // // // // // // // // import { useCart } from "../../context/CartContext";
+// // // // // // // // // // // // // // // // // // // // import { useWishlist } from "../../context/WishlistContext";
+// // // // // // // // // // // // // // // // // // // // import { FiEdit } from "react-icons/fi";
+
+// // // // // // // // // // // // // // // // // // // // const ProductDetails = () => {
+// // // // // // // // // // // // // // // // // // // //   const { id } = useParams();
+// // // // // // // // // // // // // // // // // // // //   const { addToCart } = useCart();
+// // // // // // // // // // // // // // // // // // // //   const { addToWishlist } = useWishlist();
+
+// // // // // // // // // // // // // // // // // // // //   const [product, setProduct] = useState(null);
+// // // // // // // // // // // // // // // // // // // //   const [reviews, setReviews] = useState([]);
+// // // // // // // // // // // // // // // // // // // //   const [activeTab, setActiveTab] = useState("details");
+
+// // // // // // // // // // // // // // // // // // // //   const [showForm, setShowForm] = useState(false);
+// // // // // // // // // // // // // // // // // // // //   const [rating, setRating] = useState(5);
+// // // // // // // // // // // // // // // // // // // //   const [comment, setComment] = useState("");
+// // // // // // // // // // // // // // // // // // // //   const [editingReviewId, setEditingReviewId] = useState(null);
+
+// // // // // // // // // // // // // // // // // // // //   const [openMenuId, setOpenMenuId] = useState(null);
+
+// // // // // // // // // // // // // // // // // // // //   // ✅ USER NAME (IMPORTANT)
+// // // // // // // // // // // // // // // // // // // //   const userName = localStorage.getItem("name");
+
+// // // // // // // // // // // // // // // // // // // //   // ================= FETCH =================
+// // // // // // // // // // // // // // // // // // // //   const fetchProduct = async () => {
+// // // // // // // // // // // // // // // // // // // //     const res = await axios.get(`/products/${id}`);
+// // // // // // // // // // // // // // // // // // // //     setProduct(res.data);
+// // // // // // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // // // // // //   const fetchReviews = async () => {
+// // // // // // // // // // // // // // // // // // // //     const res = await axios.get(`/reviews?productId=${id}`);
+// // // // // // // // // // // // // // // // // // // //     setReviews(res.data);
+// // // // // // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // // // // // //   useEffect(() => {
+// // // // // // // // // // // // // // // // // // // //     fetchProduct();
+// // // // // // // // // // // // // // // // // // // //     fetchReviews();
+// // // // // // // // // // // // // // // // // // // //   }, [id]);
+
+// // // // // // // // // // // // // // // // // // // //   if (!product) return <div className="p-10 text-center">Loading...</div>;
+
+// // // // // // // // // // // // // // // // // // // //   const imageUrl = product.image?.startsWith("http")
+// // // // // // // // // // // // // // // // // // // //     ? product.image
+// // // // // // // // // // // // // // // // // // // //     : `http://localhost:5000/${product.image}`;
+
+// // // // // // // // // // // // // // // // // // // //   // ================= SUBMIT =================
+// // // // // // // // // // // // // // // // // // // //   const handleSubmitReview = async () => {
+// // // // // // // // // // // // // // // // // // // //     try {
+// // // // // // // // // // // // // // // // // // // //       const token = localStorage.getItem("token");
+
+// // // // // // // // // // // // // // // // // // // //       if (!token) return alert("Login required");
+
+// // // // // // // // // // // // // // // // // // // //       if (editingReviewId) {
+// // // // // // // // // // // // // // // // // // // //         await axios.put(
+// // // // // // // // // // // // // // // // // // // //           `/reviews/${editingReviewId}`,
+// // // // // // // // // // // // // // // // // // // //           { rating, comment },
+// // // // // // // // // // // // // // // // // // // //           { headers: { Authorization: `Bearer ${token}` } }
+// // // // // // // // // // // // // // // // // // // //         );
+// // // // // // // // // // // // // // // // // // // //       } else {
+// // // // // // // // // // // // // // // // // // // //         await axios.post(
+// // // // // // // // // // // // // // // // // // // //           "/reviews",
+// // // // // // // // // // // // // // // // // // // //           { productId: id, rating, comment },
+// // // // // // // // // // // // // // // // // // // //           { headers: { Authorization: `Bearer ${token}` } }
+// // // // // // // // // // // // // // // // // // // //         );
+// // // // // // // // // // // // // // // // // // // //       }
+
+// // // // // // // // // // // // // // // // // // // //       setShowForm(false);
+// // // // // // // // // // // // // // // // // // // //       setComment("");
+// // // // // // // // // // // // // // // // // // // //       setRating(5);
+// // // // // // // // // // // // // // // // // // // //       setEditingReviewId(null);
+
+// // // // // // // // // // // // // // // // // // // //       fetchReviews();
+// // // // // // // // // // // // // // // // // // // //     } catch (err) {
+// // // // // // // // // // // // // // // // // // // //       alert(err.response?.data?.message || "Error");
+// // // // // // // // // // // // // // // // // // // //     }
+// // // // // // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // // // // // //   // ================= DELETE =================
+// // // // // // // // // // // // // // // // // // // //   const handleDelete = async (rid) => {
+// // // // // // // // // // // // // // // // // // // //     await axios.delete(`/reviews/${rid}`, {
+// // // // // // // // // // // // // // // // // // // //       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+// // // // // // // // // // // // // // // // // // // //     });
+// // // // // // // // // // // // // // // // // // // //     fetchReviews();
+// // // // // // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // // // // // //   // ================= EDIT =================
+// // // // // // // // // // // // // // // // // // // //   const handleEdit = (review) => {
+// // // // // // // // // // // // // // // // // // // //     setShowForm(true);
+// // // // // // // // // // // // // // // // // // // //     setRating(review.rating);
+// // // // // // // // // // // // // // // // // // // //     setComment(review.comment);
+// // // // // // // // // // // // // // // // // // // //     setEditingReviewId(review._id);
+// // // // // // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // // // // // //   return (
+// // // // // // // // // // // // // // // // // // // //     <div className="bg-gray-50 min-h-screen">
+// // // // // // // // // // // // // // // // // // // //       <div className="max-w-6xl mx-auto p-4">
+
+// // // // // // // // // // // // // // // // // // // //         {/* PRODUCT */}
+// // // // // // // // // // // // // // // // // // // //         <div className="grid md:grid-cols-2 gap-6 bg-white p-6 rounded shadow">
+// // // // // // // // // // // // // // // // // // // //           <img src={imageUrl} className="h-[400px] object-contain" />
+
+// // // // // // // // // // // // // // // // // // // //           <div>
+// // // // // // // // // // // // // // // // // // // //             <h1 className="text-xl font-semibold">{product.title}</h1>
+// // // // // // // // // // // // // // // // // // // //             <p className="text-2xl font-bold mt-2">₹{product.price}</p>
+
+// // // // // // // // // // // // // // // // // // // //             <div className="flex gap-3 mt-4">
+// // // // // // // // // // // // // // // // // // // //               <button
+// // // // // // // // // // // // // // // // // // // //                 onClick={() => addToCart(product)}
+// // // // // // // // // // // // // // // // // // // //                 className="bg-pink-500 text-white px-6 py-3 rounded w-full"
+// // // // // // // // // // // // // // // // // // // //               >
+// // // // // // // // // // // // // // // // // // // //                 Add to Bag
+// // // // // // // // // // // // // // // // // // // //               </button>
+
+// // // // // // // // // // // // // // // // // // // //               <button
+// // // // // // // // // // // // // // // // // // // //                 onClick={() => addToWishlist(product)}
+// // // // // // // // // // // // // // // // // // // //                 className="border px-4 py-3 rounded"
+// // // // // // // // // // // // // // // // // // // //               >
+// // // // // // // // // // // // // // // // // // // //                 ❤️
+// // // // // // // // // // // // // // // // // // // //               </button>
+// // // // // // // // // // // // // // // // // // // //             </div>
+// // // // // // // // // // // // // // // // // // // //           </div>
+// // // // // // // // // // // // // // // // // // // //         </div>
+
+// // // // // // // // // // // // // // // // // // // //         {/* TABS */}
+// // // // // // // // // // // // // // // // // // // //         <div className="bg-white mt-6 rounded shadow">
+// // // // // // // // // // // // // // // // // // // //           <div className="flex border-b">
+// // // // // // // // // // // // // // // // // // // //             <button
+// // // // // // // // // // // // // // // // // // // //               onClick={() => setActiveTab("details")}
+// // // // // // // // // // // // // // // // // // // //               className={`px-6 py-3 ${activeTab === "details" && "border-b-2 border-pink-500"}`}
+// // // // // // // // // // // // // // // // // // // //             >
+// // // // // // // // // // // // // // // // // // // //               Product Details
+// // // // // // // // // // // // // // // // // // // //             </button>
+
+// // // // // // // // // // // // // // // // // // // //             <button
+// // // // // // // // // // // // // // // // // // // //               onClick={() => setActiveTab("reviews")}
+// // // // // // // // // // // // // // // // // // // //               className={`px-6 py-3 ${activeTab === "reviews" && "border-b-2 border-pink-500"}`}
+// // // // // // // // // // // // // // // // // // // //             >
+// // // // // // // // // // // // // // // // // // // //               Ratings & Reviews
+// // // // // // // // // // // // // // // // // // // //             </button>
+// // // // // // // // // // // // // // // // // // // //           </div>
+
+// // // // // // // // // // // // // // // // // // // //           <div className="p-6">
+
+// // // // // // // // // // // // // // // // // // // //             {/* DETAILS */}
+// // // // // // // // // // // // // // // // // // // //             {activeTab === "details" && (
+// // // // // // // // // // // // // // // // // // // //               <p>{product.description}</p>
+// // // // // // // // // // // // // // // // // // // //             )}
+
+// // // // // // // // // // // // // // // // // // // //             {/* REVIEWS */}
+// // // // // // // // // // // // // // // // // // // //             {activeTab === "reviews" && (
+// // // // // // // // // // // // // // // // // // // //               <div>
+
+// // // // // // // // // // // // // // // // // // // //                 {/* HEADER */}
+// // // // // // // // // // // // // // // // // // // //                 <div className="flex justify-between mb-4">
+// // // // // // // // // // // // // // // // // // // //                   <h2>Customer Reviews</h2>
+
+// // // // // // // // // // // // // // // // // // // //                   <button
+// // // // // // // // // // // // // // // // // // // //                     onClick={() => {
+// // // // // // // // // // // // // // // // // // // //                       setShowForm(true);
+// // // // // // // // // // // // // // // // // // // //                       setEditingReviewId(null);
+// // // // // // // // // // // // // // // // // // // //                     }}
+// // // // // // // // // // // // // // // // // // // //                     className="border px-4 py-2 text-pink-500 rounded"
+// // // // // // // // // // // // // // // // // // // //                   >
+// // // // // // // // // // // // // // // // // // // //                     Write Review
+// // // // // // // // // // // // // // // // // // // //                   </button>
+// // // // // // // // // // // // // // // // // // // //                 </div>
+
+// // // // // // // // // // // // // // // // // // // //                 {/* FORM */}
+// // // // // // // // // // // // // // // // // // // //                 {showForm && (
+// // // // // // // // // // // // // // // // // // // //                   <div className="border p-4 mb-4 rounded">
+// // // // // // // // // // // // // // // // // // // //                     <select
+// // // // // // // // // // // // // // // // // // // //                       value={rating}
+// // // // // // // // // // // // // // // // // // // //                       onChange={(e) => setRating(Number(e.target.value))}
+// // // // // // // // // // // // // // // // // // // //                       className="border p-2 w-full mb-2"
+// // // // // // // // // // // // // // // // // // // //                     >
+// // // // // // // // // // // // // // // // // // // //                       {[5,4,3,2,1].map(r => (
+// // // // // // // // // // // // // // // // // // // //                         <option key={r}>{r}</option>
+// // // // // // // // // // // // // // // // // // // //                       ))}
+// // // // // // // // // // // // // // // // // // // //                     </select>
+
+// // // // // // // // // // // // // // // // // // // //                     <textarea
+// // // // // // // // // // // // // // // // // // // //                       value={comment}
+// // // // // // // // // // // // // // // // // // // //                       onChange={(e) => setComment(e.target.value)}
+// // // // // // // // // // // // // // // // // // // //                       className="border p-2 w-full mb-2"
+// // // // // // // // // // // // // // // // // // // //                     />
+
+// // // // // // // // // // // // // // // // // // // //                     <button
+// // // // // // // // // // // // // // // // // // // //                       onClick={handleSubmitReview}
+// // // // // // // // // // // // // // // // // // // //                       className="bg-pink-500 text-white px-4 py-2 rounded"
+// // // // // // // // // // // // // // // // // // // //                     >
+// // // // // // // // // // // // // // // // // // // //                       {editingReviewId ? "Update" : "Submit"}
+// // // // // // // // // // // // // // // // // // // //                     </button>
+// // // // // // // // // // // // // // // // // // // //                   </div>
+// // // // // // // // // // // // // // // // // // // //                 )}
+
+// // // // // // // // // // // // // // // // // // // //                 {/* LIST */}
+// // // // // // // // // // // // // // // // // // // //                 {reviews.map((review) => {
+// // // // // // // // // // // // // // // // // // // //                   const isOwner =
+// // // // // // // // // // // // // // // // // // // //                     review.user?.name === userName;
+
+// // // // // // // // // // // // // // // // // // // //                   return (
+// // // // // // // // // // // // // // // // // // // //                     <div key={review._id} className="border-b py-3 flex justify-between">
+
+// // // // // // // // // // // // // // // // // // // //                       <div>
+// // // // // // // // // // // // // // // // // // // //                         <p>⭐ {review.rating}</p>
+// // // // // // // // // // // // // // // // // // // //                         <p>{review.comment}</p>
+// // // // // // // // // // // // // // // // // // // //                         <p className="text-xs text-gray-500">
+// // // // // // // // // // // // // // // // // // // //                           by {review.user?.name}
+// // // // // // // // // // // // // // // // // // // //                         </p>
+// // // // // // // // // // // // // // // // // // // //                       </div>
+
+// // // // // // // // // // // // // // // // // // // //                       {/* ✅ ICON + MENU */}
+// // // // // // // // // // // // // // // // // // // //                       {isOwner && (
+// // // // // // // // // // // // // // // // // // // //                         <div className="relative">
+
+// // // // // // // // // // // // // // // // // // // //                           <button
+// // // // // // // // // // // // // // // // // // // //                             onClick={() =>
+// // // // // // // // // // // // // // // // // // // //                               setOpenMenuId(
+// // // // // // // // // // // // // // // // // // // //                                 openMenuId === review._id ? null : review._id
+// // // // // // // // // // // // // // // // // // // //                               )
+// // // // // // // // // // // // // // // // // // // //                             }
+// // // // // // // // // // // // // // // // // // // //                             className="text-lg"
+// // // // // // // // // // // // // // // // // // // //                           >
+// // // // // // // // // // // // // // // // // // // //                             <FiEdit />
+// // // // // // // // // // // // // // // // // // // //                           </button>
+
+// // // // // // // // // // // // // // // // // // // //                           {openMenuId === review._id && (
+// // // // // // // // // // // // // // // // // // // //                             <div className="absolute right-0 bg-white border shadow rounded w-28">
+// // // // // // // // // // // // // // // // // // // //                               <button
+// // // // // // // // // // // // // // // // // // // //                                 onClick={() => handleEdit(review)}
+// // // // // // // // // // // // // // // // // // // //                                 className="block w-full text-left px-3 py-2 hover:bg-gray-100"
+// // // // // // // // // // // // // // // // // // // //                               >
+// // // // // // // // // // // // // // // // // // // //                                 Edit
+// // // // // // // // // // // // // // // // // // // //                               </button>
+
+// // // // // // // // // // // // // // // // // // // //                               <button
+// // // // // // // // // // // // // // // // // // // //                                 onClick={() => handleDelete(review._id)}
+// // // // // // // // // // // // // // // // // // // //                                 className="block w-full text-left px-3 py-2 text-red-500 hover:bg-gray-100"
+// // // // // // // // // // // // // // // // // // // //                               >
+// // // // // // // // // // // // // // // // // // // //                                 Delete
+// // // // // // // // // // // // // // // // // // // //                               </button>
+// // // // // // // // // // // // // // // // // // // //                             </div>
+// // // // // // // // // // // // // // // // // // // //                           )}
+
+// // // // // // // // // // // // // // // // // // // //                         </div>
+// // // // // // // // // // // // // // // // // // // //                       )}
+
+// // // // // // // // // // // // // // // // // // // //                     </div>
+// // // // // // // // // // // // // // // // // // // //                   );
+// // // // // // // // // // // // // // // // // // // //                 })}
+
+// // // // // // // // // // // // // // // // // // // //               </div>
+// // // // // // // // // // // // // // // // // // // //             )}
+// // // // // // // // // // // // // // // // // // // //           </div>
+// // // // // // // // // // // // // // // // // // // //         </div>
+// // // // // // // // // // // // // // // // // // // //       </div>
+// // // // // // // // // // // // // // // // // // // //     </div>
+// // // // // // // // // // // // // // // // // // // //   );
+// // // // // // // // // // // // // // // // // // // // };
+
+// // // // // // // // // // // // // // // // // // // // export default ProductDetails;
+
+
+
+
+// // // // // // // // // // // // // // // // // // // import React, { useEffect, useState } from "react";
+// // // // // // // // // // // // // // // // // // // import { useParams } from "react-router-dom";
+// // // // // // // // // // // // // // // // // // // import axios from "../../utils/axios";
+// // // // // // // // // // // // // // // // // // // import { useCart } from "../../context/CartContext";
+// // // // // // // // // // // // // // // // // // // import { useWishlist } from "../../context/WishlistContext";
+
+// // // // // // // // // // // // // // // // // // // const ProductDetails = () => {
+// // // // // // // // // // // // // // // // // // //   const { id } = useParams();
+// // // // // // // // // // // // // // // // // // //   const { addToCart } = useCart();
+// // // // // // // // // // // // // // // // // // //   const { addToWishlist } = useWishlist();
+
+// // // // // // // // // // // // // // // // // // //   const [product, setProduct] = useState(null);
+// // // // // // // // // // // // // // // // // // //   const [reviews, setReviews] = useState([]);
+// // // // // // // // // // // // // // // // // // //   const [activeTab, setActiveTab] = useState("details");
+
+// // // // // // // // // // // // // // // // // // //   const [showForm, setShowForm] = useState(false);
+// // // // // // // // // // // // // // // // // // //   const [rating, setRating] = useState(5);
+// // // // // // // // // // // // // // // // // // //   const [comment, setComment] = useState("");
+// // // // // // // // // // // // // // // // // // //   const [editingReviewId, setEditingReviewId] = useState(null);
+
+// // // // // // // // // // // // // // // // // // //   const [openMenuId, setOpenMenuId] = useState(null);
+
+// // // // // // // // // // // // // // // // // // //   const userId = localStorage.getItem("userId");
+
+// // // // // // // // // // // // // // // // // // //   // ================= FETCH =================
+// // // // // // // // // // // // // // // // // // //   const fetchProduct = async () => {
+// // // // // // // // // // // // // // // // // // //     const res = await axios.get(`/products/${id}`);
+// // // // // // // // // // // // // // // // // // //     setProduct(res.data);
+// // // // // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // // // // //   const fetchReviews = async () => {
+// // // // // // // // // // // // // // // // // // //     const res = await axios.get(`/reviews?productId=${id}`);
+// // // // // // // // // // // // // // // // // // //     setReviews(res.data);
+// // // // // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // // // // //   useEffect(() => {
+// // // // // // // // // // // // // // // // // // //     fetchProduct();
+// // // // // // // // // // // // // // // // // // //     fetchReviews();
+// // // // // // // // // // // // // // // // // // //   }, [id]);
+
+// // // // // // // // // // // // // // // // // // //   if (!product) return <div className="p-10 text-center">Loading...</div>;
+
+// // // // // // // // // // // // // // // // // // //   const imageUrl = product.image?.startsWith("http")
+// // // // // // // // // // // // // // // // // // //     ? product.image
+// // // // // // // // // // // // // // // // // // //     : `http://localhost:5000/${product.image}`;
+
+// // // // // // // // // // // // // // // // // // //   // ================= ADD / UPDATE =================
+// // // // // // // // // // // // // // // // // // //   const handleSubmitReview = async () => {
+// // // // // // // // // // // // // // // // // // //     try {
+// // // // // // // // // // // // // // // // // // //       const token = localStorage.getItem("token");
+
+// // // // // // // // // // // // // // // // // // //       if (!token) return alert("Login required");
+
+// // // // // // // // // // // // // // // // // // //       if (editingReviewId) {
+// // // // // // // // // // // // // // // // // // //         await axios.put(
+// // // // // // // // // // // // // // // // // // //           `/reviews/${editingReviewId}`,
+// // // // // // // // // // // // // // // // // // //           { rating, comment },
+// // // // // // // // // // // // // // // // // // //           { headers: { Authorization: `Bearer ${token}` } }
+// // // // // // // // // // // // // // // // // // //         );
+// // // // // // // // // // // // // // // // // // //       } else {
+// // // // // // // // // // // // // // // // // // //         await axios.post(
+// // // // // // // // // // // // // // // // // // //           "/reviews",
+// // // // // // // // // // // // // // // // // // //           { productId: id, rating, comment },
+// // // // // // // // // // // // // // // // // // //           { headers: { Authorization: `Bearer ${token}` } }
+// // // // // // // // // // // // // // // // // // //         );
+// // // // // // // // // // // // // // // // // // //       }
+
+// // // // // // // // // // // // // // // // // // //       setShowForm(false);
+// // // // // // // // // // // // // // // // // // //       setComment("");
+// // // // // // // // // // // // // // // // // // //       setRating(5);
+// // // // // // // // // // // // // // // // // // //       setEditingReviewId(null);
+
+// // // // // // // // // // // // // // // // // // //       fetchReviews();
+// // // // // // // // // // // // // // // // // // //     } catch (err) {
+// // // // // // // // // // // // // // // // // // //       alert(err.response?.data?.message || "Error");
+// // // // // // // // // // // // // // // // // // //     }
+// // // // // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // // // // //   // ================= DELETE =================
+// // // // // // // // // // // // // // // // // // //   const handleDelete = async (rid) => {
+// // // // // // // // // // // // // // // // // // //     await axios.delete(`/reviews/${rid}`, {
+// // // // // // // // // // // // // // // // // // //       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+// // // // // // // // // // // // // // // // // // //     });
+// // // // // // // // // // // // // // // // // // //     fetchReviews();
+// // // // // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // // // // //   // ================= EDIT =================
+// // // // // // // // // // // // // // // // // // //   const handleEdit = (review) => {
+// // // // // // // // // // // // // // // // // // //     setShowForm(true);
+// // // // // // // // // // // // // // // // // // //     setRating(review.rating);
+// // // // // // // // // // // // // // // // // // //     setComment(review.comment);
+// // // // // // // // // // // // // // // // // // //     setEditingReviewId(review._id);
+// // // // // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // // // // //   return (
+// // // // // // // // // // // // // // // // // // //     <div className="bg-gray-50 min-h-screen">
+// // // // // // // // // // // // // // // // // // //       <div className="max-w-6xl mx-auto p-4">
+
+// // // // // // // // // // // // // // // // // // //         {/* PRODUCT */}
+// // // // // // // // // // // // // // // // // // //         <div className="grid md:grid-cols-2 gap-6 bg-white p-6 rounded shadow">
+// // // // // // // // // // // // // // // // // // //           <img src={imageUrl} className="h-[400px] object-contain" />
+
+// // // // // // // // // // // // // // // // // // //           <div>
+// // // // // // // // // // // // // // // // // // //             <h1 className="text-xl font-semibold">{product.title}</h1>
+// // // // // // // // // // // // // // // // // // //             <p className="text-2xl font-bold mt-2">₹{product.price}</p>
+
+// // // // // // // // // // // // // // // // // // //             <div className="flex gap-3 mt-4">
+// // // // // // // // // // // // // // // // // // //               <button
+// // // // // // // // // // // // // // // // // // //                 onClick={() => addToCart(product)}
+// // // // // // // // // // // // // // // // // // //                 className="bg-pink-500 text-white px-6 py-3 rounded w-full"
+// // // // // // // // // // // // // // // // // // //               >
+// // // // // // // // // // // // // // // // // // //                 Add to Bag
+// // // // // // // // // // // // // // // // // // //               </button>
+
+// // // // // // // // // // // // // // // // // // //               <button
+// // // // // // // // // // // // // // // // // // //                 onClick={() => addToWishlist(product)}
+// // // // // // // // // // // // // // // // // // //                 className="border px-4 py-3 rounded"
+// // // // // // // // // // // // // // // // // // //               >
+// // // // // // // // // // // // // // // // // // //                 ❤️
+// // // // // // // // // // // // // // // // // // //               </button>
+// // // // // // // // // // // // // // // // // // //             </div>
+// // // // // // // // // // // // // // // // // // //           </div>
+// // // // // // // // // // // // // // // // // // //         </div>
+
+// // // // // // // // // // // // // // // // // // //         {/* TABS */}
+// // // // // // // // // // // // // // // // // // //         <div className="bg-white mt-6 rounded shadow">
+// // // // // // // // // // // // // // // // // // //           <div className="flex border-b">
+// // // // // // // // // // // // // // // // // // //             <button
+// // // // // // // // // // // // // // // // // // //               onClick={() => setActiveTab("details")}
+// // // // // // // // // // // // // // // // // // //               className={`px-6 py-3 ${activeTab === "details" && "border-b-2 border-pink-500"}`}
+// // // // // // // // // // // // // // // // // // //             >
+// // // // // // // // // // // // // // // // // // //               Product Details
+// // // // // // // // // // // // // // // // // // //             </button>
+
+// // // // // // // // // // // // // // // // // // //             <button
+// // // // // // // // // // // // // // // // // // //               onClick={() => setActiveTab("reviews")}
+// // // // // // // // // // // // // // // // // // //               className={`px-6 py-3 ${activeTab === "reviews" && "border-b-2 border-pink-500"}`}
+// // // // // // // // // // // // // // // // // // //             >
+// // // // // // // // // // // // // // // // // // //               Ratings & Reviews
+// // // // // // // // // // // // // // // // // // //             </button>
+// // // // // // // // // // // // // // // // // // //           </div>
+
+// // // // // // // // // // // // // // // // // // //           <div className="p-6">
+
+// // // // // // // // // // // // // // // // // // //             {/* DETAILS */}
+// // // // // // // // // // // // // // // // // // //             {activeTab === "details" && (
+// // // // // // // // // // // // // // // // // // //               <p>{product.description}</p>
+// // // // // // // // // // // // // // // // // // //             )}
+
+// // // // // // // // // // // // // // // // // // //             {/* REVIEWS */}
+// // // // // // // // // // // // // // // // // // //             {activeTab === "reviews" && (
+// // // // // // // // // // // // // // // // // // //               <div>
+
+// // // // // // // // // // // // // // // // // // //                 {/* HEADER */}
+// // // // // // // // // // // // // // // // // // //                 <div className="flex justify-between mb-4">
+// // // // // // // // // // // // // // // // // // //                   <h2>Customer Reviews</h2>
+
+// // // // // // // // // // // // // // // // // // //                   <button
+// // // // // // // // // // // // // // // // // // //                     onClick={() => {
+// // // // // // // // // // // // // // // // // // //                       setShowForm(true);
+// // // // // // // // // // // // // // // // // // //                       setEditingReviewId(null);
+// // // // // // // // // // // // // // // // // // //                     }}
+// // // // // // // // // // // // // // // // // // //                     className="border px-4 py-2 text-pink-500 rounded"
+// // // // // // // // // // // // // // // // // // //                   >
+// // // // // // // // // // // // // // // // // // //                     Write Review
+// // // // // // // // // // // // // // // // // // //                   </button>
+// // // // // // // // // // // // // // // // // // //                 </div>
+
+// // // // // // // // // // // // // // // // // // //                 {/* FORM */}
+// // // // // // // // // // // // // // // // // // //                 {showForm && (
+// // // // // // // // // // // // // // // // // // //                   <div className="border p-4 mb-4 rounded">
+// // // // // // // // // // // // // // // // // // //                     <select
+// // // // // // // // // // // // // // // // // // //                       value={rating}
+// // // // // // // // // // // // // // // // // // //                       onChange={(e) => setRating(Number(e.target.value))}
+// // // // // // // // // // // // // // // // // // //                       className="border p-2 w-full mb-2"
+// // // // // // // // // // // // // // // // // // //                     >
+// // // // // // // // // // // // // // // // // // //                       {[5,4,3,2,1].map(r => (
+// // // // // // // // // // // // // // // // // // //                         <option key={r}>{r}</option>
+// // // // // // // // // // // // // // // // // // //                       ))}
+// // // // // // // // // // // // // // // // // // //                     </select>
+
+// // // // // // // // // // // // // // // // // // //                     <textarea
+// // // // // // // // // // // // // // // // // // //                       value={comment}
+// // // // // // // // // // // // // // // // // // //                       onChange={(e) => setComment(e.target.value)}
+// // // // // // // // // // // // // // // // // // //                       className="border p-2 w-full mb-2"
+// // // // // // // // // // // // // // // // // // //                     />
+
+// // // // // // // // // // // // // // // // // // //                     <button
+// // // // // // // // // // // // // // // // // // //                       onClick={handleSubmitReview}
+// // // // // // // // // // // // // // // // // // //                       className="bg-pink-500 text-white px-4 py-2 rounded"
+// // // // // // // // // // // // // // // // // // //                     >
+// // // // // // // // // // // // // // // // // // //                       {editingReviewId ? "Update" : "Submit"}
+// // // // // // // // // // // // // // // // // // //                     </button>
+// // // // // // // // // // // // // // // // // // //                   </div>
+// // // // // // // // // // // // // // // // // // //                 )}
+
+// // // // // // // // // // // // // // // // // // //                 {/* LIST */}
+// // // // // // // // // // // // // // // // // // //                 {reviews.map((review) => {
+
+// // // // // // // // // // // // // // // // // // //                   // ✅ FINAL OWNER CHECK (WORKING)
+// // // // // // // // // // // // // // // // // // //                   const isOwner =
+// // // // // // // // // // // // // // // // // // //                     String(review.user?._id || review.user) === String(userId);
+
+// // // // // // // // // // // // // // // // // // //                   return (
+// // // // // // // // // // // // // // // // // // //                     <div key={review._id} className="border-b py-3 flex justify-between">
+
+// // // // // // // // // // // // // // // // // // //                       <div>
+// // // // // // // // // // // // // // // // // // //                         <p>⭐ {review.rating}</p>
+// // // // // // // // // // // // // // // // // // //                         <p>{review.comment}</p>
+// // // // // // // // // // // // // // // // // // //                         <p className="text-xs text-gray-500">
+// // // // // // // // // // // // // // // // // // //                           by {review.user?.name || "User"}
+// // // // // // // // // // // // // // // // // // //                         </p>
+// // // // // // // // // // // // // // // // // // //                       </div>
+
+// // // // // // // // // // // // // // // // // // //                       {/* ✅ ALWAYS WORKING EDIT ICON */}
+// // // // // // // // // // // // // // // // // // //                       {isOwner && (
+// // // // // // // // // // // // // // // // // // //                         <div className="relative">
+
+// // // // // // // // // // // // // // // // // // //                           <button
+// // // // // // // // // // // // // // // // // // //                             onClick={() =>
+// // // // // // // // // // // // // // // // // // //                               setOpenMenuId(
+// // // // // // // // // // // // // // // // // // //                                 openMenuId === review._id ? null : review._id
+// // // // // // // // // // // // // // // // // // //                               )
+// // // // // // // // // // // // // // // // // // //                             }
+// // // // // // // // // // // // // // // // // // //                             className="text-xl"
+// // // // // // // // // // // // // // // // // // //                           >
+// // // // // // // // // // // // // // // // // // //                             ✏️
+// // // // // // // // // // // // // // // // // // //                           </button>
+
+// // // // // // // // // // // // // // // // // // //                           {openMenuId === review._id && (
+// // // // // // // // // // // // // // // // // // //                             <div className="absolute right-0 bg-white border shadow rounded w-28 z-10">
+// // // // // // // // // // // // // // // // // // //                               <button
+// // // // // // // // // // // // // // // // // // //                                 onClick={() => handleEdit(review)}
+// // // // // // // // // // // // // // // // // // //                                 className="block w-full text-left px-3 py-2 hover:bg-gray-100"
+// // // // // // // // // // // // // // // // // // //                               >
+// // // // // // // // // // // // // // // // // // //                                 Edit
+// // // // // // // // // // // // // // // // // // //                               </button>
+
+// // // // // // // // // // // // // // // // // // //                               <button
+// // // // // // // // // // // // // // // // // // //                                 onClick={() => handleDelete(review._id)}
+// // // // // // // // // // // // // // // // // // //                                 className="block w-full text-left px-3 py-2 text-red-500 hover:bg-gray-100"
+// // // // // // // // // // // // // // // // // // //                               >
+// // // // // // // // // // // // // // // // // // //                                 Delete
+// // // // // // // // // // // // // // // // // // //                               </button>
+// // // // // // // // // // // // // // // // // // //                             </div>
+// // // // // // // // // // // // // // // // // // //                           )}
+
+// // // // // // // // // // // // // // // // // // //                         </div>
+// // // // // // // // // // // // // // // // // // //                       )}
+
+// // // // // // // // // // // // // // // // // // //                     </div>
+// // // // // // // // // // // // // // // // // // //                   );
+// // // // // // // // // // // // // // // // // // //                 })}
+
+// // // // // // // // // // // // // // // // // // //               </div>
+// // // // // // // // // // // // // // // // // // //             )}
+// // // // // // // // // // // // // // // // // // //           </div>
+// // // // // // // // // // // // // // // // // // //         </div>
+// // // // // // // // // // // // // // // // // // //       </div>
+// // // // // // // // // // // // // // // // // // //     </div>
+// // // // // // // // // // // // // // // // // // //   );
+// // // // // // // // // // // // // // // // // // // };
+
+// // // // // // // // // // // // // // // // // // // export default ProductDetails;
+
+
+
+
+// // // // // // // // // // // // // // // // import React, { useEffect, useState } from "react";
+// // // // // // // // // // // // // // // // import { useParams } from "react-router-dom";
+// // // // // // // // // // // // // // // // import axios from "../../utils/axios";
+// // // // // // // // // // // // // // // // import { useCart } from "../../context/CartContext";
+// // // // // // // // // // // // // // // // import { useWishlist } from "../../context/WishlistContext";
+
+// // // // // // // // // // // // // // // // const ProductDetails = () => {
+// // // // // // // // // // // // // // // //   const { id } = useParams();
+// // // // // // // // // // // // // // // //   const { addToCart } = useCart();
+// // // // // // // // // // // // // // // //   const { addToWishlist } = useWishlist();
+
+// // // // // // // // // // // // // // // //   const [product, setProduct] = useState(null);
+// // // // // // // // // // // // // // // //   const [reviews, setReviews] = useState([]);
+// // // // // // // // // // // // // // // //   const [activeTab, setActiveTab] = useState("details");
+
+// // // // // // // // // // // // // // // //   const [showForm, setShowForm] = useState(false);
+// // // // // // // // // // // // // // // //   const [rating, setRating] = useState(5);
+// // // // // // // // // // // // // // // //   const [comment, setComment] = useState("");
+// // // // // // // // // // // // // // // //   const [editingReviewId, setEditingReviewId] = useState(null);
+
+// // // // // // // // // // // // // // // //   const [openMenuId, setOpenMenuId] = useState(null);
+
+// // // // // // // // // // // // // // // //   const userId = localStorage.getItem("userId");
+
+// // // // // // // // // // // // // // // //   // ================= FETCH =================
+// // // // // // // // // // // // // // // //   const fetchProduct = async () => {
+// // // // // // // // // // // // // // // //     const res = await axios.get(`/products/${id}`);
+// // // // // // // // // // // // // // // //     setProduct(res.data);
+// // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // //   const fetchReviews = async () => {
+// // // // // // // // // // // // // // // //     const res = await axios.get(`/reviews?productId=${id}`);
+// // // // // // // // // // // // // // // //     setReviews(res.data);
+// // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // //   useEffect(() => {
+// // // // // // // // // // // // // // // //     fetchProduct();
+// // // // // // // // // // // // // // // //     fetchReviews();
+// // // // // // // // // // // // // // // //   }, [id]);
+
+// // // // // // // // // // // // // // // //   if (!product) return <div className="p-10 text-center">Loading...</div>;
+
+// // // // // // // // // // // // // // // //   // ✅ FIX IMAGE: use images[0] from your schema
+// // // // // // // // // // // // // // // // //   const backendURL =
+// // // // // // // // // // // // // // // // //     import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
+// // // // // // // // // // // // // // // // //   const imageUrl =
+// // // // // // // // // // // // // // // // //     product.images && product.images[0]
+// // // // // // // // // // // // // // // // //       ? product.images[0].startsWith("http")
+// // // // // // // // // // // // // // // // //         ? product.images[0]
+// // // // // // // // // // // // // // // // //         : `${backendURL}/uploads/${product.images[0]}`
+// // // // // // // // // // // // // // // // //       : "/placeholder.png";
+
+// // // // // // // // // // // // // // // // const backendURL =
+// // // // // // // // // // // // // // // //   import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
+// // // // // // // // // // // // // // // // const imageUrl =
+// // // // // // // // // // // // // // // //   product.images && product.images[0]
+// // // // // // // // // // // // // // // //     ? product.images[0].startsWith("http")
+// // // // // // // // // // // // // // // //       ? product.images[0]
+// // // // // // // // // // // // // // // //       : product.images[0].startsWith("/uploads/")
+// // // // // // // // // // // // // // // //         ? `${backendURL}${product.images[0]}`
+// // // // // // // // // // // // // // // //         : `${backendURL}/uploads/${product.images[0]}`
+// // // // // // // // // // // // // // // //     : "/placeholder.png"; // fallback
+
+// // // // // // // // // // // // // // // //   // ================= ADD / UPDATE =================
+// // // // // // // // // // // // // // // //   const handleSubmitReview = async () => {
+// // // // // // // // // // // // // // // //     try {
+// // // // // // // // // // // // // // // //       const token = localStorage.getItem("token");
+
+// // // // // // // // // // // // // // // //       if (!token) return alert("Login required");
+
+// // // // // // // // // // // // // // // //       if (editingReviewId) {
+// // // // // // // // // // // // // // // //         await axios.put(
+// // // // // // // // // // // // // // // //           `/reviews/${editingReviewId}`,
+// // // // // // // // // // // // // // // //           { rating, comment },
+// // // // // // // // // // // // // // // //           { headers: { Authorization: `Bearer ${token}` } }
+// // // // // // // // // // // // // // // //         );
+// // // // // // // // // // // // // // // //       } else {
+// // // // // // // // // // // // // // // //         await axios.post(
+// // // // // // // // // // // // // // // //           "/reviews",
+// // // // // // // // // // // // // // // //           { productId: id, rating, comment },
+// // // // // // // // // // // // // // // //           { headers: { Authorization: `Bearer ${token}` } }
+// // // // // // // // // // // // // // // //         );
+// // // // // // // // // // // // // // // //       }
+
+// // // // // // // // // // // // // // // //       setShowForm(false);
+// // // // // // // // // // // // // // // //       setComment("");
+// // // // // // // // // // // // // // // //       setRating(5);
+// // // // // // // // // // // // // // // //       setEditingReviewId(null);
+
+// // // // // // // // // // // // // // // //       fetchReviews();
+// // // // // // // // // // // // // // // //     } catch (err) {
+// // // // // // // // // // // // // // // //       alert(err.response?.data?.message || "Error");
+// // // // // // // // // // // // // // // //     }
+// // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // //   // ================= DELETE =================
+// // // // // // // // // // // // // // // //   const handleDelete = async (rid) => {
+// // // // // // // // // // // // // // // //     await axios.delete(`/reviews/${rid}`, {
+// // // // // // // // // // // // // // // //       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+// // // // // // // // // // // // // // // //     });
+// // // // // // // // // // // // // // // //     fetchReviews();
+// // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // //   // ================= EDIT =================
+// // // // // // // // // // // // // // // //   const handleEdit = (review) => {
+// // // // // // // // // // // // // // // //     setShowForm(true);
+// // // // // // // // // // // // // // // //     setRating(review.rating);
+// // // // // // // // // // // // // // // //     setComment(review.comment);
+// // // // // // // // // // // // // // // //     setEditingReviewId(review._id);
+// // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // //   return (
+// // // // // // // // // // // // // // // //     <div className="bg-gray-50 min-h-screen">
+// // // // // // // // // // // // // // // //       <div className="max-w-6xl mx-auto p-4">
+
+// // // // // // // // // // // // // // // //         {/* PRODUCT */}
+// // // // // // // // // // // // // // // //         <div className="grid md:grid-cols-2 gap-6 bg-white p-6 rounded shadow">
+
+// // // // // // // // // // // // // // // //           {/* LEFT SIDE IMAGE */}
+// // // // // // // // // // // // // // // //           <img
+// // // // // // // // // // // // // // // //             src={imageUrl}
+// // // // // // // // // // // // // // // //             alt={product.title}
+// // // // // // // // // // // // // // // //             className="h-[400px] w-full object-contain"
+// // // // // // // // // // // // // // // //           />
+
+// // // // // // // // // // // // // // // //           {/* RIGHT SIDE CONTENT */}
+// // // // // // // // // // // // // // // //           <div className="flex flex-col justify-start">
+// // // // // // // // // // // // // // // //             <h1 className="text-xl font-semibold">{product.title}</h1>
+
+// // // // // // // // // // // // // // // //             {/* ✅ ADD DESCRIPTION BELOW TITLE */}
+// // // // // // // // // // // // // // // //             <p className="text-gray-700 mt-2">{product.description}</p>
+
+// // // // // // // // // // // // // // // //             <p className="text-2xl font-bold mt-2">₹{product.price}</p>
+
+// // // // // // // // // // // // // // // //             <div className="flex gap-3 mt-4">
+// // // // // // // // // // // // // // // //               <button
+// // // // // // // // // // // // // // // //                 onClick={() => addToCart(product)}
+// // // // // // // // // // // // // // // //                 className="bg-pink-500 text-white px-6 py-3 rounded w-full"
+// // // // // // // // // // // // // // // //               >
+// // // // // // // // // // // // // // // //                 Add to Bag
+// // // // // // // // // // // // // // // //               </button>
+
+// // // // // // // // // // // // // // // //               <button
+// // // // // // // // // // // // // // // //                 onClick={() => addToWishlist(product)}
+// // // // // // // // // // // // // // // //                 className="border px-4 py-3 rounded"
+// // // // // // // // // // // // // // // //               >
+// // // // // // // // // // // // // // // //                 ❤️
+// // // // // // // // // // // // // // // //               </button>
+// // // // // // // // // // // // // // // //             </div>
+// // // // // // // // // // // // // // // //           </div>
+// // // // // // // // // // // // // // // //         </div>
+
+// // // // // // // // // // // // // // // //         {/* TABS (DETAILS & REVIEWS) */}
+// // // // // // // // // // // // // // // //         <div className="bg-white mt-6 rounded shadow">
+// // // // // // // // // // // // // // // //           <div className="flex border-b">
+// // // // // // // // // // // // // // // //             <button
+// // // // // // // // // // // // // // // //               onClick={() => setActiveTab("details")}
+// // // // // // // // // // // // // // // //               className={`px-6 py-3 ${activeTab === "details" && "border-b-2 border-pink-500"}`}
+// // // // // // // // // // // // // // // //             >
+// // // // // // // // // // // // // // // //               Product Details
+// // // // // // // // // // // // // // // //             </button>
+
+// // // // // // // // // // // // // // // //             <button
+// // // // // // // // // // // // // // // //               onClick={() => setActiveTab("reviews")}
+// // // // // // // // // // // // // // // //               className={`px-6 py-3 ${activeTab === "reviews" && "border-b-2 border-pink-500"}`}
+// // // // // // // // // // // // // // // //             >
+// // // // // // // // // // // // // // // //               Ratings & Reviews
+// // // // // // // // // // // // // // // //             </button>
+// // // // // // // // // // // // // // // //           </div>
+
+// // // // // // // // // // // // // // // //           <div className="p-6">
+// // // // // // // // // // // // // // // //             {/* DETAILS */}
+// // // // // // // // // // // // // // // //             {activeTab === "details" && <p>{product.description}</p>}
+
+// // // // // // // // // // // // // // // //             {/* REVIEWS */}
+// // // // // // // // // // // // // // // //             {activeTab === "reviews" && (
+// // // // // // // // // // // // // // // //               <div>
+// // // // // // // // // // // // // // // //                 {/* HEADER */}
+// // // // // // // // // // // // // // // //                 <div className="flex justify-between mb-4">
+// // // // // // // // // // // // // // // //                   <h2>Customer Reviews</h2>
+// // // // // // // // // // // // // // // //                   <button
+// // // // // // // // // // // // // // // //                     onClick={() => {
+// // // // // // // // // // // // // // // //                       setShowForm(true);
+// // // // // // // // // // // // // // // //                       setEditingReviewId(null);
+// // // // // // // // // // // // // // // //                     }}
+// // // // // // // // // // // // // // // //                     className="border px-4 py-2 text-pink-500 rounded"
+// // // // // // // // // // // // // // // //                   >
+// // // // // // // // // // // // // // // //                     Write Review
+// // // // // // // // // // // // // // // //                   </button>
+// // // // // // // // // // // // // // // //                 </div>
+
+// // // // // // // // // // // // // // // //                 {/* FORM */}
+// // // // // // // // // // // // // // // //                 {showForm && (
+// // // // // // // // // // // // // // // //                   <div className="border p-4 mb-4 rounded">
+// // // // // // // // // // // // // // // //                     <select
+// // // // // // // // // // // // // // // //                       value={rating}
+// // // // // // // // // // // // // // // //                       onChange={(e) => setRating(Number(e.target.value))}
+// // // // // // // // // // // // // // // //                       className="border p-2 w-full mb-2"
+// // // // // // // // // // // // // // // //                     >
+// // // // // // // // // // // // // // // //                       {[5,4,3,2,1].map(r => <option key={r}>{r}</option>)}
+// // // // // // // // // // // // // // // //                     </select>
+
+// // // // // // // // // // // // // // // //                     <textarea
+// // // // // // // // // // // // // // // //                       value={comment}
+// // // // // // // // // // // // // // // //                       onChange={(e) => setComment(e.target.value)}
+// // // // // // // // // // // // // // // //                       className="border p-2 w-full mb-2"
+// // // // // // // // // // // // // // // //                     />
+
+// // // // // // // // // // // // // // // //                     <button
+// // // // // // // // // // // // // // // //                       onClick={handleSubmitReview}
+// // // // // // // // // // // // // // // //                       className="bg-pink-500 text-white px-4 py-2 rounded"
+// // // // // // // // // // // // // // // //                     >
+// // // // // // // // // // // // // // // //                       {editingReviewId ? "Update" : "Submit"}
+// // // // // // // // // // // // // // // //                     </button>
+// // // // // // // // // // // // // // // //                   </div>
+// // // // // // // // // // // // // // // //                 )}
+
+// // // // // // // // // // // // // // // //                 {/* LIST */}
+// // // // // // // // // // // // // // // //                 {reviews.map((review) => {
+// // // // // // // // // // // // // // // //                   const isOwner = String(review.user?._id || review.user) === String(userId);
+
+// // // // // // // // // // // // // // // //                   return (
+// // // // // // // // // // // // // // // //                     <div key={review._id} className="border-b py-3 flex justify-between">
+// // // // // // // // // // // // // // // //                       <div>
+// // // // // // // // // // // // // // // //                         <p>⭐ {review.rating}</p>
+// // // // // // // // // // // // // // // //                         <p>{review.comment}</p>
+// // // // // // // // // // // // // // // //                         <p className="text-xs text-gray-500">by {review.user?.name || "User"}</p>
+// // // // // // // // // // // // // // // //                       </div>
+
+// // // // // // // // // // // // // // // //                       {isOwner && (
+// // // // // // // // // // // // // // // //                         <div className="relative">
+// // // // // // // // // // // // // // // //                           <button
+// // // // // // // // // // // // // // // //                             onClick={() => setOpenMenuId(openMenuId === review._id ? null : review._id)}
+// // // // // // // // // // // // // // // //                             className="text-xl"
+// // // // // // // // // // // // // // // //                           >
+// // // // // // // // // // // // // // // //                             ✏️
+// // // // // // // // // // // // // // // //                           </button>
+
+// // // // // // // // // // // // // // // //                           {openMenuId === review._id && (
+// // // // // // // // // // // // // // // //                             <div className="absolute right-0 bg-white border shadow rounded w-28 z-10">
+// // // // // // // // // // // // // // // //                               <button
+// // // // // // // // // // // // // // // //                                 onClick={() => handleEdit(review)}
+// // // // // // // // // // // // // // // //                                 className="block w-full text-left px-3 py-2 hover:bg-gray-100"
+// // // // // // // // // // // // // // // //                               >
+// // // // // // // // // // // // // // // //                                 Edit
+// // // // // // // // // // // // // // // //                               </button>
+
+// // // // // // // // // // // // // // // //                               <button
+// // // // // // // // // // // // // // // //                                 onClick={() => handleDelete(review._id)}
+// // // // // // // // // // // // // // // //                                 className="block w-full text-left px-3 py-2 text-red-500 hover:bg-gray-100"
+// // // // // // // // // // // // // // // //                               >
+// // // // // // // // // // // // // // // //                                 Delete
+// // // // // // // // // // // // // // // //                               </button>
+// // // // // // // // // // // // // // // //                             </div>
+// // // // // // // // // // // // // // // //                           )}
+// // // // // // // // // // // // // // // //                         </div>
+// // // // // // // // // // // // // // // //                       )}
+// // // // // // // // // // // // // // // //                     </div>
+// // // // // // // // // // // // // // // //                   );
+// // // // // // // // // // // // // // // //                 })}
+// // // // // // // // // // // // // // // //               </div>
+// // // // // // // // // // // // // // // //             )}
+// // // // // // // // // // // // // // // //           </div>
+// // // // // // // // // // // // // // // //         </div>
+
+// // // // // // // // // // // // // // // //       </div>
+// // // // // // // // // // // // // // // //     </div>
+// // // // // // // // // // // // // // // //   );
+// // // // // // // // // // // // // // // // };
+
+// // // // // // // // // // // // // // // // export default ProductDetails;
+
+// // // // // // // // // // // // // // // // // // import React, { useEffect, useState } from "react";
+// // // // // // // // // // // // // // // // // // import { useParams } from "react-router-dom";
+// // // // // // // // // // // // // // // // // // import axios from "../../utils/axios";
+// // // // // // // // // // // // // // // // // // import { useCart } from "../../context/CartContext";
+// // // // // // // // // // // // // // // // // // import { useWishlist } from "../../context/WishlistContext";
+
+// // // // // // // // // // // // // // // // // // const ProductDetails = () => {
+// // // // // // // // // // // // // // // // // //   const { id } = useParams();
+// // // // // // // // // // // // // // // // // //   const { addToCart } = useCart();
+// // // // // // // // // // // // // // // // // //   const { addToWishlist } = useWishlist();
+
+// // // // // // // // // // // // // // // // // //   const [product, setProduct] = useState(null);
+
+// // // // // // // // // // // // // // // // // //   const backendURL =
+// // // // // // // // // // // // // // // // // //     import.meta.env.VITE_BACKEND_URL ||
+// // // // // // // // // // // // // // // // // //     "https://ecommerce-mern-backend-1.onrender.com/api";
+
+// // // // // // // // // // // // // // // // // //   useEffect(() => {
+// // // // // // // // // // // // // // // // // //     const fetchProduct = async () => {
+// // // // // // // // // // // // // // // // // //       try {
+// // // // // // // // // // // // // // // // // //         const res = await axios.get(`${backendURL}/products/${id}`);
+// // // // // // // // // // // // // // // // // //         const data = res.data;
+
+// // // // // // // // // // // // // // // // // //         // Fix images
+// // // // // // // // // // // // // // // // // //         setProduct({
+// // // // // // // // // // // // // // // // // //           ...data,
+// // // // // // // // // // // // // // // // // //           image:
+// // // // // // // // // // // // // // // // // //             data.images?.[0]?.startsWith("http")
+// // // // // // // // // // // // // // // // // //               ? data.images[0]
+// // // // // // // // // // // // // // // // // //               : `${backendURL}/uploads/${data.images[0]}`,
+// // // // // // // // // // // // // // // // // //         });
+// // // // // // // // // // // // // // // // // //       } catch (err) {
+// // // // // // // // // // // // // // // // // //         console.error("Fetch product error:", err);
+// // // // // // // // // // // // // // // // // //       }
+// // // // // // // // // // // // // // // // // //     };
+
+// // // // // // // // // // // // // // // // // //     fetchProduct();
+// // // // // // // // // // // // // // // // // //   }, [id]);
+
+// // // // // // // // // // // // // // // // // //   if (!product) return <div className="p-10 text-center">Loading...</div>;
+
+// // // // // // // // // // // // // // // // // //   return (
+// // // // // // // // // // // // // // // // // //     <div className="bg-gray-50 min-h-screen p-4">
+// // // // // // // // // // // // // // // // // //       <div className="grid md:grid-cols-2 gap-6 bg-white p-6 rounded shadow">
+// // // // // // // // // // // // // // // // // //         <img
+// // // // // // // // // // // // // // // // // //           src={product.image}
+// // // // // // // // // // // // // // // // // //           alt={product.title}
+// // // // // // // // // // // // // // // // // //           className="h-[400px] w-full object-contain"
+// // // // // // // // // // // // // // // // // //         />
+// // // // // // // // // // // // // // // // // //         <div className="flex flex-col justify-start">
+// // // // // // // // // // // // // // // // // //           <h1 className="text-xl font-semibold">{product.title}</h1>
+// // // // // // // // // // // // // // // // // //           <p className="text-gray-700 mt-2">{product.description}</p>
+// // // // // // // // // // // // // // // // // //           <p className="text-2xl font-bold mt-2">₹{product.price}</p>
+// // // // // // // // // // // // // // // // // //           <div className="flex gap-3 mt-4">
+// // // // // // // // // // // // // // // // // //             <button
+// // // // // // // // // // // // // // // // // //               onClick={() => addToCart(product)}
+// // // // // // // // // // // // // // // // // //               className="bg-pink-500 text-white px-6 py-3 rounded w-full"
+// // // // // // // // // // // // // // // // // //             >
+// // // // // // // // // // // // // // // // // //               Add to Bag
+// // // // // // // // // // // // // // // // // //             </button>
+// // // // // // // // // // // // // // // // // //             <button
+// // // // // // // // // // // // // // // // // //               onClick={() => addToWishlist(product)}
+// // // // // // // // // // // // // // // // // //               className="border px-4 py-3 rounded"
+// // // // // // // // // // // // // // // // // //             >
+// // // // // // // // // // // // // // // // // //               ❤️
+// // // // // // // // // // // // // // // // // //             </button>
+// // // // // // // // // // // // // // // // // //           </div>
+// // // // // // // // // // // // // // // // // //         </div>
+// // // // // // // // // // // // // // // // // //       </div>
+// // // // // // // // // // // // // // // // // //     </div>
+// // // // // // // // // // // // // // // // // //   );
+// // // // // // // // // // // // // // // // // // };
+
+// // // // // // // // // // // // // // // // // // export default ProductDetails;
+
+
+// // // // // // // // // // // // // // // // // import React, { useEffect, useState } from "react";
+// // // // // // // // // // // // // // // // // import { useParams } from "react-router-dom";
+// // // // // // // // // // // // // // // // // import axios from "../../utils/axios";
+// // // // // // // // // // // // // // // // // import { useCart } from "../../context/CartContext";
+// // // // // // // // // // // // // // // // // import { useWishlist } from "../../context/WishlistContext";
+
+// // // // // // // // // // // // // // // // // const ProductDetails = () => {
+// // // // // // // // // // // // // // // // //   const { id } = useParams();
+// // // // // // // // // // // // // // // // //   const { addToCart } = useCart();
+// // // // // // // // // // // // // // // // //   const { addToWishlist } = useWishlist();
+
+// // // // // // // // // // // // // // // // //   const [product, setProduct] = useState(null);
+
+// // // // // // // // // // // // // // // // //   // ✅ Correct backend URL (your new Render URL)
+// // // // // // // // // // // // // // // // //   const BASE_URL =
+// // // // // // // // // // // // // // // // //     import.meta.env.VITE_BACKEND_URL ||
+// // // // // // // // // // // // // // // // //     "https://ecommerce-mern-backend-2-t4ku.onrender.com";
+
+// // // // // // // // // // // // // // // // //   useEffect(() => {
+// // // // // // // // // // // // // // // // //     const fetchProduct = async () => {
+// // // // // // // // // // // // // // // // //       try {
+// // // // // // // // // // // // // // // // //         // full endpoint
+// // // // // // // // // // // // // // // // //         const res = await axios.get(`${BASE_URL}/api/products/${id}`);
+// // // // // // // // // // // // // // // // //         const data = res.data;
+
+// // // // // // // // // // // // // // // // //         // Fix image URL
+// // // // // // // // // // // // // // // // //         setProduct({
+// // // // // // // // // // // // // // // // //           ...data,
+// // // // // // // // // // // // // // // // //           image:
+// // // // // // // // // // // // // // // // //             data.images?.[0]?.startsWith("http")
+// // // // // // // // // // // // // // // // //               ? data.images[0]
+// // // // // // // // // // // // // // // // //               : `${BASE_URL}/uploads/${data.images[0]}`,
+// // // // // // // // // // // // // // // // //         });
+// // // // // // // // // // // // // // // // //       } catch (err) {
+// // // // // // // // // // // // // // // // //         console.error("Fetch product error:", err);
+// // // // // // // // // // // // // // // // //       }
+// // // // // // // // // // // // // // // // //     };
+
+// // // // // // // // // // // // // // // // //     fetchProduct();
+// // // // // // // // // // // // // // // // //   }, [id, BASE_URL]);
+
+// // // // // // // // // // // // // // // // //   if (!product) return <div className="p-10 text-center">Loading...</div>;
+
+// // // // // // // // // // // // // // // // //   return (
+// // // // // // // // // // // // // // // // //     <div className="bg-gray-50 min-h-screen p-4">
+// // // // // // // // // // // // // // // // //       <div className="grid md:grid-cols-2 gap-6 bg-white p-6 rounded shadow">
+// // // // // // // // // // // // // // // // //         <img
+// // // // // // // // // // // // // // // // //           src={product.image}
+// // // // // // // // // // // // // // // // //           alt={product.title}
+// // // // // // // // // // // // // // // // //           className="h-[400px] w-full object-contain"
+// // // // // // // // // // // // // // // // //         />
+// // // // // // // // // // // // // // // // //         <div className="flex flex-col justify-start">
+// // // // // // // // // // // // // // // // //           <h1 className="text-xl font-semibold">{product.title}</h1>
+// // // // // // // // // // // // // // // // //           <p className="text-gray-700 mt-2">{product.description}</p>
+// // // // // // // // // // // // // // // // //           <p className="text-2xl font-bold mt-2">₹{product.price}</p>
+// // // // // // // // // // // // // // // // //           <div className="flex gap-3 mt-4">
+// // // // // // // // // // // // // // // // //             <button
+// // // // // // // // // // // // // // // // //               onClick={() => addToCart({ ...product, quantity: 1 })}
+// // // // // // // // // // // // // // // // //               className="bg-pink-500 text-white px-6 py-3 rounded w-full"
+// // // // // // // // // // // // // // // // //             >
+// // // // // // // // // // // // // // // // //               Add to Bag
+// // // // // // // // // // // // // // // // //             </button>
+// // // // // // // // // // // // // // // // //             <button
+// // // // // // // // // // // // // // // // //               onClick={() => addToWishlist(product)}
+// // // // // // // // // // // // // // // // //               className="border px-4 py-3 rounded"
+// // // // // // // // // // // // // // // // //             >
+// // // // // // // // // // // // // // // // //               ❤️
+// // // // // // // // // // // // // // // // //             </button>
+// // // // // // // // // // // // // // // // //           </div>
+// // // // // // // // // // // // // // // // //         </div>
+// // // // // // // // // // // // // // // // //       </div>
+// // // // // // // // // // // // // // // // //     </div>
+// // // // // // // // // // // // // // // // //   );
+// // // // // // // // // // // // // // // // // };
+
+// // // // // // // // // // // // // // // // // export default ProductDetails;
+
+
 // // // // // // // // // // // // // // import React, { useEffect, useState } from "react";
 // // // // // // // // // // // // // // import { useParams } from "react-router-dom";
 // // // // // // // // // // // // // // import axios from "../../utils/axios";
 // // // // // // // // // // // // // // import { useCart } from "../../context/CartContext";
 // // // // // // // // // // // // // // import { useWishlist } from "../../context/WishlistContext";
-// // // // // // // // // // // // // // import { FiEdit } from "react-icons/fi";
 
 // // // // // // // // // // // // // // const ProductDetails = () => {
 // // // // // // // // // // // // // //   const { id } = useParams();
@@ -628,26 +1591,48 @@
 // // // // // // // // // // // // // //   const [product, setProduct] = useState(null);
 // // // // // // // // // // // // // //   const [reviews, setReviews] = useState([]);
 // // // // // // // // // // // // // //   const [activeTab, setActiveTab] = useState("details");
-
 // // // // // // // // // // // // // //   const [showForm, setShowForm] = useState(false);
 // // // // // // // // // // // // // //   const [rating, setRating] = useState(5);
 // // // // // // // // // // // // // //   const [comment, setComment] = useState("");
 // // // // // // // // // // // // // //   const [editingReviewId, setEditingReviewId] = useState(null);
 
-// // // // // // // // // // // // // //   const [openMenuId, setOpenMenuId] = useState(null);
+// // // // // // // // // // // // // //   // ✅ Safe user id
+// // // // // // // // // // // // // //   const userId = String(localStorage.getItem("userId") || "");
 
-// // // // // // // // // // // // // //   // ✅ USER NAME (IMPORTANT)
-// // // // // // // // // // // // // //   const userName = localStorage.getItem("name");
+// // // // // // // // // // // // // //   // ✅ Correct backend URL
+// // // // // // // // // // // // // //   const BASE_URL =
+// // // // // // // // // // // // // //     import.meta.env.VITE_BACKEND_URL ||
+// // // // // // // // // // // // // //     "https://ecommerce-mern-backend-1.onrender.com";
 
-// // // // // // // // // // // // // //   // ================= FETCH =================
+// // // // // // // // // // // // // //   // ================= FETCH PRODUCT =================
 // // // // // // // // // // // // // //   const fetchProduct = async () => {
-// // // // // // // // // // // // // //     const res = await axios.get(`/products/${id}`);
-// // // // // // // // // // // // // //     setProduct(res.data);
+// // // // // // // // // // // // // //     try {
+// // // // // // // // // // // // // //       const res = await axios.get(`${BASE_URL}/api/products/${id}`);
+// // // // // // // // // // // // // //       const data = res.data;
+
+// // // // // // // // // // // // // //       // Fix image URL
+// // // // // // // // // // // // // //       setProduct({
+// // // // // // // // // // // // // //         ...data,
+// // // // // // // // // // // // // //         image:
+// // // // // // // // // // // // // //           data.images && data.images[0]
+// // // // // // // // // // // // // //             ? data.images[0].startsWith("http")
+// // // // // // // // // // // // // //               ? data.images[0]
+// // // // // // // // // // // // // //               : `${BASE_URL}/uploads/${data.images[0]}`
+// // // // // // // // // // // // // //             : "/placeholder.png",
+// // // // // // // // // // // // // //       });
+// // // // // // // // // // // // // //     } catch (err) {
+// // // // // // // // // // // // // //       console.error("Fetch product error:", err);
+// // // // // // // // // // // // // //     }
 // // // // // // // // // // // // // //   };
 
+// // // // // // // // // // // // // //   // ================= FETCH REVIEWS =================
 // // // // // // // // // // // // // //   const fetchReviews = async () => {
-// // // // // // // // // // // // // //     const res = await axios.get(`/reviews?productId=${id}`);
-// // // // // // // // // // // // // //     setReviews(res.data);
+// // // // // // // // // // // // // //     try {
+// // // // // // // // // // // // // //       const res = await axios.get(`${BASE_URL}/api/reviews?productId=${id}`);
+// // // // // // // // // // // // // //       setReviews(res.data);
+// // // // // // // // // // // // // //     } catch (err) {
+// // // // // // // // // // // // // //       console.error("Fetch reviews error:", err);
+// // // // // // // // // // // // // //     }
 // // // // // // // // // // // // // //   };
 
 // // // // // // // // // // // // // //   useEffect(() => {
@@ -657,31 +1642,40 @@
 
 // // // // // // // // // // // // // //   if (!product) return <div className="p-10 text-center">Loading...</div>;
 
-// // // // // // // // // // // // // //   const imageUrl = product.image?.startsWith("http")
-// // // // // // // // // // // // // //     ? product.image
-// // // // // // // // // // // // // //     : `http://localhost:5000/${product.image}`;
+// // // // // // // // // // // // // //   const imageUrl = product.image;
 
-// // // // // // // // // // // // // //   // ================= SUBMIT =================
+// // // // // // // // // // // // // //   // ================= ADD / UPDATE =================
 // // // // // // // // // // // // // //   const handleSubmitReview = async () => {
 // // // // // // // // // // // // // //     try {
 // // // // // // // // // // // // // //       const token = localStorage.getItem("token");
 
-// // // // // // // // // // // // // //       if (!token) return alert("Login required");
+// // // // // // // // // // // // // //       if (!token) {
+// // // // // // // // // // // // // //         alert("Please login first");
+// // // // // // // // // // // // // //         return;
+// // // // // // // // // // // // // //       }
+
+// // // // // // // // // // // // // //       if (!comment.trim()) {
+// // // // // // // // // // // // // //         alert("Please write review");
+// // // // // // // // // // // // // //         return;
+// // // // // // // // // // // // // //       }
 
 // // // // // // // // // // // // // //       if (editingReviewId) {
 // // // // // // // // // // // // // //         await axios.put(
-// // // // // // // // // // // // // //           `/reviews/${editingReviewId}`,
-// // // // // // // // // // // // // //           { rating, comment },
-// // // // // // // // // // // // // //           { headers: { Authorization: `Bearer ${token}` } }
+// // // // // // // // // // // // // //           `${BASE_URL}/api/reviews/${editingReviewId}`,
+// // // // // // // // // // // // // //           { rating: Number(rating), comment },
+// // // // // // // // // // // // // //           {
+// // // // // // // // // // // // // //             headers: { Authorization: `Bearer ${token}` },
+// // // // // // // // // // // // // //           }
 // // // // // // // // // // // // // //         );
 // // // // // // // // // // // // // //       } else {
 // // // // // // // // // // // // // //         await axios.post(
-// // // // // // // // // // // // // //           "/reviews",
-// // // // // // // // // // // // // //           { productId: id, rating, comment },
+// // // // // // // // // // // // // //           `${BASE_URL}/api/reviews`,
+// // // // // // // // // // // // // //           { productId: id, rating: Number(rating), comment },
 // // // // // // // // // // // // // //           { headers: { Authorization: `Bearer ${token}` } }
 // // // // // // // // // // // // // //         );
 // // // // // // // // // // // // // //       }
 
+// // // // // // // // // // // // // //       alert("Review submitted successfully!");
 // // // // // // // // // // // // // //       setShowForm(false);
 // // // // // // // // // // // // // //       setComment("");
 // // // // // // // // // // // // // //       setRating(5);
@@ -689,16 +1683,21 @@
 
 // // // // // // // // // // // // // //       fetchReviews();
 // // // // // // // // // // // // // //     } catch (err) {
-// // // // // // // // // // // // // //       alert(err.response?.data?.message || "Error");
+// // // // // // // // // // // // // //       console.error("REVIEW ERROR:", err.response?.data || err.message);
+// // // // // // // // // // // // // //       alert(err.response?.data?.message || "Review failed");
 // // // // // // // // // // // // // //     }
 // // // // // // // // // // // // // //   };
 
 // // // // // // // // // // // // // //   // ================= DELETE =================
-// // // // // // // // // // // // // //   const handleDelete = async (rid) => {
-// // // // // // // // // // // // // //     await axios.delete(`/reviews/${rid}`, {
-// // // // // // // // // // // // // //       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-// // // // // // // // // // // // // //     });
-// // // // // // // // // // // // // //     fetchReviews();
+// // // // // // // // // // // // // //   const handleDelete = async (reviewId) => {
+// // // // // // // // // // // // // //     try {
+// // // // // // // // // // // // // //       await axios.delete(`${BASE_URL}/api/reviews/${reviewId}`, {
+// // // // // // // // // // // // // //         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+// // // // // // // // // // // // // //       });
+// // // // // // // // // // // // // //       fetchReviews();
+// // // // // // // // // // // // // //     } catch (err) {
+// // // // // // // // // // // // // //       console.error(err);
+// // // // // // // // // // // // // //     }
 // // // // // // // // // // // // // //   };
 
 // // // // // // // // // // // // // //   // ================= EDIT =================
@@ -713,17 +1712,18 @@
 // // // // // // // // // // // // // //     <div className="bg-gray-50 min-h-screen">
 // // // // // // // // // // // // // //       <div className="max-w-6xl mx-auto p-4">
 
-// // // // // // // // // // // // // //         {/* PRODUCT */}
-// // // // // // // // // // // // // //         <div className="grid md:grid-cols-2 gap-6 bg-white p-6 rounded shadow">
-// // // // // // // // // // // // // //           <img src={imageUrl} className="h-[400px] object-contain" />
+// // // // // // // // // // // // // //         {/* TOP */}
+// // // // // // // // // // // // // //         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-lg shadow">
+// // // // // // // // // // // // // //           <img src={imageUrl} alt={product.title} className="h-[400px] w-full object-contain" />
 
 // // // // // // // // // // // // // //           <div>
 // // // // // // // // // // // // // //             <h1 className="text-xl font-semibold">{product.title}</h1>
+// // // // // // // // // // // // // //             <p className="text-gray-700 mt-2">{product.description}</p>
 // // // // // // // // // // // // // //             <p className="text-2xl font-bold mt-2">₹{product.price}</p>
 
 // // // // // // // // // // // // // //             <div className="flex gap-3 mt-4">
 // // // // // // // // // // // // // //               <button
-// // // // // // // // // // // // // //                 onClick={() => addToCart(product)}
+// // // // // // // // // // // // // //                 onClick={() => addToCart({ ...product, quantity: 1 })}
 // // // // // // // // // // // // // //                 className="bg-pink-500 text-white px-6 py-3 rounded w-full"
 // // // // // // // // // // // // // //               >
 // // // // // // // // // // // // // //                 Add to Bag
@@ -740,7 +1740,7 @@
 // // // // // // // // // // // // // //         </div>
 
 // // // // // // // // // // // // // //         {/* TABS */}
-// // // // // // // // // // // // // //         <div className="bg-white mt-6 rounded shadow">
+// // // // // // // // // // // // // //         <div className="bg-white mt-6 rounded-lg shadow">
 // // // // // // // // // // // // // //           <div className="flex border-b">
 // // // // // // // // // // // // // //             <button
 // // // // // // // // // // // // // //               onClick={() => setActiveTab("details")}
@@ -758,25 +1758,17 @@
 // // // // // // // // // // // // // //           </div>
 
 // // // // // // // // // // // // // //           <div className="p-6">
-
 // // // // // // // // // // // // // //             {/* DETAILS */}
-// // // // // // // // // // // // // //             {activeTab === "details" && (
-// // // // // // // // // // // // // //               <p>{product.description}</p>
-// // // // // // // // // // // // // //             )}
+// // // // // // // // // // // // // //             {activeTab === "details" && <p className="text-gray-600">{product.description}</p>}
 
 // // // // // // // // // // // // // //             {/* REVIEWS */}
 // // // // // // // // // // // // // //             {activeTab === "reviews" && (
 // // // // // // // // // // // // // //               <div>
-
-// // // // // // // // // // // // // //                 {/* HEADER */}
 // // // // // // // // // // // // // //                 <div className="flex justify-between mb-4">
-// // // // // // // // // // // // // //                   <h2>Customer Reviews</h2>
+// // // // // // // // // // // // // //                   <h2 className="font-semibold">Customer Reviews</h2>
 
 // // // // // // // // // // // // // //                   <button
-// // // // // // // // // // // // // //                     onClick={() => {
-// // // // // // // // // // // // // //                       setShowForm(true);
-// // // // // // // // // // // // // //                       setEditingReviewId(null);
-// // // // // // // // // // // // // //                     }}
+// // // // // // // // // // // // // //                     onClick={() => { setShowForm(true); setEditingReviewId(null); setComment(""); setRating(5); }}
 // // // // // // // // // // // // // //                     className="border px-4 py-2 text-pink-500 rounded"
 // // // // // // // // // // // // // //                   >
 // // // // // // // // // // // // // //                     Write Review
@@ -789,16 +1781,17 @@
 // // // // // // // // // // // // // //                     <select
 // // // // // // // // // // // // // //                       value={rating}
 // // // // // // // // // // // // // //                       onChange={(e) => setRating(Number(e.target.value))}
-// // // // // // // // // // // // // //                       className="border p-2 w-full mb-2"
+// // // // // // // // // // // // // //                       className="border p-2 mb-2 w-full"
 // // // // // // // // // // // // // //                     >
-// // // // // // // // // // // // // //                       {[5,4,3,2,1].map(r => (
-// // // // // // // // // // // // // //                         <option key={r}>{r}</option>
+// // // // // // // // // // // // // //                       {[5, 4, 3, 2, 1].map((r) => (
+// // // // // // // // // // // // // //                         <option key={r} value={r}>{r} Stars</option>
 // // // // // // // // // // // // // //                       ))}
 // // // // // // // // // // // // // //                     </select>
 
 // // // // // // // // // // // // // //                     <textarea
 // // // // // // // // // // // // // //                       value={comment}
 // // // // // // // // // // // // // //                       onChange={(e) => setComment(e.target.value)}
+// // // // // // // // // // // // // //                       placeholder="Write your review..."
 // // // // // // // // // // // // // //                       className="border p-2 w-full mb-2"
 // // // // // // // // // // // // // //                     />
 
@@ -806,67 +1799,30 @@
 // // // // // // // // // // // // // //                       onClick={handleSubmitReview}
 // // // // // // // // // // // // // //                       className="bg-pink-500 text-white px-4 py-2 rounded"
 // // // // // // // // // // // // // //                     >
-// // // // // // // // // // // // // //                       {editingReviewId ? "Update" : "Submit"}
+// // // // // // // // // // // // // //                       {editingReviewId ? "Update Review" : "Submit Review"}
 // // // // // // // // // // // // // //                     </button>
 // // // // // // // // // // // // // //                   </div>
 // // // // // // // // // // // // // //                 )}
 
 // // // // // // // // // // // // // //                 {/* LIST */}
-// // // // // // // // // // // // // //                 {reviews.map((review) => {
-// // // // // // // // // // // // // //                   const isOwner =
-// // // // // // // // // // // // // //                     review.user?.name === userName;
+// // // // // // // // // // // // // //                 {reviews.length === 0 && <p>No reviews yet</p>}
 
-// // // // // // // // // // // // // //                   return (
-// // // // // // // // // // // // // //                     <div key={review._id} className="border-b py-3 flex justify-between">
-
-// // // // // // // // // // // // // //                       <div>
-// // // // // // // // // // // // // //                         <p>⭐ {review.rating}</p>
-// // // // // // // // // // // // // //                         <p>{review.comment}</p>
-// // // // // // // // // // // // // //                         <p className="text-xs text-gray-500">
-// // // // // // // // // // // // // //                           by {review.user?.name}
-// // // // // // // // // // // // // //                         </p>
-// // // // // // // // // // // // // //                       </div>
-
-// // // // // // // // // // // // // //                       {/* ✅ ICON + MENU */}
-// // // // // // // // // // // // // //                       {isOwner && (
-// // // // // // // // // // // // // //                         <div className="relative">
-
-// // // // // // // // // // // // // //                           <button
-// // // // // // // // // // // // // //                             onClick={() =>
-// // // // // // // // // // // // // //                               setOpenMenuId(
-// // // // // // // // // // // // // //                                 openMenuId === review._id ? null : review._id
-// // // // // // // // // // // // // //                               )
-// // // // // // // // // // // // // //                             }
-// // // // // // // // // // // // // //                             className="text-lg"
-// // // // // // // // // // // // // //                           >
-// // // // // // // // // // // // // //                             <FiEdit />
-// // // // // // // // // // // // // //                           </button>
-
-// // // // // // // // // // // // // //                           {openMenuId === review._id && (
-// // // // // // // // // // // // // //                             <div className="absolute right-0 bg-white border shadow rounded w-28">
-// // // // // // // // // // // // // //                               <button
-// // // // // // // // // // // // // //                                 onClick={() => handleEdit(review)}
-// // // // // // // // // // // // // //                                 className="block w-full text-left px-3 py-2 hover:bg-gray-100"
-// // // // // // // // // // // // // //                               >
-// // // // // // // // // // // // // //                                 Edit
-// // // // // // // // // // // // // //                               </button>
-
-// // // // // // // // // // // // // //                               <button
-// // // // // // // // // // // // // //                                 onClick={() => handleDelete(review._id)}
-// // // // // // // // // // // // // //                                 className="block w-full text-left px-3 py-2 text-red-500 hover:bg-gray-100"
-// // // // // // // // // // // // // //                               >
-// // // // // // // // // // // // // //                                 Delete
-// // // // // // // // // // // // // //                               </button>
-// // // // // // // // // // // // // //                             </div>
-// // // // // // // // // // // // // //                           )}
-
-// // // // // // // // // // // // // //                         </div>
-// // // // // // // // // // // // // //                       )}
-
+// // // // // // // // // // // // // //                 {reviews.map((review) => (
+// // // // // // // // // // // // // //                   <div key={review._id} className="border-b py-3 flex justify-between">
+// // // // // // // // // // // // // //                     <div>
+// // // // // // // // // // // // // //                       <p className="font-semibold">⭐ {review.rating}</p>
+// // // // // // // // // // // // // //                       <p>{review.comment}</p>
+// // // // // // // // // // // // // //                       <p className="text-xs text-gray-500">by {review.user?.name || "Anonymous"}</p>
 // // // // // // // // // // // // // //                     </div>
-// // // // // // // // // // // // // //                   );
-// // // // // // // // // // // // // //                 })}
 
+// // // // // // // // // // // // // //                     {String(review.user?._id) === userId && (
+// // // // // // // // // // // // // //                       <div className="flex gap-2">
+// // // // // // // // // // // // // //                         <button onClick={() => handleEdit(review)} className="text-blue-500">Edit</button>
+// // // // // // // // // // // // // //                         <button onClick={() => handleDelete(review._id)} className="text-red-500">Delete</button>
+// // // // // // // // // // // // // //                       </div>
+// // // // // // // // // // // // // //                     )}
+// // // // // // // // // // // // // //                   </div>
+// // // // // // // // // // // // // //                 ))}
 // // // // // // // // // // // // // //               </div>
 // // // // // // // // // // // // // //             )}
 // // // // // // // // // // // // // //           </div>
@@ -880,271 +1836,293 @@
 
 
 
+// // // // // // // // // // // // import React, { useEffect, useState } from "react";
+// // // // // // // // // // // // import { useParams } from "react-router-dom";
+// // // // // // // // // // // // import axios from "../../utils/axios";
+// // // // // // // // // // // // import { useCart } from "../../context/CartContext";
+// // // // // // // // // // // // import { useWishlist } from "../../context/WishlistContext";
 
-// // // // // // // // // // // // // import React, { useEffect, useState } from "react";
-// // // // // // // // // // // // // import { useParams } from "react-router-dom";
-// // // // // // // // // // // // // import axios from "../../utils/axios";
-// // // // // // // // // // // // // import { useCart } from "../../context/CartContext";
-// // // // // // // // // // // // // import { useWishlist } from "../../context/WishlistContext";
+// // // // // // // // // // // // const ProductDetails = () => {
+// // // // // // // // // // // //   const { id } = useParams();
+// // // // // // // // // // // //   const { addToCart } = useCart();
+// // // // // // // // // // // //   const { addToWishlist } = useWishlist();
 
-// // // // // // // // // // // // // const ProductDetails = () => {
-// // // // // // // // // // // // //   const { id } = useParams();
-// // // // // // // // // // // // //   const { addToCart } = useCart();
-// // // // // // // // // // // // //   const { addToWishlist } = useWishlist();
+// // // // // // // // // // // //   const [product, setProduct] = useState(null);
+// // // // // // // // // // // //   const [reviews, setReviews] = useState([]);
+// // // // // // // // // // // //   const [activeTab, setActiveTab] = useState("details");
 
-// // // // // // // // // // // // //   const [product, setProduct] = useState(null);
-// // // // // // // // // // // // //   const [reviews, setReviews] = useState([]);
-// // // // // // // // // // // // //   const [activeTab, setActiveTab] = useState("details");
+// // // // // // // // // // // //   const [showForm, setShowForm] = useState(false);
+// // // // // // // // // // // //   const [rating, setRating] = useState(5);
+// // // // // // // // // // // //   const [comment, setComment] = useState("");
+// // // // // // // // // // // //   const [editingReviewId, setEditingReviewId] = useState(null);
 
-// // // // // // // // // // // // //   const [showForm, setShowForm] = useState(false);
-// // // // // // // // // // // // //   const [rating, setRating] = useState(5);
-// // // // // // // // // // // // //   const [comment, setComment] = useState("");
-// // // // // // // // // // // // //   const [editingReviewId, setEditingReviewId] = useState(null);
+// // // // // // // // // // // //   // ✅ Use the old backend URL style
+// // // // // // // // // // // //   const backendURL =
+// // // // // // // // // // // //     import.meta.env.VITE_BACKEND_URL ||
+// // // // // // // // // // // //     "https://ecommerce-mern-backend-1.onrender.com";
 
-// // // // // // // // // // // // //   const [openMenuId, setOpenMenuId] = useState(null);
+// // // // // // // // // // // //   // ✅ Safe user ID
+// // // // // // // // // // // //   const userId = String(localStorage.getItem("userId") || "");
 
-// // // // // // // // // // // // //   const userId = localStorage.getItem("userId");
+// // // // // // // // // // // //   // ================= FETCH PRODUCT =================
+// // // // // // // // // // // //   const fetchProduct = async () => {
+// // // // // // // // // // // //     try {
+// // // // // // // // // // // //       const res = await axios.get(`${backendURL}/api/products/${id}`);
+// // // // // // // // // // // //       setProduct(res.data);
+// // // // // // // // // // // //     } catch (err) {
+// // // // // // // // // // // //       console.error("Fetch product error:", err);
+// // // // // // // // // // // //     }
+// // // // // // // // // // // //   };
 
-// // // // // // // // // // // // //   // ================= FETCH =================
-// // // // // // // // // // // // //   const fetchProduct = async () => {
-// // // // // // // // // // // // //     const res = await axios.get(`/products/${id}`);
-// // // // // // // // // // // // //     setProduct(res.data);
-// // // // // // // // // // // // //   };
+// // // // // // // // // // // //   // ================= FETCH REVIEWS =================
+// // // // // // // // // // // //   const fetchReviews = async () => {
+// // // // // // // // // // // //     try {
+// // // // // // // // // // // //       const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
+// // // // // // // // // // // //       setReviews(res.data);
+// // // // // // // // // // // //     } catch (err) {
+// // // // // // // // // // // //       console.error("Fetch reviews error:", err);
+// // // // // // // // // // // //     }
+// // // // // // // // // // // //   };
 
-// // // // // // // // // // // // //   const fetchReviews = async () => {
-// // // // // // // // // // // // //     const res = await axios.get(`/reviews?productId=${id}`);
-// // // // // // // // // // // // //     setReviews(res.data);
-// // // // // // // // // // // // //   };
+// // // // // // // // // // // //   useEffect(() => {
+// // // // // // // // // // // //     fetchProduct();
+// // // // // // // // // // // //     fetchReviews();
+// // // // // // // // // // // //   }, [id]);
 
-// // // // // // // // // // // // //   useEffect(() => {
-// // // // // // // // // // // // //     fetchProduct();
-// // // // // // // // // // // // //     fetchReviews();
-// // // // // // // // // // // // //   }, [id]);
+// // // // // // // // // // // //   if (!product) return <div className="p-10 text-center">Loading...</div>;
 
-// // // // // // // // // // // // //   if (!product) return <div className="p-10 text-center">Loading...</div>;
+// // // // // // // // // // // //   // ================= IMAGE URL =================
+// // // // // // // // // // // //   const imageUrl =
+// // // // // // // // // // // //     product.images && product.images[0]
+// // // // // // // // // // // //       ? product.images[0].startsWith("http")
+// // // // // // // // // // // //         ? product.images[0]
+// // // // // // // // // // // //         : product.images[0].startsWith("/uploads/")
+// // // // // // // // // // // //         ? `${backendURL}${product.images[0]}`
+// // // // // // // // // // // //         : `${backendURL}/uploads/${product.images[0]}`
+// // // // // // // // // // // //       : "/placeholder.png";
 
-// // // // // // // // // // // // //   const imageUrl = product.image?.startsWith("http")
-// // // // // // // // // // // // //     ? product.image
-// // // // // // // // // // // // //     : `http://localhost:5000/${product.image}`;
+// // // // // // // // // // // //   // ================= ADD / UPDATE REVIEW =================
+// // // // // // // // // // // //   const handleSubmitReview = async () => {
+// // // // // // // // // // // //     try {
+// // // // // // // // // // // //       const token = localStorage.getItem("token");
 
-// // // // // // // // // // // // //   // ================= ADD / UPDATE =================
-// // // // // // // // // // // // //   const handleSubmitReview = async () => {
-// // // // // // // // // // // // //     try {
-// // // // // // // // // // // // //       const token = localStorage.getItem("token");
+// // // // // // // // // // // //       if (!token) {
+// // // // // // // // // // // //         alert("Please login first");
+// // // // // // // // // // // //         return;
+// // // // // // // // // // // //       }
 
-// // // // // // // // // // // // //       if (!token) return alert("Login required");
+// // // // // // // // // // // //       if (!comment.trim()) {
+// // // // // // // // // // // //         alert("Please write a review");
+// // // // // // // // // // // //         return;
+// // // // // // // // // // // //       }
 
-// // // // // // // // // // // // //       if (editingReviewId) {
-// // // // // // // // // // // // //         await axios.put(
-// // // // // // // // // // // // //           `/reviews/${editingReviewId}`,
-// // // // // // // // // // // // //           { rating, comment },
-// // // // // // // // // // // // //           { headers: { Authorization: `Bearer ${token}` } }
-// // // // // // // // // // // // //         );
-// // // // // // // // // // // // //       } else {
-// // // // // // // // // // // // //         await axios.post(
-// // // // // // // // // // // // //           "/reviews",
-// // // // // // // // // // // // //           { productId: id, rating, comment },
-// // // // // // // // // // // // //           { headers: { Authorization: `Bearer ${token}` } }
-// // // // // // // // // // // // //         );
-// // // // // // // // // // // // //       }
+// // // // // // // // // // // //       if (editingReviewId) {
+// // // // // // // // // // // //         await axios.put(
+// // // // // // // // // // // //           `${backendURL}/api/reviews/${editingReviewId}`,
+// // // // // // // // // // // //           { rating: Number(rating), comment },
+// // // // // // // // // // // //           {
+// // // // // // // // // // // //             headers: { Authorization: `Bearer ${token}` },
+// // // // // // // // // // // //           }
+// // // // // // // // // // // //         );
+// // // // // // // // // // // //       } else {
+// // // // // // // // // // // //         await axios.post(
+// // // // // // // // // // // //           `${backendURL}/api/reviews`,
+// // // // // // // // // // // //           { productId: id, rating: Number(rating), comment },
+// // // // // // // // // // // //           {
+// // // // // // // // // // // //             headers: { Authorization: `Bearer ${token}` },
+// // // // // // // // // // // //           }
+// // // // // // // // // // // //         );
+// // // // // // // // // // // //       }
 
-// // // // // // // // // // // // //       setShowForm(false);
-// // // // // // // // // // // // //       setComment("");
-// // // // // // // // // // // // //       setRating(5);
-// // // // // // // // // // // // //       setEditingReviewId(null);
+// // // // // // // // // // // //       alert("Review submitted successfully!");
+// // // // // // // // // // // //       setShowForm(false);
+// // // // // // // // // // // //       setComment("");
+// // // // // // // // // // // //       setRating(5);
+// // // // // // // // // // // //       setEditingReviewId(null);
+// // // // // // // // // // // //       fetchReviews();
+// // // // // // // // // // // //     } catch (err) {
+// // // // // // // // // // // //       console.error("Review error:", err.response?.data || err.message);
+// // // // // // // // // // // //       alert(err.response?.data?.message || "Review failed");
+// // // // // // // // // // // //     }
+// // // // // // // // // // // //   };
 
-// // // // // // // // // // // // //       fetchReviews();
-// // // // // // // // // // // // //     } catch (err) {
-// // // // // // // // // // // // //       alert(err.response?.data?.message || "Error");
-// // // // // // // // // // // // //     }
-// // // // // // // // // // // // //   };
+// // // // // // // // // // // //   // ================= DELETE REVIEW =================
+// // // // // // // // // // // //   const handleDelete = async (reviewId) => {
+// // // // // // // // // // // //     try {
+// // // // // // // // // // // //       await axios.delete(`${backendURL}/api/reviews/${reviewId}`, {
+// // // // // // // // // // // //         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+// // // // // // // // // // // //       });
+// // // // // // // // // // // //       fetchReviews();
+// // // // // // // // // // // //     } catch (err) {
+// // // // // // // // // // // //       console.error("Delete review error:", err);
+// // // // // // // // // // // //     }
+// // // // // // // // // // // //   };
 
-// // // // // // // // // // // // //   // ================= DELETE =================
-// // // // // // // // // // // // //   const handleDelete = async (rid) => {
-// // // // // // // // // // // // //     await axios.delete(`/reviews/${rid}`, {
-// // // // // // // // // // // // //       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-// // // // // // // // // // // // //     });
-// // // // // // // // // // // // //     fetchReviews();
-// // // // // // // // // // // // //   };
+// // // // // // // // // // // //   // ================= EDIT REVIEW =================
+// // // // // // // // // // // //   const handleEdit = (review) => {
+// // // // // // // // // // // //     setShowForm(true);
+// // // // // // // // // // // //     setRating(review.rating);
+// // // // // // // // // // // //     setComment(review.comment);
+// // // // // // // // // // // //     setEditingReviewId(review._id);
+// // // // // // // // // // // //   };
 
-// // // // // // // // // // // // //   // ================= EDIT =================
-// // // // // // // // // // // // //   const handleEdit = (review) => {
-// // // // // // // // // // // // //     setShowForm(true);
-// // // // // // // // // // // // //     setRating(review.rating);
-// // // // // // // // // // // // //     setComment(review.comment);
-// // // // // // // // // // // // //     setEditingReviewId(review._id);
-// // // // // // // // // // // // //   };
+// // // // // // // // // // // //   return (
+// // // // // // // // // // // //     <div className="bg-gray-50 min-h-screen">
+// // // // // // // // // // // //       <div className="max-w-6xl mx-auto p-4">
 
-// // // // // // // // // // // // //   return (
-// // // // // // // // // // // // //     <div className="bg-gray-50 min-h-screen">
-// // // // // // // // // // // // //       <div className="max-w-6xl mx-auto p-4">
+// // // // // // // // // // // //         {/* TOP SECTION */}
+// // // // // // // // // // // //         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-lg shadow">
+// // // // // // // // // // // //           <img
+// // // // // // // // // // // //             src={imageUrl}
+// // // // // // // // // // // //             alt={product.title}
+// // // // // // // // // // // //             className="h-[400px] w-full object-contain"
+// // // // // // // // // // // //           />
 
-// // // // // // // // // // // // //         {/* PRODUCT */}
-// // // // // // // // // // // // //         <div className="grid md:grid-cols-2 gap-6 bg-white p-6 rounded shadow">
-// // // // // // // // // // // // //           <img src={imageUrl} className="h-[400px] object-contain" />
+// // // // // // // // // // // //           <div>
+// // // // // // // // // // // //             <h1 className="text-xl font-semibold">{product.title}</h1>
+// // // // // // // // // // // //             <p className="text-gray-600 mt-2">{product.description}</p>
+// // // // // // // // // // // //             <p className="text-2xl font-bold mt-2">₹{product.price}</p>
 
-// // // // // // // // // // // // //           <div>
-// // // // // // // // // // // // //             <h1 className="text-xl font-semibold">{product.title}</h1>
-// // // // // // // // // // // // //             <p className="text-2xl font-bold mt-2">₹{product.price}</p>
+// // // // // // // // // // // //             <div className="flex gap-3 mt-4">
+// // // // // // // // // // // //               <button
+// // // // // // // // // // // //                 onClick={() => addToCart({ ...product, quantity: 1 })}
+// // // // // // // // // // // //                 className="bg-pink-500 text-white px-6 py-3 rounded w-full"
+// // // // // // // // // // // //               >
+// // // // // // // // // // // //                 Add to Bag
+// // // // // // // // // // // //               </button>
+// // // // // // // // // // // //               <button
+// // // // // // // // // // // //                 onClick={() => addToWishlist(product)}
+// // // // // // // // // // // //                 className="border px-4 py-3 rounded"
+// // // // // // // // // // // //               >
+// // // // // // // // // // // //                 ❤️
+// // // // // // // // // // // //               </button>
+// // // // // // // // // // // //             </div>
+// // // // // // // // // // // //           </div>
+// // // // // // // // // // // //         </div>
 
-// // // // // // // // // // // // //             <div className="flex gap-3 mt-4">
-// // // // // // // // // // // // //               <button
-// // // // // // // // // // // // //                 onClick={() => addToCart(product)}
-// // // // // // // // // // // // //                 className="bg-pink-500 text-white px-6 py-3 rounded w-full"
-// // // // // // // // // // // // //               >
-// // // // // // // // // // // // //                 Add to Bag
-// // // // // // // // // // // // //               </button>
+// // // // // // // // // // // //         {/* TABS SECTION */}
+// // // // // // // // // // // //         <div className="bg-white mt-6 rounded-lg shadow">
+// // // // // // // // // // // //           <div className="flex border-b">
+// // // // // // // // // // // //             <button
+// // // // // // // // // // // //               onClick={() => setActiveTab("details")}
+// // // // // // // // // // // //               className={`px-6 py-3 ${
+// // // // // // // // // // // //                 activeTab === "details" && "border-b-2 border-pink-500"
+// // // // // // // // // // // //               }`}
+// // // // // // // // // // // //             >
+// // // // // // // // // // // //               Product Details
+// // // // // // // // // // // //             </button>
+// // // // // // // // // // // //             <button
+// // // // // // // // // // // //               onClick={() => setActiveTab("reviews")}
+// // // // // // // // // // // //               className={`px-6 py-3 ${
+// // // // // // // // // // // //                 activeTab === "reviews" && "border-b-2 border-pink-500"
+// // // // // // // // // // // //               }`}
+// // // // // // // // // // // //             >
+// // // // // // // // // // // //               Ratings & Reviews
+// // // // // // // // // // // //             </button>
+// // // // // // // // // // // //           </div>
 
-// // // // // // // // // // // // //               <button
-// // // // // // // // // // // // //                 onClick={() => addToWishlist(product)}
-// // // // // // // // // // // // //                 className="border px-4 py-3 rounded"
-// // // // // // // // // // // // //               >
-// // // // // // // // // // // // //                 ❤️
-// // // // // // // // // // // // //               </button>
-// // // // // // // // // // // // //             </div>
-// // // // // // // // // // // // //           </div>
-// // // // // // // // // // // // //         </div>
+// // // // // // // // // // // //           <div className="p-6">
+// // // // // // // // // // // //             {/* DETAILS */}
+// // // // // // // // // // // //             {activeTab === "details" && (
+// // // // // // // // // // // //               <p className="text-gray-600">{product.description}</p>
+// // // // // // // // // // // //             )}
 
-// // // // // // // // // // // // //         {/* TABS */}
-// // // // // // // // // // // // //         <div className="bg-white mt-6 rounded shadow">
-// // // // // // // // // // // // //           <div className="flex border-b">
-// // // // // // // // // // // // //             <button
-// // // // // // // // // // // // //               onClick={() => setActiveTab("details")}
-// // // // // // // // // // // // //               className={`px-6 py-3 ${activeTab === "details" && "border-b-2 border-pink-500"}`}
-// // // // // // // // // // // // //             >
-// // // // // // // // // // // // //               Product Details
-// // // // // // // // // // // // //             </button>
+// // // // // // // // // // // //             {/* REVIEWS */}
+// // // // // // // // // // // //             {activeTab === "reviews" && (
+// // // // // // // // // // // //               <div>
+// // // // // // // // // // // //                 {/* HEADER */}
+// // // // // // // // // // // //                 <div className="flex justify-between mb-4">
+// // // // // // // // // // // //                   <h2 className="font-semibold">Customer Reviews</h2>
+// // // // // // // // // // // //                   <button
+// // // // // // // // // // // //                     onClick={() => {
+// // // // // // // // // // // //                       setShowForm(true);
+// // // // // // // // // // // //                       setEditingReviewId(null);
+// // // // // // // // // // // //                       setComment("");
+// // // // // // // // // // // //                       setRating(5);
+// // // // // // // // // // // //                     }}
+// // // // // // // // // // // //                     className="border px-4 py-2 text-pink-500 rounded"
+// // // // // // // // // // // //                   >
+// // // // // // // // // // // //                     Write Review
+// // // // // // // // // // // //                   </button>
+// // // // // // // // // // // //                 </div>
 
-// // // // // // // // // // // // //             <button
-// // // // // // // // // // // // //               onClick={() => setActiveTab("reviews")}
-// // // // // // // // // // // // //               className={`px-6 py-3 ${activeTab === "reviews" && "border-b-2 border-pink-500"}`}
-// // // // // // // // // // // // //             >
-// // // // // // // // // // // // //               Ratings & Reviews
-// // // // // // // // // // // // //             </button>
-// // // // // // // // // // // // //           </div>
+// // // // // // // // // // // //                 {/* REVIEW FORM */}
+// // // // // // // // // // // //                 {showForm && (
+// // // // // // // // // // // //                   <div className="border p-4 mb-4 rounded">
+// // // // // // // // // // // //                     <select
+// // // // // // // // // // // //                       value={rating}
+// // // // // // // // // // // //                       onChange={(e) => setRating(Number(e.target.value))}
+// // // // // // // // // // // //                       className="border p-2 mb-2 w-full"
+// // // // // // // // // // // //                     >
+// // // // // // // // // // // //                       {[5, 4, 3, 2, 1].map((r) => (
+// // // // // // // // // // // //                         <option key={r} value={r}>
+// // // // // // // // // // // //                           {r} Stars
+// // // // // // // // // // // //                         </option>
+// // // // // // // // // // // //                       ))}
+// // // // // // // // // // // //                     </select>
 
-// // // // // // // // // // // // //           <div className="p-6">
+// // // // // // // // // // // //                     <textarea
+// // // // // // // // // // // //                       value={comment}
+// // // // // // // // // // // //                       onChange={(e) => setComment(e.target.value)}
+// // // // // // // // // // // //                       placeholder="Write your review..."
+// // // // // // // // // // // //                       className="border p-2 w-full mb-2"
+// // // // // // // // // // // //                     />
 
-// // // // // // // // // // // // //             {/* DETAILS */}
-// // // // // // // // // // // // //             {activeTab === "details" && (
-// // // // // // // // // // // // //               <p>{product.description}</p>
-// // // // // // // // // // // // //             )}
+// // // // // // // // // // // //                     <button
+// // // // // // // // // // // //                       onClick={handleSubmitReview}
+// // // // // // // // // // // //                       className="bg-pink-500 text-white px-4 py-2 rounded"
+// // // // // // // // // // // //                     >
+// // // // // // // // // // // //                       {editingReviewId ? "Update Review" : "Submit Review"}
+// // // // // // // // // // // //                     </button>
+// // // // // // // // // // // //                   </div>
+// // // // // // // // // // // //                 )}
 
-// // // // // // // // // // // // //             {/* REVIEWS */}
-// // // // // // // // // // // // //             {activeTab === "reviews" && (
-// // // // // // // // // // // // //               <div>
+// // // // // // // // // // // //                 {/* REVIEW LIST */}
+// // // // // // // // // // // //                 {reviews.length === 0 && <p>No reviews yet</p>}
 
-// // // // // // // // // // // // //                 {/* HEADER */}
-// // // // // // // // // // // // //                 <div className="flex justify-between mb-4">
-// // // // // // // // // // // // //                   <h2>Customer Reviews</h2>
+// // // // // // // // // // // //                 {reviews.map((review) => (
+// // // // // // // // // // // //                   <div
+// // // // // // // // // // // //                     key={review._id}
+// // // // // // // // // // // //                     className="border-b py-3 flex justify-between"
+// // // // // // // // // // // //                   >
+// // // // // // // // // // // //                     <div>
+// // // // // // // // // // // //                       <p className="font-semibold">⭐ {review.rating}</p>
+// // // // // // // // // // // //                       <p>{review.comment}</p>
+// // // // // // // // // // // //                       <p className="text-xs text-gray-500">
+// // // // // // // // // // // //                         by {review.user?.name}
+// // // // // // // // // // // //                       </p>
+// // // // // // // // // // // //                     </div>
 
-// // // // // // // // // // // // //                   <button
-// // // // // // // // // // // // //                     onClick={() => {
-// // // // // // // // // // // // //                       setShowForm(true);
-// // // // // // // // // // // // //                       setEditingReviewId(null);
-// // // // // // // // // // // // //                     }}
-// // // // // // // // // // // // //                     className="border px-4 py-2 text-pink-500 rounded"
-// // // // // // // // // // // // //                   >
-// // // // // // // // // // // // //                     Write Review
-// // // // // // // // // // // // //                   </button>
-// // // // // // // // // // // // //                 </div>
+// // // // // // // // // // // //                     {/* EDIT / DELETE FOR OWNER */}
+// // // // // // // // // // // //                     {String(review.user?._id) === userId && (
+// // // // // // // // // // // //                       <div className="flex gap-2">
+// // // // // // // // // // // //                         <button
+// // // // // // // // // // // //                           onClick={() => handleEdit(review)}
+// // // // // // // // // // // //                           className="text-blue-500"
+// // // // // // // // // // // //                         >
+// // // // // // // // // // // //                           Edit
+// // // // // // // // // // // //                         </button>
+// // // // // // // // // // // //                         <button
+// // // // // // // // // // // //                           onClick={() => handleDelete(review._id)}
+// // // // // // // // // // // //                           className="text-red-500"
+// // // // // // // // // // // //                         >
+// // // // // // // // // // // //                           Delete
+// // // // // // // // // // // //                         </button>
+// // // // // // // // // // // //                       </div>
+// // // // // // // // // // // //                     )}
+// // // // // // // // // // // //                   </div>
+// // // // // // // // // // // //                 ))}
 
-// // // // // // // // // // // // //                 {/* FORM */}
-// // // // // // // // // // // // //                 {showForm && (
-// // // // // // // // // // // // //                   <div className="border p-4 mb-4 rounded">
-// // // // // // // // // // // // //                     <select
-// // // // // // // // // // // // //                       value={rating}
-// // // // // // // // // // // // //                       onChange={(e) => setRating(Number(e.target.value))}
-// // // // // // // // // // // // //                       className="border p-2 w-full mb-2"
-// // // // // // // // // // // // //                     >
-// // // // // // // // // // // // //                       {[5,4,3,2,1].map(r => (
-// // // // // // // // // // // // //                         <option key={r}>{r}</option>
-// // // // // // // // // // // // //                       ))}
-// // // // // // // // // // // // //                     </select>
+// // // // // // // // // // // //               </div>
+// // // // // // // // // // // //             )}
+// // // // // // // // // // // //           </div>
+// // // // // // // // // // // //         </div>
+// // // // // // // // // // // //       </div>
+// // // // // // // // // // // //     </div>
+// // // // // // // // // // // //   );
+// // // // // // // // // // // // };
 
-// // // // // // // // // // // // //                     <textarea
-// // // // // // // // // // // // //                       value={comment}
-// // // // // // // // // // // // //                       onChange={(e) => setComment(e.target.value)}
-// // // // // // // // // // // // //                       className="border p-2 w-full mb-2"
-// // // // // // // // // // // // //                     />
-
-// // // // // // // // // // // // //                     <button
-// // // // // // // // // // // // //                       onClick={handleSubmitReview}
-// // // // // // // // // // // // //                       className="bg-pink-500 text-white px-4 py-2 rounded"
-// // // // // // // // // // // // //                     >
-// // // // // // // // // // // // //                       {editingReviewId ? "Update" : "Submit"}
-// // // // // // // // // // // // //                     </button>
-// // // // // // // // // // // // //                   </div>
-// // // // // // // // // // // // //                 )}
-
-// // // // // // // // // // // // //                 {/* LIST */}
-// // // // // // // // // // // // //                 {reviews.map((review) => {
-
-// // // // // // // // // // // // //                   // ✅ FINAL OWNER CHECK (WORKING)
-// // // // // // // // // // // // //                   const isOwner =
-// // // // // // // // // // // // //                     String(review.user?._id || review.user) === String(userId);
-
-// // // // // // // // // // // // //                   return (
-// // // // // // // // // // // // //                     <div key={review._id} className="border-b py-3 flex justify-between">
-
-// // // // // // // // // // // // //                       <div>
-// // // // // // // // // // // // //                         <p>⭐ {review.rating}</p>
-// // // // // // // // // // // // //                         <p>{review.comment}</p>
-// // // // // // // // // // // // //                         <p className="text-xs text-gray-500">
-// // // // // // // // // // // // //                           by {review.user?.name || "User"}
-// // // // // // // // // // // // //                         </p>
-// // // // // // // // // // // // //                       </div>
-
-// // // // // // // // // // // // //                       {/* ✅ ALWAYS WORKING EDIT ICON */}
-// // // // // // // // // // // // //                       {isOwner && (
-// // // // // // // // // // // // //                         <div className="relative">
-
-// // // // // // // // // // // // //                           <button
-// // // // // // // // // // // // //                             onClick={() =>
-// // // // // // // // // // // // //                               setOpenMenuId(
-// // // // // // // // // // // // //                                 openMenuId === review._id ? null : review._id
-// // // // // // // // // // // // //                               )
-// // // // // // // // // // // // //                             }
-// // // // // // // // // // // // //                             className="text-xl"
-// // // // // // // // // // // // //                           >
-// // // // // // // // // // // // //                             ✏️
-// // // // // // // // // // // // //                           </button>
-
-// // // // // // // // // // // // //                           {openMenuId === review._id && (
-// // // // // // // // // // // // //                             <div className="absolute right-0 bg-white border shadow rounded w-28 z-10">
-// // // // // // // // // // // // //                               <button
-// // // // // // // // // // // // //                                 onClick={() => handleEdit(review)}
-// // // // // // // // // // // // //                                 className="block w-full text-left px-3 py-2 hover:bg-gray-100"
-// // // // // // // // // // // // //                               >
-// // // // // // // // // // // // //                                 Edit
-// // // // // // // // // // // // //                               </button>
-
-// // // // // // // // // // // // //                               <button
-// // // // // // // // // // // // //                                 onClick={() => handleDelete(review._id)}
-// // // // // // // // // // // // //                                 className="block w-full text-left px-3 py-2 text-red-500 hover:bg-gray-100"
-// // // // // // // // // // // // //                               >
-// // // // // // // // // // // // //                                 Delete
-// // // // // // // // // // // // //                               </button>
-// // // // // // // // // // // // //                             </div>
-// // // // // // // // // // // // //                           )}
-
-// // // // // // // // // // // // //                         </div>
-// // // // // // // // // // // // //                       )}
-
-// // // // // // // // // // // // //                     </div>
-// // // // // // // // // // // // //                   );
-// // // // // // // // // // // // //                 })}
-
-// // // // // // // // // // // // //               </div>
-// // // // // // // // // // // // //             )}
-// // // // // // // // // // // // //           </div>
-// // // // // // // // // // // // //         </div>
-// // // // // // // // // // // // //       </div>
-// // // // // // // // // // // // //     </div>
-// // // // // // // // // // // // //   );
-// // // // // // // // // // // // // };
-
-// // // // // // // // // // // // // export default ProductDetails;
+// // // // // // // // // // // // export default ProductDetails;
 
 
 
@@ -1169,19 +2147,32 @@
 // // // // // // // // // //   const [comment, setComment] = useState("");
 // // // // // // // // // //   const [editingReviewId, setEditingReviewId] = useState(null);
 
-// // // // // // // // // //   const [openMenuId, setOpenMenuId] = useState(null);
+// // // // // // // // // //   const backendURL =
+// // // // // // // // // //     import.meta.env.VITE_BACKEND_URL ||
+// // // // // // // // // //     "https://ecommerce-mern-backend-1.onrender.com";
 
-// // // // // // // // // //   const userId = localStorage.getItem("userId");
+// // // // // // // // // //   // ✅ FIX: get userId from stored user
+// // // // // // // // // //   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+// // // // // // // // // //   const userId = storedUser?._id;
 
-// // // // // // // // // //   // ================= FETCH =================
+// // // // // // // // // //   // ================= FETCH PRODUCT =================
 // // // // // // // // // //   const fetchProduct = async () => {
-// // // // // // // // // //     const res = await axios.get(`/products/${id}`);
-// // // // // // // // // //     setProduct(res.data);
+// // // // // // // // // //     try {
+// // // // // // // // // //       const res = await axios.get(`${backendURL}/api/products/${id}`);
+// // // // // // // // // //       setProduct(res.data);
+// // // // // // // // // //     } catch (err) {
+// // // // // // // // // //       console.error("Fetch product error:", err);
+// // // // // // // // // //     }
 // // // // // // // // // //   };
 
+// // // // // // // // // //   // ================= FETCH REVIEWS =================
 // // // // // // // // // //   const fetchReviews = async () => {
-// // // // // // // // // //     const res = await axios.get(`/reviews?productId=${id}`);
-// // // // // // // // // //     setReviews(res.data);
+// // // // // // // // // //     try {
+// // // // // // // // // //       const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
+// // // // // // // // // //       setReviews(res.data);
+// // // // // // // // // //     } catch (err) {
+// // // // // // // // // //       console.error("Fetch reviews error:", err);
+// // // // // // // // // //     }
 // // // // // // // // // //   };
 
 // // // // // // // // // //   useEffect(() => {
@@ -1191,67 +2182,70 @@
 
 // // // // // // // // // //   if (!product) return <div className="p-10 text-center">Loading...</div>;
 
-// // // // // // // // // //   // ✅ FIX IMAGE: use images[0] from your schema
-// // // // // // // // // // //   const backendURL =
-// // // // // // // // // // //     import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
-
-// // // // // // // // // // //   const imageUrl =
-// // // // // // // // // // //     product.images && product.images[0]
-// // // // // // // // // // //       ? product.images[0].startsWith("http")
-// // // // // // // // // // //         ? product.images[0]
-// // // // // // // // // // //         : `${backendURL}/uploads/${product.images[0]}`
-// // // // // // // // // // //       : "/placeholder.png";
-
-// // // // // // // // // // const backendURL =
-// // // // // // // // // //   import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
-
-// // // // // // // // // // const imageUrl =
-// // // // // // // // // //   product.images && product.images[0]
-// // // // // // // // // //     ? product.images[0].startsWith("http")
-// // // // // // // // // //       ? product.images[0]
-// // // // // // // // // //       : product.images[0].startsWith("/uploads/")
+// // // // // // // // // //   // ================= IMAGE =================
+// // // // // // // // // //   const imageUrl =
+// // // // // // // // // //     product.images && product.images[0]
+// // // // // // // // // //       ? product.images[0].startsWith("http")
+// // // // // // // // // //         ? product.images[0]
+// // // // // // // // // //         : product.images[0].startsWith("/uploads/")
 // // // // // // // // // //         ? `${backendURL}${product.images[0]}`
 // // // // // // // // // //         : `${backendURL}/uploads/${product.images[0]}`
-// // // // // // // // // //     : "/placeholder.png"; // fallback
+// // // // // // // // // //       : "/placeholder.png";
 
-// // // // // // // // // //   // ================= ADD / UPDATE =================
+// // // // // // // // // //   // ================= ADD / UPDATE REVIEW =================
 // // // // // // // // // //   const handleSubmitReview = async () => {
 // // // // // // // // // //     try {
 // // // // // // // // // //       const token = localStorage.getItem("token");
 
-// // // // // // // // // //       if (!token) return alert("Login required");
+// // // // // // // // // //       if (!token) {
+// // // // // // // // // //         alert("Please login first");
+// // // // // // // // // //         return;
+// // // // // // // // // //       }
+
+// // // // // // // // // //       if (!comment.trim()) {
+// // // // // // // // // //         alert("Please write a review");
+// // // // // // // // // //         return;
+// // // // // // // // // //       }
 
 // // // // // // // // // //       if (editingReviewId) {
 // // // // // // // // // //         await axios.put(
-// // // // // // // // // //           `/reviews/${editingReviewId}`,
-// // // // // // // // // //           { rating, comment },
+// // // // // // // // // //           `${backendURL}/api/reviews/${editingReviewId}`,
+// // // // // // // // // //           { rating: Number(rating), comment },
 // // // // // // // // // //           { headers: { Authorization: `Bearer ${token}` } }
 // // // // // // // // // //         );
 // // // // // // // // // //       } else {
 // // // // // // // // // //         await axios.post(
-// // // // // // // // // //           "/reviews",
-// // // // // // // // // //           { productId: id, rating, comment },
+// // // // // // // // // //           `${backendURL}/api/reviews`,
+// // // // // // // // // //           { productId: id, rating: Number(rating), comment },
 // // // // // // // // // //           { headers: { Authorization: `Bearer ${token}` } }
 // // // // // // // // // //         );
 // // // // // // // // // //       }
 
+// // // // // // // // // //       alert("Review submitted successfully!");
 // // // // // // // // // //       setShowForm(false);
 // // // // // // // // // //       setComment("");
 // // // // // // // // // //       setRating(5);
 // // // // // // // // // //       setEditingReviewId(null);
-
 // // // // // // // // // //       fetchReviews();
 // // // // // // // // // //     } catch (err) {
-// // // // // // // // // //       alert(err.response?.data?.message || "Error");
+// // // // // // // // // //       console.error("Review error:", err.response?.data || err.message);
+// // // // // // // // // //       alert(err.response?.data?.message || "Review failed");
 // // // // // // // // // //     }
 // // // // // // // // // //   };
 
 // // // // // // // // // //   // ================= DELETE =================
-// // // // // // // // // //   const handleDelete = async (rid) => {
-// // // // // // // // // //     await axios.delete(`/reviews/${rid}`, {
-// // // // // // // // // //       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-// // // // // // // // // //     });
-// // // // // // // // // //     fetchReviews();
+// // // // // // // // // //   const handleDelete = async (reviewId) => {
+// // // // // // // // // //     try {
+// // // // // // // // // //       const token = localStorage.getItem("token");
+
+// // // // // // // // // //       await axios.delete(`${backendURL}/api/reviews/${reviewId}`, {
+// // // // // // // // // //         headers: { Authorization: `Bearer ${token}` },
+// // // // // // // // // //       });
+
+// // // // // // // // // //       fetchReviews();
+// // // // // // // // // //     } catch (err) {
+// // // // // // // // // //       console.error("Delete review error:", err);
+// // // // // // // // // //     }
 // // // // // // // // // //   };
 
 // // // // // // // // // //   // ================= EDIT =================
@@ -1266,33 +2260,26 @@
 // // // // // // // // // //     <div className="bg-gray-50 min-h-screen">
 // // // // // // // // // //       <div className="max-w-6xl mx-auto p-4">
 
-// // // // // // // // // //         {/* PRODUCT */}
-// // // // // // // // // //         <div className="grid md:grid-cols-2 gap-6 bg-white p-6 rounded shadow">
-
-// // // // // // // // // //           {/* LEFT SIDE IMAGE */}
+// // // // // // // // // //         {/* TOP */}
+// // // // // // // // // //         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-lg shadow">
 // // // // // // // // // //           <img
 // // // // // // // // // //             src={imageUrl}
 // // // // // // // // // //             alt={product.title}
 // // // // // // // // // //             className="h-[400px] w-full object-contain"
 // // // // // // // // // //           />
 
-// // // // // // // // // //           {/* RIGHT SIDE CONTENT */}
-// // // // // // // // // //           <div className="flex flex-col justify-start">
+// // // // // // // // // //           <div>
 // // // // // // // // // //             <h1 className="text-xl font-semibold">{product.title}</h1>
-
-// // // // // // // // // //             {/* ✅ ADD DESCRIPTION BELOW TITLE */}
-// // // // // // // // // //             <p className="text-gray-700 mt-2">{product.description}</p>
-
+// // // // // // // // // //             <p className="text-gray-600 mt-2">{product.description}</p>
 // // // // // // // // // //             <p className="text-2xl font-bold mt-2">₹{product.price}</p>
 
 // // // // // // // // // //             <div className="flex gap-3 mt-4">
 // // // // // // // // // //               <button
-// // // // // // // // // //                 onClick={() => addToCart(product)}
+// // // // // // // // // //                 onClick={() => addToCart({ ...product, quantity: 1 })}
 // // // // // // // // // //                 className="bg-pink-500 text-white px-6 py-3 rounded w-full"
 // // // // // // // // // //               >
 // // // // // // // // // //                 Add to Bag
 // // // // // // // // // //               </button>
-
 // // // // // // // // // //               <button
 // // // // // // // // // //                 onClick={() => addToWishlist(product)}
 // // // // // // // // // //                 className="border px-4 py-3 rounded"
@@ -1303,38 +2290,43 @@
 // // // // // // // // // //           </div>
 // // // // // // // // // //         </div>
 
-// // // // // // // // // //         {/* TABS (DETAILS & REVIEWS) */}
-// // // // // // // // // //         <div className="bg-white mt-6 rounded shadow">
+// // // // // // // // // //         {/* TABS */}
+// // // // // // // // // //         <div className="bg-white mt-6 rounded-lg shadow">
 // // // // // // // // // //           <div className="flex border-b">
 // // // // // // // // // //             <button
 // // // // // // // // // //               onClick={() => setActiveTab("details")}
-// // // // // // // // // //               className={`px-6 py-3 ${activeTab === "details" && "border-b-2 border-pink-500"}`}
+// // // // // // // // // //               className={`px-6 py-3 ${
+// // // // // // // // // //                 activeTab === "details" && "border-b-2 border-pink-500"
+// // // // // // // // // //               }`}
 // // // // // // // // // //             >
 // // // // // // // // // //               Product Details
 // // // // // // // // // //             </button>
-
 // // // // // // // // // //             <button
 // // // // // // // // // //               onClick={() => setActiveTab("reviews")}
-// // // // // // // // // //               className={`px-6 py-3 ${activeTab === "reviews" && "border-b-2 border-pink-500"}`}
+// // // // // // // // // //               className={`px-6 py-3 ${
+// // // // // // // // // //                 activeTab === "reviews" && "border-b-2 border-pink-500"
+// // // // // // // // // //               }`}
 // // // // // // // // // //             >
 // // // // // // // // // //               Ratings & Reviews
 // // // // // // // // // //             </button>
 // // // // // // // // // //           </div>
 
 // // // // // // // // // //           <div className="p-6">
-// // // // // // // // // //             {/* DETAILS */}
-// // // // // // // // // //             {activeTab === "details" && <p>{product.description}</p>}
+// // // // // // // // // //             {activeTab === "details" && (
+// // // // // // // // // //               <p className="text-gray-600">{product.description}</p>
+// // // // // // // // // //             )}
 
-// // // // // // // // // //             {/* REVIEWS */}
 // // // // // // // // // //             {activeTab === "reviews" && (
 // // // // // // // // // //               <div>
 // // // // // // // // // //                 {/* HEADER */}
 // // // // // // // // // //                 <div className="flex justify-between mb-4">
-// // // // // // // // // //                   <h2>Customer Reviews</h2>
+// // // // // // // // // //                   <h2 className="font-semibold">Customer Reviews</h2>
 // // // // // // // // // //                   <button
 // // // // // // // // // //                     onClick={() => {
 // // // // // // // // // //                       setShowForm(true);
 // // // // // // // // // //                       setEditingReviewId(null);
+// // // // // // // // // //                       setComment("");
+// // // // // // // // // //                       setRating(5);
 // // // // // // // // // //                     }}
 // // // // // // // // // //                     className="border px-4 py-2 text-pink-500 rounded"
 // // // // // // // // // //                   >
@@ -1348,14 +2340,19 @@
 // // // // // // // // // //                     <select
 // // // // // // // // // //                       value={rating}
 // // // // // // // // // //                       onChange={(e) => setRating(Number(e.target.value))}
-// // // // // // // // // //                       className="border p-2 w-full mb-2"
+// // // // // // // // // //                       className="border p-2 mb-2 w-full"
 // // // // // // // // // //                     >
-// // // // // // // // // //                       {[5,4,3,2,1].map(r => <option key={r}>{r}</option>)}
+// // // // // // // // // //                       {[5, 4, 3, 2, 1].map((r) => (
+// // // // // // // // // //                         <option key={r} value={r}>
+// // // // // // // // // //                           {r} Stars
+// // // // // // // // // //                         </option>
+// // // // // // // // // //                       ))}
 // // // // // // // // // //                     </select>
 
 // // // // // // // // // //                     <textarea
 // // // // // // // // // //                       value={comment}
 // // // // // // // // // //                       onChange={(e) => setComment(e.target.value)}
+// // // // // // // // // //                       placeholder="Write your review..."
 // // // // // // // // // //                       className="border p-2 w-full mb-2"
 // // // // // // // // // //                     />
 
@@ -1363,59 +2360,50 @@
 // // // // // // // // // //                       onClick={handleSubmitReview}
 // // // // // // // // // //                       className="bg-pink-500 text-white px-4 py-2 rounded"
 // // // // // // // // // //                     >
-// // // // // // // // // //                       {editingReviewId ? "Update" : "Submit"}
+// // // // // // // // // //                       {editingReviewId ? "Update Review" : "Submit Review"}
 // // // // // // // // // //                     </button>
 // // // // // // // // // //                   </div>
 // // // // // // // // // //                 )}
 
 // // // // // // // // // //                 {/* LIST */}
-// // // // // // // // // //                 {reviews.map((review) => {
-// // // // // // // // // //                   const isOwner = String(review.user?._id || review.user) === String(userId);
+// // // // // // // // // //                 {reviews.length === 0 && <p>No reviews yet</p>}
 
-// // // // // // // // // //                   return (
-// // // // // // // // // //                     <div key={review._id} className="border-b py-3 flex justify-between">
-// // // // // // // // // //                       <div>
-// // // // // // // // // //                         <p>⭐ {review.rating}</p>
-// // // // // // // // // //                         <p>{review.comment}</p>
-// // // // // // // // // //                         <p className="text-xs text-gray-500">by {review.user?.name || "User"}</p>
-// // // // // // // // // //                       </div>
-
-// // // // // // // // // //                       {isOwner && (
-// // // // // // // // // //                         <div className="relative">
-// // // // // // // // // //                           <button
-// // // // // // // // // //                             onClick={() => setOpenMenuId(openMenuId === review._id ? null : review._id)}
-// // // // // // // // // //                             className="text-xl"
-// // // // // // // // // //                           >
-// // // // // // // // // //                             ✏️
-// // // // // // // // // //                           </button>
-
-// // // // // // // // // //                           {openMenuId === review._id && (
-// // // // // // // // // //                             <div className="absolute right-0 bg-white border shadow rounded w-28 z-10">
-// // // // // // // // // //                               <button
-// // // // // // // // // //                                 onClick={() => handleEdit(review)}
-// // // // // // // // // //                                 className="block w-full text-left px-3 py-2 hover:bg-gray-100"
-// // // // // // // // // //                               >
-// // // // // // // // // //                                 Edit
-// // // // // // // // // //                               </button>
-
-// // // // // // // // // //                               <button
-// // // // // // // // // //                                 onClick={() => handleDelete(review._id)}
-// // // // // // // // // //                                 className="block w-full text-left px-3 py-2 text-red-500 hover:bg-gray-100"
-// // // // // // // // // //                               >
-// // // // // // // // // //                                 Delete
-// // // // // // // // // //                               </button>
-// // // // // // // // // //                             </div>
-// // // // // // // // // //                           )}
-// // // // // // // // // //                         </div>
-// // // // // // // // // //                       )}
+// // // // // // // // // //                 {reviews.map((review) => (
+// // // // // // // // // //                   <div
+// // // // // // // // // //                     key={review._id}
+// // // // // // // // // //                     className="border-b py-3 flex justify-between"
+// // // // // // // // // //                   >
+// // // // // // // // // //                     <div>
+// // // // // // // // // //                       <p className="font-semibold">⭐ {review.rating}</p>
+// // // // // // // // // //                       <p>{review.comment}</p>
+// // // // // // // // // //                       <p className="text-xs text-gray-500">
+// // // // // // // // // //                         by {review.user?.name}
+// // // // // // // // // //                       </p>
 // // // // // // // // // //                     </div>
-// // // // // // // // // //                   );
-// // // // // // // // // //                 })}
+
+// // // // // // // // // //                     {/* ✅ FIXED CONDITION */}
+// // // // // // // // // //                     {String(review.user?._id) === String(userId) && (
+// // // // // // // // // //                       <div className="flex gap-2">
+// // // // // // // // // //                         <button
+// // // // // // // // // //                           onClick={() => handleEdit(review)}
+// // // // // // // // // //                           className="text-blue-500"
+// // // // // // // // // //                         >
+// // // // // // // // // //                           Edit
+// // // // // // // // // //                         </button>
+// // // // // // // // // //                         <button
+// // // // // // // // // //                           onClick={() => handleDelete(review._id)}
+// // // // // // // // // //                           className="text-red-500"
+// // // // // // // // // //                         >
+// // // // // // // // // //                           Delete
+// // // // // // // // // //                         </button>
+// // // // // // // // // //                       </div>
+// // // // // // // // // //                     )}
+// // // // // // // // // //                   </div>
+// // // // // // // // // //                 ))}
 // // // // // // // // // //               </div>
 // // // // // // // // // //             )}
 // // // // // // // // // //           </div>
 // // // // // // // // // //         </div>
-
 // // // // // // // // // //       </div>
 // // // // // // // // // //     </div>
 // // // // // // // // // //   );
@@ -1423,158 +2411,300 @@
 
 // // // // // // // // // // export default ProductDetails;
 
-// // // // // // // // // // // // import React, { useEffect, useState } from "react";
-// // // // // // // // // // // // import { useParams } from "react-router-dom";
-// // // // // // // // // // // // import axios from "../../utils/axios";
-// // // // // // // // // // // // import { useCart } from "../../context/CartContext";
-// // // // // // // // // // // // import { useWishlist } from "../../context/WishlistContext";
-
-// // // // // // // // // // // // const ProductDetails = () => {
-// // // // // // // // // // // //   const { id } = useParams();
-// // // // // // // // // // // //   const { addToCart } = useCart();
-// // // // // // // // // // // //   const { addToWishlist } = useWishlist();
-
-// // // // // // // // // // // //   const [product, setProduct] = useState(null);
-
-// // // // // // // // // // // //   const backendURL =
-// // // // // // // // // // // //     import.meta.env.VITE_BACKEND_URL ||
-// // // // // // // // // // // //     "https://ecommerce-mern-backend-1.onrender.com/api";
-
-// // // // // // // // // // // //   useEffect(() => {
-// // // // // // // // // // // //     const fetchProduct = async () => {
-// // // // // // // // // // // //       try {
-// // // // // // // // // // // //         const res = await axios.get(`${backendURL}/products/${id}`);
-// // // // // // // // // // // //         const data = res.data;
-
-// // // // // // // // // // // //         // Fix images
-// // // // // // // // // // // //         setProduct({
-// // // // // // // // // // // //           ...data,
-// // // // // // // // // // // //           image:
-// // // // // // // // // // // //             data.images?.[0]?.startsWith("http")
-// // // // // // // // // // // //               ? data.images[0]
-// // // // // // // // // // // //               : `${backendURL}/uploads/${data.images[0]}`,
-// // // // // // // // // // // //         });
-// // // // // // // // // // // //       } catch (err) {
-// // // // // // // // // // // //         console.error("Fetch product error:", err);
-// // // // // // // // // // // //       }
-// // // // // // // // // // // //     };
-
-// // // // // // // // // // // //     fetchProduct();
-// // // // // // // // // // // //   }, [id]);
-
-// // // // // // // // // // // //   if (!product) return <div className="p-10 text-center">Loading...</div>;
-
-// // // // // // // // // // // //   return (
-// // // // // // // // // // // //     <div className="bg-gray-50 min-h-screen p-4">
-// // // // // // // // // // // //       <div className="grid md:grid-cols-2 gap-6 bg-white p-6 rounded shadow">
-// // // // // // // // // // // //         <img
-// // // // // // // // // // // //           src={product.image}
-// // // // // // // // // // // //           alt={product.title}
-// // // // // // // // // // // //           className="h-[400px] w-full object-contain"
-// // // // // // // // // // // //         />
-// // // // // // // // // // // //         <div className="flex flex-col justify-start">
-// // // // // // // // // // // //           <h1 className="text-xl font-semibold">{product.title}</h1>
-// // // // // // // // // // // //           <p className="text-gray-700 mt-2">{product.description}</p>
-// // // // // // // // // // // //           <p className="text-2xl font-bold mt-2">₹{product.price}</p>
-// // // // // // // // // // // //           <div className="flex gap-3 mt-4">
-// // // // // // // // // // // //             <button
-// // // // // // // // // // // //               onClick={() => addToCart(product)}
-// // // // // // // // // // // //               className="bg-pink-500 text-white px-6 py-3 rounded w-full"
-// // // // // // // // // // // //             >
-// // // // // // // // // // // //               Add to Bag
-// // // // // // // // // // // //             </button>
-// // // // // // // // // // // //             <button
-// // // // // // // // // // // //               onClick={() => addToWishlist(product)}
-// // // // // // // // // // // //               className="border px-4 py-3 rounded"
-// // // // // // // // // // // //             >
-// // // // // // // // // // // //               ❤️
-// // // // // // // // // // // //             </button>
-// // // // // // // // // // // //           </div>
-// // // // // // // // // // // //         </div>
-// // // // // // // // // // // //       </div>
-// // // // // // // // // // // //     </div>
-// // // // // // // // // // // //   );
-// // // // // // // // // // // // };
-
-// // // // // // // // // // // // export default ProductDetails;
 
 
-// // // // // // // // // // // import React, { useEffect, useState } from "react";
-// // // // // // // // // // // import { useParams } from "react-router-dom";
-// // // // // // // // // // // import axios from "../../utils/axios";
-// // // // // // // // // // // import { useCart } from "../../context/CartContext";
-// // // // // // // // // // // import { useWishlist } from "../../context/WishlistContext";
+// // // // // // // // // import React, { useEffect, useState } from "react";
+// // // // // // // // // import { useParams } from "react-router-dom";
+// // // // // // // // // import axios from "../../utils/axios";
+// // // // // // // // // import { useCart } from "../../context/CartContext";
+// // // // // // // // // import { useWishlist } from "../../context/WishlistContext";
 
-// // // // // // // // // // // const ProductDetails = () => {
-// // // // // // // // // // //   const { id } = useParams();
-// // // // // // // // // // //   const { addToCart } = useCart();
-// // // // // // // // // // //   const { addToWishlist } = useWishlist();
+// // // // // // // // // const ProductDetails = () => {
+// // // // // // // // //   const { id } = useParams();
+// // // // // // // // //   const { addToCart } = useCart();
+// // // // // // // // //   const { addToWishlist } = useWishlist();
 
-// // // // // // // // // // //   const [product, setProduct] = useState(null);
+// // // // // // // // //   const [product, setProduct] = useState(null);
+// // // // // // // // //   const [reviews, setReviews] = useState([]);
+// // // // // // // // //   const [activeTab, setActiveTab] = useState("details");
 
-// // // // // // // // // // //   // ✅ Correct backend URL (your new Render URL)
-// // // // // // // // // // //   const BASE_URL =
-// // // // // // // // // // //     import.meta.env.VITE_BACKEND_URL ||
-// // // // // // // // // // //     "https://ecommerce-mern-backend-2-t4ku.onrender.com";
+// // // // // // // // //   const [showForm, setShowForm] = useState(false);
+// // // // // // // // //   const [rating, setRating] = useState(5);
+// // // // // // // // //   const [comment, setComment] = useState("");
+// // // // // // // // //   const [editingReviewId, setEditingReviewId] = useState(null);
 
-// // // // // // // // // // //   useEffect(() => {
-// // // // // // // // // // //     const fetchProduct = async () => {
-// // // // // // // // // // //       try {
-// // // // // // // // // // //         // full endpoint
-// // // // // // // // // // //         const res = await axios.get(`${BASE_URL}/api/products/${id}`);
-// // // // // // // // // // //         const data = res.data;
+// // // // // // // // //   const backendURL =
+// // // // // // // // //     import.meta.env.VITE_BACKEND_URL ||
+// // // // // // // // //     "https://ecommerce-mern-backend-1.onrender.com";
 
-// // // // // // // // // // //         // Fix image URL
-// // // // // // // // // // //         setProduct({
-// // // // // // // // // // //           ...data,
-// // // // // // // // // // //           image:
-// // // // // // // // // // //             data.images?.[0]?.startsWith("http")
-// // // // // // // // // // //               ? data.images[0]
-// // // // // // // // // // //               : `${BASE_URL}/uploads/${data.images[0]}`,
-// // // // // // // // // // //         });
-// // // // // // // // // // //       } catch (err) {
-// // // // // // // // // // //         console.error("Fetch product error:", err);
-// // // // // // // // // // //       }
-// // // // // // // // // // //     };
+// // // // // // // // //   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+// // // // // // // // //   const userId = storedUser?._id;
 
-// // // // // // // // // // //     fetchProduct();
-// // // // // // // // // // //   }, [id, BASE_URL]);
+// // // // // // // // //   // ================= FETCH =================
+// // // // // // // // //   useEffect(() => {
+// // // // // // // // //     fetchProduct();
+// // // // // // // // //     fetchReviews();
+// // // // // // // // //   }, [id]);
 
-// // // // // // // // // // //   if (!product) return <div className="p-10 text-center">Loading...</div>;
+// // // // // // // // //   const fetchProduct = async () => {
+// // // // // // // // //     const res = await axios.get(`${backendURL}/api/products/${id}`);
+// // // // // // // // //     setProduct(res.data);
+// // // // // // // // //   };
 
-// // // // // // // // // // //   return (
-// // // // // // // // // // //     <div className="bg-gray-50 min-h-screen p-4">
-// // // // // // // // // // //       <div className="grid md:grid-cols-2 gap-6 bg-white p-6 rounded shadow">
-// // // // // // // // // // //         <img
-// // // // // // // // // // //           src={product.image}
-// // // // // // // // // // //           alt={product.title}
-// // // // // // // // // // //           className="h-[400px] w-full object-contain"
-// // // // // // // // // // //         />
-// // // // // // // // // // //         <div className="flex flex-col justify-start">
-// // // // // // // // // // //           <h1 className="text-xl font-semibold">{product.title}</h1>
-// // // // // // // // // // //           <p className="text-gray-700 mt-2">{product.description}</p>
-// // // // // // // // // // //           <p className="text-2xl font-bold mt-2">₹{product.price}</p>
-// // // // // // // // // // //           <div className="flex gap-3 mt-4">
-// // // // // // // // // // //             <button
-// // // // // // // // // // //               onClick={() => addToCart({ ...product, quantity: 1 })}
-// // // // // // // // // // //               className="bg-pink-500 text-white px-6 py-3 rounded w-full"
-// // // // // // // // // // //             >
-// // // // // // // // // // //               Add to Bag
-// // // // // // // // // // //             </button>
-// // // // // // // // // // //             <button
-// // // // // // // // // // //               onClick={() => addToWishlist(product)}
-// // // // // // // // // // //               className="border px-4 py-3 rounded"
-// // // // // // // // // // //             >
-// // // // // // // // // // //               ❤️
-// // // // // // // // // // //             </button>
-// // // // // // // // // // //           </div>
-// // // // // // // // // // //         </div>
-// // // // // // // // // // //       </div>
-// // // // // // // // // // //     </div>
-// // // // // // // // // // //   );
-// // // // // // // // // // // };
+// // // // // // // // //   const fetchReviews = async () => {
+// // // // // // // // //     const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
+// // // // // // // // //     setReviews(res.data);
+// // // // // // // // //   };
 
-// // // // // // // // // // // export default ProductDetails;
+// // // // // // // // //   if (!product)
+// // // // // // // // //     return <div className="p-10 text-center text-lg">Loading...</div>;
+
+// // // // // // // // //   // ================= IMAGE =================
+// // // // // // // // //   const imageUrl =
+// // // // // // // // //     product.images?.[0]
+// // // // // // // // //       ? product.images[0].startsWith("http")
+// // // // // // // // //         ? product.images[0]
+// // // // // // // // //         : `${backendURL}${product.images[0]}`
+// // // // // // // // //       : "/placeholder.png";
+
+// // // // // // // // //   // ================= REVIEW SUBMIT =================
+// // // // // // // // //   const handleSubmitReview = async () => {
+// // // // // // // // //     const token = localStorage.getItem("token");
+
+// // // // // // // // //     if (!token) return alert("Please login first");
+// // // // // // // // //     if (!comment.trim()) return alert("Write something");
+
+// // // // // // // // //     if (editingReviewId) {
+// // // // // // // // //       await axios.put(
+// // // // // // // // //         `${backendURL}/api/reviews/${editingReviewId}`,
+// // // // // // // // //         { rating, comment },
+// // // // // // // // //         { headers: { Authorization: `Bearer ${token}` } }
+// // // // // // // // //       );
+// // // // // // // // //     } else {
+// // // // // // // // //       await axios.post(
+// // // // // // // // //         `${backendURL}/api/reviews`,
+// // // // // // // // //         { productId: id, rating, comment },
+// // // // // // // // //         { headers: { Authorization: `Bearer ${token}` } }
+// // // // // // // // //       );
+// // // // // // // // //     }
+
+// // // // // // // // //     setShowForm(false);
+// // // // // // // // //     setComment("");
+// // // // // // // // //     setRating(5);
+// // // // // // // // //     setEditingReviewId(null);
+// // // // // // // // //     fetchReviews();
+// // // // // // // // //   };
+
+// // // // // // // // //   const handleDelete = async (reviewId) => {
+// // // // // // // // //     const token = localStorage.getItem("token");
+
+// // // // // // // // //     await axios.delete(`${backendURL}/api/reviews/${reviewId}`, {
+// // // // // // // // //       headers: { Authorization: `Bearer ${token}` },
+// // // // // // // // //     });
+
+// // // // // // // // //     fetchReviews();
+// // // // // // // // //   };
+
+// // // // // // // // //   const handleEdit = (review) => {
+// // // // // // // // //     setShowForm(true);
+// // // // // // // // //     setRating(review.rating);
+// // // // // // // // //     setComment(review.comment);
+// // // // // // // // //     setEditingReviewId(review._id);
+// // // // // // // // //   };
+
+// // // // // // // // //   return (
+// // // // // // // // //     <div className="bg-gray-50 min-h-screen p-4">
+// // // // // // // // //       <div className="max-w-6xl mx-auto">
+
+// // // // // // // // //         {/* TOP SECTION */}
+// // // // // // // // //         <div className="grid md:grid-cols-2 gap-8 bg-white p-6 rounded-2xl shadow">
+
+// // // // // // // // //           {/* IMAGE */}
+// // // // // // // // //           <div className="overflow-hidden rounded-xl">
+// // // // // // // // //             <img
+// // // // // // // // //               src={imageUrl}
+// // // // // // // // //               alt={product.title}
+// // // // // // // // //               className="h-[400px] w-full object-contain hover:scale-105 transition duration-300"
+// // // // // // // // //             />
+// // // // // // // // //           </div>
+
+// // // // // // // // //           {/* DETAILS */}
+// // // // // // // // //           <div className="flex flex-col justify-between">
+// // // // // // // // //             <div>
+// // // // // // // // //               <h1 className="text-2xl font-bold">{product.title}</h1>
+
+// // // // // // // // //               <p className="text-gray-600 mt-2">{product.description}</p>
+
+// // // // // // // // //               <p className="text-3xl font-bold text-pink-600 mt-4">
+// // // // // // // // //                 ₹{product.price}
+// // // // // // // // //               </p>
+
+// // // // // // // // //               {/* Fake rating UI */}
+// // // // // // // // //               <div className="mt-2 text-yellow-500">
+// // // // // // // // //                 ⭐⭐⭐⭐☆ <span className="text-gray-500 text-sm">(4.2)</span>
+// // // // // // // // //               </div>
+// // // // // // // // //             </div>
+
+// // // // // // // // //             {/* BUTTONS */}
+// // // // // // // // //             <div className="flex gap-3 mt-6">
+// // // // // // // // //               <button
+// // // // // // // // //                 onClick={() => addToCart({ ...product, quantity: 1 })}
+// // // // // // // // //                 className="flex-1 bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-xl shadow-md transition"
+// // // // // // // // //               >
+// // // // // // // // //                 Add to Bag
+// // // // // // // // //               </button>
+
+// // // // // // // // //               <button
+// // // // // // // // //                 onClick={() => addToWishlist(product)}
+// // // // // // // // //                 className="px-4 border rounded-xl hover:bg-gray-100 transition"
+// // // // // // // // //               >
+// // // // // // // // //                 ❤️
+// // // // // // // // //               </button>
+// // // // // // // // //             </div>
+// // // // // // // // //           </div>
+// // // // // // // // //         </div>
+
+// // // // // // // // //         {/* TABS */}
+// // // // // // // // //         <div className="bg-white mt-6 rounded-2xl shadow">
+// // // // // // // // //           <div className="flex border-b">
+// // // // // // // // //             <button
+// // // // // // // // //               onClick={() => setActiveTab("details")}
+// // // // // // // // //               className={`px-6 py-3 font-medium ${
+// // // // // // // // //                 activeTab === "details"
+// // // // // // // // //                   ? "border-b-2 border-pink-500 text-pink-500"
+// // // // // // // // //                   : "text-gray-500"
+// // // // // // // // //               }`}
+// // // // // // // // //             >
+// // // // // // // // //               Details
+// // // // // // // // //             </button>
+
+// // // // // // // // //             <button
+// // // // // // // // //               onClick={() => setActiveTab("reviews")}
+// // // // // // // // //               className={`px-6 py-3 font-medium ${
+// // // // // // // // //                 activeTab === "reviews"
+// // // // // // // // //                   ? "border-b-2 border-pink-500 text-pink-500"
+// // // // // // // // //                   : "text-gray-500"
+// // // // // // // // //               }`}
+// // // // // // // // //             >
+// // // // // // // // //               Reviews
+// // // // // // // // //             </button>
+// // // // // // // // //           </div>
+
+// // // // // // // // //           <div className="p-6">
+
+// // // // // // // // //             {/* DETAILS TAB */}
+// // // // // // // // //             {activeTab === "details" && (
+// // // // // // // // //               <p className="text-gray-600 leading-relaxed">
+// // // // // // // // //                 {product.description}
+// // // // // // // // //               </p>
+// // // // // // // // //             )}
+
+// // // // // // // // //             {/* REVIEWS TAB */}
+// // // // // // // // //             {activeTab === "reviews" && (
+// // // // // // // // //               <div>
+
+// // // // // // // // //                 {/* HEADER */}
+// // // // // // // // //                 <div className="flex justify-between mb-4">
+// // // // // // // // //                   <h2 className="font-semibold text-lg">
+// // // // // // // // //                     Customer Reviews
+// // // // // // // // //                   </h2>
+
+// // // // // // // // //                   <button
+// // // // // // // // //                     onClick={() => {
+// // // // // // // // //                       setShowForm(true);
+// // // // // // // // //                       setEditingReviewId(null);
+// // // // // // // // //                       setComment("");
+// // // // // // // // //                       setRating(5);
+// // // // // // // // //                     }}
+// // // // // // // // //                     className="border px-4 py-2 text-pink-500 rounded-lg hover:bg-pink-50"
+// // // // // // // // //                   >
+// // // // // // // // //                     Write Review
+// // // // // // // // //                   </button>
+// // // // // // // // //                 </div>
+
+// // // // // // // // //                 {/* FORM */}
+// // // // // // // // //                 {showForm && (
+// // // // // // // // //                   <div className="border p-4 mb-4 rounded-xl bg-gray-50">
+// // // // // // // // //                     <select
+// // // // // // // // //                       value={rating}
+// // // // // // // // //                       onChange={(e) => setRating(Number(e.target.value))}
+// // // // // // // // //                       className="border p-2 mb-2 w-full rounded"
+// // // // // // // // //                     >
+// // // // // // // // //                       {[5, 4, 3, 2, 1].map((r) => (
+// // // // // // // // //                         <option key={r} value={r}>
+// // // // // // // // //                           {r} Stars
+// // // // // // // // //                         </option>
+// // // // // // // // //                       ))}
+// // // // // // // // //                     </select>
+
+// // // // // // // // //                     <textarea
+// // // // // // // // //                       value={comment}
+// // // // // // // // //                       onChange={(e) => setComment(e.target.value)}
+// // // // // // // // //                       placeholder="Write your review..."
+// // // // // // // // //                       className="border p-2 w-full mb-2 rounded"
+// // // // // // // // //                     />
+
+// // // // // // // // //                     <button
+// // // // // // // // //                       onClick={handleSubmitReview}
+// // // // // // // // //                       className="bg-pink-500 text-white px-4 py-2 rounded-lg"
+// // // // // // // // //                     >
+// // // // // // // // //                       {editingReviewId ? "Update" : "Submit"}
+// // // // // // // // //                     </button>
+// // // // // // // // //                   </div>
+// // // // // // // // //                 )}
+               
+
+// // // // // // // // //                 {/* LIST */}
+// // // // // // // // //                 {reviews.length === 0 && (
+// // // // // // // // //                   <p className="text-gray-500">No reviews yet</p>
+// // // // // // // // //                 )}
+
+// // // // // // // // //                 {reviews.map((review) => (
+// // // // // // // // //                   <div
+// // // // // // // // //                     key={review._id}
+// // // // // // // // //                     className="bg-gray-50 p-4 rounded-xl mb-3 shadow-sm flex justify-between"
+// // // // // // // // //                   >
+// // // // // // // // //                     <div>
+// // // // // // // // //                       <p className="text-yellow-500">
+// // // // // // // // //                         {"⭐".repeat(review.rating)}
+// // // // // // // // //                       </p>
+// // // // // // // // //                       <p className="mt-1">{review.comment}</p>
+// // // // // // // // //                       <p className="text-xs text-gray-500 mt-1">
+// // // // // // // // //                         by {review.user?.name}
+// // // // // // // // //                       </p>
+// // // // // // // // //                     </div>
+
+// // // // // // // // //                     {String(review.user?._id) === String(userId) && (
+// // // // // // // // //                       <div className="flex gap-3 text-sm">
+// // // // // // // // //                         <button
+// // // // // // // // //                           onClick={() => handleEdit(review)}
+// // // // // // // // //                           className="text-blue-500"
+// // // // // // // // //                         >
+// // // // // // // // //                           Edit
+// // // // // // // // //                         </button>
+
+// // // // // // // // //                         <button
+// // // // // // // // //                           onClick={() => handleDelete(review._id)}
+// // // // // // // // //                           className="text-red-500"
+// // // // // // // // //                         >
+// // // // // // // // //                           Delete
+// // // // // // // // //                         </button>
+// // // // // // // // //                       </div>
+// // // // // // // // //                     )}
+// // // // // // // // //                   </div>
+// // // // // // // // //                 ))}
+
+// // // // // // // // //               </div>
+// // // // // // // // //             )}
+// // // // // // // // //           </div>
+// // // // // // // // //         </div>
+// // // // // // // // //       </div>
+// // // // // // // // //     </div>
+// // // // // // // // //   );
+// // // // // // // // // };
+
+// // // // // // // // // export default ProductDetails;
+
 
 
 // // // // // // // // import React, { useEffect, useState } from "react";
@@ -1591,116 +2721,81 @@
 // // // // // // // //   const [product, setProduct] = useState(null);
 // // // // // // // //   const [reviews, setReviews] = useState([]);
 // // // // // // // //   const [activeTab, setActiveTab] = useState("details");
+
 // // // // // // // //   const [showForm, setShowForm] = useState(false);
 // // // // // // // //   const [rating, setRating] = useState(5);
 // // // // // // // //   const [comment, setComment] = useState("");
 // // // // // // // //   const [editingReviewId, setEditingReviewId] = useState(null);
 
-// // // // // // // //   // ✅ Safe user id
-// // // // // // // //   const userId = String(localStorage.getItem("userId") || "");
-
-// // // // // // // //   // ✅ Correct backend URL
-// // // // // // // //   const BASE_URL =
+// // // // // // // //   const backendURL =
 // // // // // // // //     import.meta.env.VITE_BACKEND_URL ||
 // // // // // // // //     "https://ecommerce-mern-backend-1.onrender.com";
 
-// // // // // // // //   // ================= FETCH PRODUCT =================
-// // // // // // // //   const fetchProduct = async () => {
-// // // // // // // //     try {
-// // // // // // // //       const res = await axios.get(`${BASE_URL}/api/products/${id}`);
-// // // // // // // //       const data = res.data;
-
-// // // // // // // //       // Fix image URL
-// // // // // // // //       setProduct({
-// // // // // // // //         ...data,
-// // // // // // // //         image:
-// // // // // // // //           data.images && data.images[0]
-// // // // // // // //             ? data.images[0].startsWith("http")
-// // // // // // // //               ? data.images[0]
-// // // // // // // //               : `${BASE_URL}/uploads/${data.images[0]}`
-// // // // // // // //             : "/placeholder.png",
-// // // // // // // //       });
-// // // // // // // //     } catch (err) {
-// // // // // // // //       console.error("Fetch product error:", err);
-// // // // // // // //     }
-// // // // // // // //   };
-
-// // // // // // // //   // ================= FETCH REVIEWS =================
-// // // // // // // //   const fetchReviews = async () => {
-// // // // // // // //     try {
-// // // // // // // //       const res = await axios.get(`${BASE_URL}/api/reviews?productId=${id}`);
-// // // // // // // //       setReviews(res.data);
-// // // // // // // //     } catch (err) {
-// // // // // // // //       console.error("Fetch reviews error:", err);
-// // // // // // // //     }
-// // // // // // // //   };
+// // // // // // // //   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+// // // // // // // //   const userId = storedUser?._id;
 
 // // // // // // // //   useEffect(() => {
 // // // // // // // //     fetchProduct();
 // // // // // // // //     fetchReviews();
 // // // // // // // //   }, [id]);
 
-// // // // // // // //   if (!product) return <div className="p-10 text-center">Loading...</div>;
+// // // // // // // //   const fetchProduct = async () => {
+// // // // // // // //     const res = await axios.get(`${backendURL}/api/products/${id}`);
+// // // // // // // //     setProduct(res.data);
+// // // // // // // //   };
 
-// // // // // // // //   const imageUrl = product.image;
+// // // // // // // //   const fetchReviews = async () => {
+// // // // // // // //     const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
+// // // // // // // //     setReviews(res.data);
+// // // // // // // //   };
 
-// // // // // // // //   // ================= ADD / UPDATE =================
+// // // // // // // //   if (!product)
+// // // // // // // //     return <div className="p-10 text-center text-lg">Loading...</div>;
+
+// // // // // // // //   const imageUrl =
+// // // // // // // //     product.images?.[0]
+// // // // // // // //       ? product.images[0].startsWith("http")
+// // // // // // // //         ? product.images[0]
+// // // // // // // //         : `${backendURL}${product.images[0]}`
+// // // // // // // //       : "/placeholder.png";
+
 // // // // // // // //   const handleSubmitReview = async () => {
-// // // // // // // //     try {
-// // // // // // // //       const token = localStorage.getItem("token");
+// // // // // // // //     const token = localStorage.getItem("token");
 
-// // // // // // // //       if (!token) {
-// // // // // // // //         alert("Please login first");
-// // // // // // // //         return;
-// // // // // // // //       }
+// // // // // // // //     if (!token) return alert("Please login first");
+// // // // // // // //     if (!comment.trim()) return alert("Write something");
 
-// // // // // // // //       if (!comment.trim()) {
-// // // // // // // //         alert("Please write review");
-// // // // // // // //         return;
-// // // // // // // //       }
-
-// // // // // // // //       if (editingReviewId) {
-// // // // // // // //         await axios.put(
-// // // // // // // //           `${BASE_URL}/api/reviews/${editingReviewId}`,
-// // // // // // // //           { rating: Number(rating), comment },
-// // // // // // // //           {
-// // // // // // // //             headers: { Authorization: `Bearer ${token}` },
-// // // // // // // //           }
-// // // // // // // //         );
-// // // // // // // //       } else {
-// // // // // // // //         await axios.post(
-// // // // // // // //           `${BASE_URL}/api/reviews`,
-// // // // // // // //           { productId: id, rating: Number(rating), comment },
-// // // // // // // //           { headers: { Authorization: `Bearer ${token}` } }
-// // // // // // // //         );
-// // // // // // // //       }
-
-// // // // // // // //       alert("Review submitted successfully!");
-// // // // // // // //       setShowForm(false);
-// // // // // // // //       setComment("");
-// // // // // // // //       setRating(5);
-// // // // // // // //       setEditingReviewId(null);
-
-// // // // // // // //       fetchReviews();
-// // // // // // // //     } catch (err) {
-// // // // // // // //       console.error("REVIEW ERROR:", err.response?.data || err.message);
-// // // // // // // //       alert(err.response?.data?.message || "Review failed");
+// // // // // // // //     if (editingReviewId) {
+// // // // // // // //       await axios.put(
+// // // // // // // //         `${backendURL}/api/reviews/${editingReviewId}`,
+// // // // // // // //         { rating, comment },
+// // // // // // // //         { headers: { Authorization: `Bearer ${token}` } }
+// // // // // // // //       );
+// // // // // // // //     } else {
+// // // // // // // //       await axios.post(
+// // // // // // // //         `${backendURL}/api/reviews`,
+// // // // // // // //         { productId: id, rating, comment },
+// // // // // // // //         { headers: { Authorization: `Bearer ${token}` } }
+// // // // // // // //       );
 // // // // // // // //     }
+
+// // // // // // // //     setShowForm(false);
+// // // // // // // //     setComment("");
+// // // // // // // //     setRating(5);
+// // // // // // // //     setEditingReviewId(null);
+// // // // // // // //     fetchReviews();
 // // // // // // // //   };
 
-// // // // // // // //   // ================= DELETE =================
 // // // // // // // //   const handleDelete = async (reviewId) => {
-// // // // // // // //     try {
-// // // // // // // //       await axios.delete(`${BASE_URL}/api/reviews/${reviewId}`, {
-// // // // // // // //         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-// // // // // // // //       });
-// // // // // // // //       fetchReviews();
-// // // // // // // //     } catch (err) {
-// // // // // // // //       console.error(err);
-// // // // // // // //     }
+// // // // // // // //     const token = localStorage.getItem("token");
+
+// // // // // // // //     await axios.delete(`${backendURL}/api/reviews/${reviewId}`, {
+// // // // // // // //       headers: { Authorization: `Bearer ${token}` },
+// // // // // // // //     });
+
+// // // // // // // //     fetchReviews();
 // // // // // // // //   };
 
-// // // // // // // //   // ================= EDIT =================
 // // // // // // // //   const handleEdit = (review) => {
 // // // // // // // //     setShowForm(true);
 // // // // // // // //     setRating(review.rating);
@@ -1709,29 +2804,51 @@
 // // // // // // // //   };
 
 // // // // // // // //   return (
-// // // // // // // //     <div className="bg-gray-50 min-h-screen">
-// // // // // // // //       <div className="max-w-6xl mx-auto p-4">
+// // // // // // // //     <div className="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen p-4">
+// // // // // // // //       <div className="max-w-6xl mx-auto">
 
-// // // // // // // //         {/* TOP */}
-// // // // // // // //         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-lg shadow">
-// // // // // // // //           <img src={imageUrl} alt={product.title} className="h-[400px] w-full object-contain" />
+// // // // // // // //         {/* TOP SECTION */}
+// // // // // // // //         <div className="grid md:grid-cols-2 gap-8 bg-white p-6 rounded-3xl shadow-xl">
 
-// // // // // // // //           <div>
-// // // // // // // //             <h1 className="text-xl font-semibold">{product.title}</h1>
-// // // // // // // //             <p className="text-gray-700 mt-2">{product.description}</p>
-// // // // // // // //             <p className="text-2xl font-bold mt-2">₹{product.price}</p>
+// // // // // // // //           {/* IMAGE */}
+// // // // // // // //           <div className="overflow-hidden rounded-2xl group">
+// // // // // // // //             <img
+// // // // // // // //               src={imageUrl}
+// // // // // // // //               alt={product.title}
+// // // // // // // //               className="h-[400px] w-full object-contain group-hover:scale-110 transition duration-500"
+// // // // // // // //             />
+// // // // // // // //           </div>
 
-// // // // // // // //             <div className="flex gap-3 mt-4">
+// // // // // // // //           {/* DETAILS */}
+// // // // // // // //           <div className="flex flex-col justify-between">
+// // // // // // // //             <div>
+// // // // // // // //               <h1 className="text-3xl font-bold text-gray-800">
+// // // // // // // //                 {product.title}
+// // // // // // // //               </h1>
+
+// // // // // // // //               <p className="text-gray-500 mt-3">{product.description}</p>
+
+// // // // // // // //               <p className="text-4xl font-bold text-pink-600 mt-5">
+// // // // // // // //                 ₹{product.price}
+// // // // // // // //               </p>
+
+// // // // // // // //               <div className="mt-3 text-yellow-400 text-lg">
+// // // // // // // //                 ⭐⭐⭐⭐☆ <span className="text-gray-500 text-sm">(4.2)</span>
+// // // // // // // //               </div>
+// // // // // // // //             </div>
+
+// // // // // // // //             {/* BUTTONS */}
+// // // // // // // //             <div className="flex gap-3 mt-8">
 // // // // // // // //               <button
 // // // // // // // //                 onClick={() => addToCart({ ...product, quantity: 1 })}
-// // // // // // // //                 className="bg-pink-500 text-white px-6 py-3 rounded w-full"
+// // // // // // // //                 className="flex-1 bg-gradient-to-r from-pink-500 to-pink-600 text-white py-3 rounded-2xl shadow-lg hover:scale-105 transition"
 // // // // // // // //               >
-// // // // // // // //                 Add to Bag
+// // // // // // // //                 🛒 Add to Bag
 // // // // // // // //               </button>
 
 // // // // // // // //               <button
 // // // // // // // //                 onClick={() => addToWishlist(product)}
-// // // // // // // //                 className="border px-4 py-3 rounded"
+// // // // // // // //                 className="px-5 text-xl border rounded-2xl hover:bg-pink-50 transition"
 // // // // // // // //               >
 // // // // // // // //                 ❤️
 // // // // // // // //               </button>
@@ -1740,85 +2857,144 @@
 // // // // // // // //         </div>
 
 // // // // // // // //         {/* TABS */}
-// // // // // // // //         <div className="bg-white mt-6 rounded-lg shadow">
-// // // // // // // //           <div className="flex border-b">
-// // // // // // // //             <button
-// // // // // // // //               onClick={() => setActiveTab("details")}
-// // // // // // // //               className={`px-6 py-3 ${activeTab === "details" && "border-b-2 border-pink-500"}`}
-// // // // // // // //             >
-// // // // // // // //               Product Details
-// // // // // // // //             </button>
-
-// // // // // // // //             <button
-// // // // // // // //               onClick={() => setActiveTab("reviews")}
-// // // // // // // //               className={`px-6 py-3 ${activeTab === "reviews" && "border-b-2 border-pink-500"}`}
-// // // // // // // //             >
-// // // // // // // //               Ratings & Reviews
-// // // // // // // //             </button>
+// // // // // // // //         <div className="bg-white mt-6 rounded-3xl shadow-xl overflow-hidden">
+// // // // // // // //           <div className="flex">
+// // // // // // // //             {["details", "reviews"].map((tab) => (
+// // // // // // // //               <button
+// // // // // // // //                 key={tab}
+// // // // // // // //                 onClick={() => setActiveTab(tab)}
+// // // // // // // //                 className={`flex-1 py-4 font-semibold transition ${
+// // // // // // // //                   activeTab === tab
+// // // // // // // //                     ? "bg-pink-500 text-white"
+// // // // // // // //                     : "text-gray-500 hover:bg-gray-100"
+// // // // // // // //                 }`}
+// // // // // // // //               >
+// // // // // // // //                 {tab === "details" ? "Details" : "Reviews"}
+// // // // // // // //               </button>
+// // // // // // // //             ))}
 // // // // // // // //           </div>
 
 // // // // // // // //           <div className="p-6">
+
 // // // // // // // //             {/* DETAILS */}
-// // // // // // // //             {activeTab === "details" && <p className="text-gray-600">{product.description}</p>}
+// // // // // // // //             {activeTab === "details" && (
+// // // // // // // //               <p className="text-gray-600 leading-relaxed">
+// // // // // // // //                 {product.description}
+// // // // // // // //               </p>
+// // // // // // // //             )}
 
 // // // // // // // //             {/* REVIEWS */}
 // // // // // // // //             {activeTab === "reviews" && (
 // // // // // // // //               <div>
-// // // // // // // //                 <div className="flex justify-between mb-4">
-// // // // // // // //                   <h2 className="font-semibold">Customer Reviews</h2>
+
+// // // // // // // //                 {/* HEADER */}
+// // // // // // // //                 <div className="flex justify-between mb-6">
+// // // // // // // //                   <h2 className="text-xl font-bold">Customer Reviews</h2>
 
 // // // // // // // //                   <button
-// // // // // // // //                     onClick={() => { setShowForm(true); setEditingReviewId(null); setComment(""); setRating(5); }}
-// // // // // // // //                     className="border px-4 py-2 text-pink-500 rounded"
+// // // // // // // //                     onClick={() => {
+// // // // // // // //                       setShowForm(true);
+// // // // // // // //                       setEditingReviewId(null);
+// // // // // // // //                       setComment("");
+// // // // // // // //                       setRating(5);
+// // // // // // // //                     }}
+// // // // // // // //                     className="bg-pink-500 text-white px-4 py-2 rounded-xl shadow hover:scale-105 transition"
 // // // // // // // //                   >
-// // // // // // // //                     Write Review
+// // // // // // // //                     + Write Review
 // // // // // // // //                   </button>
 // // // // // // // //                 </div>
 
 // // // // // // // //                 {/* FORM */}
 // // // // // // // //                 {showForm && (
-// // // // // // // //                   <div className="border p-4 mb-4 rounded">
-// // // // // // // //                     <select
-// // // // // // // //                       value={rating}
-// // // // // // // //                       onChange={(e) => setRating(Number(e.target.value))}
-// // // // // // // //                       className="border p-2 mb-2 w-full"
-// // // // // // // //                     >
-// // // // // // // //                       {[5, 4, 3, 2, 1].map((r) => (
-// // // // // // // //                         <option key={r} value={r}>{r} Stars</option>
+// // // // // // // //                   <div className="bg-gray-50 p-5 rounded-2xl shadow mb-6 animate-fadeIn">
+
+// // // // // // // //                     {/* Stars */}
+// // // // // // // //                     <div className="flex gap-2 text-2xl mb-3 cursor-pointer">
+// // // // // // // //                       {[1, 2, 3, 4, 5].map((star) => (
+// // // // // // // //                         <span
+// // // // // // // //                           key={star}
+// // // // // // // //                           onClick={(e) => {
+// // // // // // // //                             e.stopPropagation();
+// // // // // // // //                             setRating(star);
+// // // // // // // //                           }}
+// // // // // // // //                           className={`hover:scale-125 transition ${
+// // // // // // // //                             star <= rating
+// // // // // // // //                               ? "text-yellow-400"
+// // // // // // // //                               : "text-gray-300"
+// // // // // // // //                           }`}
+// // // // // // // //                         >
+// // // // // // // //                           ★
+// // // // // // // //                         </span>
 // // // // // // // //                       ))}
-// // // // // // // //                     </select>
+// // // // // // // //                     </div>
 
 // // // // // // // //                     <textarea
 // // // // // // // //                       value={comment}
 // // // // // // // //                       onChange={(e) => setComment(e.target.value)}
-// // // // // // // //                       placeholder="Write your review..."
-// // // // // // // //                       className="border p-2 w-full mb-2"
+// // // // // // // //                       placeholder="Write your experience..."
+// // // // // // // //                       className="w-full p-3 border rounded-xl mb-3 focus:ring-2 focus:ring-pink-400"
 // // // // // // // //                     />
 
-// // // // // // // //                     <button
-// // // // // // // //                       onClick={handleSubmitReview}
-// // // // // // // //                       className="bg-pink-500 text-white px-4 py-2 rounded"
-// // // // // // // //                     >
-// // // // // // // //                       {editingReviewId ? "Update Review" : "Submit Review"}
-// // // // // // // //                     </button>
+// // // // // // // //                     <div className="flex justify-between">
+// // // // // // // //                       <button
+// // // // // // // //                         onClick={() => setShowForm(false)}
+// // // // // // // //                         className="text-gray-500"
+// // // // // // // //                       >
+// // // // // // // //                         Cancel
+// // // // // // // //                       </button>
+
+// // // // // // // //                       <button
+// // // // // // // //                         onClick={(e) => {
+// // // // // // // //                           e.stopPropagation();
+// // // // // // // //                           handleSubmitReview();
+// // // // // // // //                         }}
+// // // // // // // //                         className="bg-pink-500 text-white px-5 py-2 rounded-xl shadow hover:scale-105 transition"
+// // // // // // // //                       >
+// // // // // // // //                         {editingReviewId ? "Update" : "Submit"}
+// // // // // // // //                       </button>
+// // // // // // // //                     </div>
 // // // // // // // //                   </div>
 // // // // // // // //                 )}
 
 // // // // // // // //                 {/* LIST */}
-// // // // // // // //                 {reviews.length === 0 && <p>No reviews yet</p>}
+// // // // // // // //                 {reviews.length === 0 && (
+// // // // // // // //                   <p className="text-gray-500">No reviews yet</p>
+// // // // // // // //                 )}
 
 // // // // // // // //                 {reviews.map((review) => (
-// // // // // // // //                   <div key={review._id} className="border-b py-3 flex justify-between">
+// // // // // // // //                   <div
+// // // // // // // //                     key={review._id}
+// // // // // // // //                     className="bg-white p-4 rounded-2xl shadow-md mb-4 hover:shadow-lg transition flex justify-between"
+// // // // // // // //                   >
 // // // // // // // //                     <div>
-// // // // // // // //                       <p className="font-semibold">⭐ {review.rating}</p>
-// // // // // // // //                       <p>{review.comment}</p>
-// // // // // // // //                       <p className="text-xs text-gray-500">by {review.user?.name || "Anonymous"}</p>
+// // // // // // // //                       <div className="text-yellow-400 text-lg">
+// // // // // // // //                         {"★".repeat(review.rating)}
+// // // // // // // //                       </div>
+
+// // // // // // // //                       <p className="mt-2 text-gray-700">
+// // // // // // // //                         {review.comment}
+// // // // // // // //                       </p>
+
+// // // // // // // //                       <p className="text-xs text-gray-400 mt-1">
+// // // // // // // //                         by {review.user?.name}
+// // // // // // // //                       </p>
 // // // // // // // //                     </div>
 
-// // // // // // // //                     {String(review.user?._id) === userId && (
-// // // // // // // //                       <div className="flex gap-2">
-// // // // // // // //                         <button onClick={() => handleEdit(review)} className="text-blue-500">Edit</button>
-// // // // // // // //                         <button onClick={() => handleDelete(review._id)} className="text-red-500">Delete</button>
+// // // // // // // //                     {String(review.user?._id) === String(userId) && (
+// // // // // // // //                       <div className="flex gap-4 items-center text-sm">
+// // // // // // // //                         <button
+// // // // // // // //                           onClick={() => handleEdit(review)}
+// // // // // // // //                           className="text-blue-500 hover:underline"
+// // // // // // // //                         >
+// // // // // // // //                           ✏️ Edit
+// // // // // // // //                         </button>
+
+// // // // // // // //                         <button
+// // // // // // // //                           onClick={() => handleDelete(review._id)}
+// // // // // // // //                           className="text-red-500 hover:underline"
+// // // // // // // //                         >
+// // // // // // // //                           🗑 Delete
+// // // // // // // //                         </button>
 // // // // // // // //                       </div>
 // // // // // // // //                     )}
 // // // // // // // //                   </div>
@@ -1836,6 +3012,252 @@
 
 
 
+// // // // // // // import React, { useEffect, useState } from "react";
+// // // // // // // import { useParams } from "react-router-dom";
+// // // // // // // import axios from "../../utils/axios";
+// // // // // // // import { useCart } from "../../context/CartContext";
+// // // // // // // import { useWishlist } from "../../context/WishlistContext";
+
+// // // // // // // const ProductDetails = () => {
+// // // // // // //   const { id } = useParams();
+// // // // // // //   const { addToCart } = useCart();
+// // // // // // //   const { addToWishlist } = useWishlist();
+
+// // // // // // //   const [product, setProduct] = useState(null);
+// // // // // // //   const [reviews, setReviews] = useState([]);
+
+// // // // // // //   const [showForm, setShowForm] = useState(false);
+// // // // // // //   const [rating, setRating] = useState(5);
+// // // // // // //   const [comment, setComment] = useState("");
+// // // // // // //   const [editingReviewId, setEditingReviewId] = useState(null);
+
+// // // // // // //   const backendURL =
+// // // // // // //     import.meta.env.VITE_BACKEND_URL ||
+// // // // // // //     "https://ecommerce-mern-backend-1.onrender.com";
+
+// // // // // // //   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+// // // // // // //   const userId = storedUser?._id;
+
+// // // // // // //   // ================= FETCH =================
+// // // // // // //   useEffect(() => {
+// // // // // // //     fetchProduct();
+// // // // // // //     fetchReviews();
+// // // // // // //   }, [id]);
+
+// // // // // // //   const fetchProduct = async () => {
+// // // // // // //     try {
+// // // // // // //       const res = await axios.get(`${backendURL}/api/products/${id}`);
+// // // // // // //       setProduct(res.data);
+// // // // // // //     } catch (err) {
+// // // // // // //       console.error("Product fetch error:", err);
+// // // // // // //     }
+// // // // // // //   };
+
+// // // // // // //   const fetchReviews = async () => {
+// // // // // // //     try {
+// // // // // // //       const res = await axios.get(
+// // // // // // //         `${backendURL}/api/reviews?productId=${id}`
+// // // // // // //       );
+// // // // // // //       setReviews(res.data);
+// // // // // // //     } catch (err) {
+// // // // // // //       console.error("Review fetch error:", err);
+// // // // // // //     }
+// // // // // // //   };
+
+// // // // // // //   if (!product) {
+// // // // // // //     return <div className="text-center p-10">Loading...</div>;
+// // // // // // //   }
+
+// // // // // // //   // ================= IMAGE =================
+// // // // // // //   const imageUrl =
+// // // // // // //     product.images?.[0]
+// // // // // // //       ? product.images[0].startsWith("http")
+// // // // // // //         ? product.images[0]
+// // // // // // //         : `${backendURL}${product.images[0]}`
+// // // // // // //       : "/placeholder.png";
+
+// // // // // // //   // ================= SUBMIT =================
+// // // // // // //   const handleSubmitReview = async () => {
+// // // // // // //     try {
+// // // // // // //       const token = localStorage.getItem("token");
+
+// // // // // // //       if (!token) {
+// // // // // // //         alert("Login required");
+// // // // // // //         return;
+// // // // // // //       }
+
+// // // // // // //       if (!comment.trim()) {
+// // // // // // //         alert("Comment required");
+// // // // // // //         return;
+// // // // // // //       }
+
+// // // // // // //       if (editingReviewId) {
+// // // // // // //         await axios.put(
+// // // // // // //           `${backendURL}/api/reviews/${editingReviewId}`,
+// // // // // // //           { rating, comment },
+// // // // // // //           {
+// // // // // // //             headers: { Authorization: `Bearer ${token}` },
+// // // // // // //           }
+// // // // // // //         );
+// // // // // // //       } else {
+// // // // // // //         await axios.post(
+// // // // // // //           `${backendURL}/api/reviews`,
+// // // // // // //           {
+// // // // // // //             productId: id,
+// // // // // // //             rating,
+// // // // // // //             comment,
+// // // // // // //           },
+// // // // // // //           {
+// // // // // // //             headers: { Authorization: `Bearer ${token}` },
+// // // // // // //           }
+// // // // // // //         );
+// // // // // // //       }
+
+// // // // // // //       // RESET
+// // // // // // //       setShowForm(false);
+// // // // // // //       setComment("");
+// // // // // // //       setRating(5);
+// // // // // // //       setEditingReviewId(null);
+
+// // // // // // //       fetchReviews();
+// // // // // // //     } catch (err) {
+// // // // // // //       console.error("Submit error:", err);
+// // // // // // //       alert(err.response?.data?.message || "Submit failed");
+// // // // // // //     }
+// // // // // // //   };
+
+// // // // // // //   const handleDelete = async (reviewId) => {
+// // // // // // //     try {
+// // // // // // //       const token = localStorage.getItem("token");
+
+// // // // // // //       await axios.delete(`${backendURL}/api/reviews/${reviewId}`, {
+// // // // // // //         headers: { Authorization: `Bearer ${token}` },
+// // // // // // //       });
+
+// // // // // // //       fetchReviews();
+// // // // // // //     } catch (err) {
+// // // // // // //       console.error("Delete error:", err);
+// // // // // // //     }
+// // // // // // //   };
+
+// // // // // // //   const handleEdit = (review) => {
+// // // // // // //     setShowForm(true);
+// // // // // // //     setRating(review.rating);
+// // // // // // //     setComment(review.comment);
+// // // // // // //     setEditingReviewId(review._id);
+// // // // // // //   };
+
+// // // // // // //   return (
+// // // // // // //     <div className="p-4 max-w-5xl mx-auto">
+
+// // // // // // //       {/* PRODUCT */}
+// // // // // // //       <div className="grid md:grid-cols-2 gap-6 bg-white p-6 rounded-xl shadow">
+// // // // // // //         <img
+// // // // // // //           src={imageUrl}
+// // // // // // //           className="w-full h-[350px] object-contain"
+// // // // // // //           alt=""
+// // // // // // //         />
+
+// // // // // // //         <div>
+// // // // // // //           <h2 className="text-2xl font-bold">{product.title}</h2>
+// // // // // // //           <p className="mt-2 text-gray-600">{product.description}</p>
+
+// // // // // // //           <p className="text-pink-600 text-2xl mt-4">
+// // // // // // //             ₹{product.price}
+// // // // // // //           </p>
+
+// // // // // // //           <div className="flex gap-3 mt-5">
+// // // // // // //             <button
+// // // // // // //               onClick={() => addToCart({ ...product, quantity: 1 })}
+// // // // // // //               className="bg-pink-500 text-white px-5 py-2 rounded"
+// // // // // // //             >
+// // // // // // //               Add to Cart
+// // // // // // //             </button>
+
+// // // // // // //             <button
+// // // // // // //               onClick={() => addToWishlist(product)}
+// // // // // // //               className="border px-4 rounded"
+// // // // // // //             >
+// // // // // // //               ❤️
+// // // // // // //             </button>
+// // // // // // //           </div>
+// // // // // // //         </div>
+// // // // // // //       </div>
+
+// // // // // // //       {/* REVIEWS */}
+// // // // // // //       <div className="mt-6 bg-white p-5 rounded-xl shadow">
+
+// // // // // // //         <div className="flex justify-between mb-4">
+// // // // // // //           <h3 className="font-bold">Reviews</h3>
+
+// // // // // // //           <button
+// // // // // // //             onClick={() => {
+// // // // // // //               setShowForm(true);
+// // // // // // //               setComment("");
+// // // // // // //               setRating(5);
+// // // // // // //               setEditingReviewId(null);
+// // // // // // //             }}
+// // // // // // //             className="text-pink-500"
+// // // // // // //           >
+// // // // // // //             Write Review
+// // // // // // //           </button>
+// // // // // // //         </div>
+
+// // // // // // //         {/* FORM */}
+// // // // // // //         {showForm && (
+// // // // // // //           <div className="border p-4 mb-4 rounded">
+// // // // // // //             <select
+// // // // // // //               value={rating}
+// // // // // // //               onChange={(e) => setRating(Number(e.target.value))}
+// // // // // // //               className="border p-2 w-full mb-2"
+// // // // // // //             >
+// // // // // // //               {[5, 4, 3, 2, 1].map((r) => (
+// // // // // // //                 <option key={r}>{r}</option>
+// // // // // // //               ))}
+// // // // // // //             </select>
+
+// // // // // // //             <textarea
+// // // // // // //               value={comment}
+// // // // // // //               onChange={(e) => setComment(e.target.value)}
+// // // // // // //               className="border p-2 w-full mb-2"
+// // // // // // //             />
+
+// // // // // // //             <button
+// // // // // // //               onClick={handleSubmitReview}
+// // // // // // //               className="bg-pink-500 text-white px-4 py-2 rounded"
+// // // // // // //             >
+// // // // // // //               Submit
+// // // // // // //             </button>
+// // // // // // //           </div>
+// // // // // // //         )}
+
+// // // // // // //         {/* LIST */}
+// // // // // // //         {reviews.map((r) => (
+// // // // // // //           <div key={r._id} className="border-b py-3 flex justify-between">
+// // // // // // //             <div>
+// // // // // // //               <p>{"⭐".repeat(r.rating)}</p>
+// // // // // // //               <p>{r.comment}</p>
+// // // // // // //               <small>{r.user?.name}</small>
+// // // // // // //             </div>
+
+// // // // // // //             {String(r.user?._id) === String(userId) && (
+// // // // // // //               <div className="flex gap-2">
+// // // // // // //                 <button onClick={() => handleEdit(r)}>Edit</button>
+// // // // // // //                 <button onClick={() => handleDelete(r._id)}>Delete</button>
+// // // // // // //               </div>
+// // // // // // //             )}
+// // // // // // //           </div>
+// // // // // // //         ))}
+// // // // // // //       </div>
+// // // // // // //     </div>
+// // // // // // //   );
+// // // // // // // };
+
+// // // // // // // export default ProductDetails;
+
+
+
+
 // // // // // // import React, { useEffect, useState } from "react";
 // // // // // // import { useParams } from "react-router-dom";
 // // // // // // import axios from "../../utils/axios";
@@ -1849,273 +3271,288 @@
 
 // // // // // //   const [product, setProduct] = useState(null);
 // // // // // //   const [reviews, setReviews] = useState([]);
-// // // // // //   const [activeTab, setActiveTab] = useState("details");
+// // // // // //   const [activeTab, setActiveTab] = useState("description");
 
 // // // // // //   const [showForm, setShowForm] = useState(false);
 // // // // // //   const [rating, setRating] = useState(5);
 // // // // // //   const [comment, setComment] = useState("");
 // // // // // //   const [editingReviewId, setEditingReviewId] = useState(null);
 
-// // // // // //   // ✅ Use the old backend URL style
 // // // // // //   const backendURL =
 // // // // // //     import.meta.env.VITE_BACKEND_URL ||
 // // // // // //     "https://ecommerce-mern-backend-1.onrender.com";
 
-// // // // // //   // ✅ Safe user ID
-// // // // // //   const userId = String(localStorage.getItem("userId") || "");
+// // // // // //   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+// // // // // //   const userId = storedUser?._id;
 
-// // // // // //   // ================= FETCH PRODUCT =================
-// // // // // //   const fetchProduct = async () => {
-// // // // // //     try {
-// // // // // //       const res = await axios.get(`${backendURL}/api/products/${id}`);
-// // // // // //       setProduct(res.data);
-// // // // // //     } catch (err) {
-// // // // // //       console.error("Fetch product error:", err);
-// // // // // //     }
-// // // // // //   };
-
-// // // // // //   // ================= FETCH REVIEWS =================
-// // // // // //   const fetchReviews = async () => {
-// // // // // //     try {
-// // // // // //       const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
-// // // // // //       setReviews(res.data);
-// // // // // //     } catch (err) {
-// // // // // //       console.error("Fetch reviews error:", err);
-// // // // // //     }
-// // // // // //   };
-
+// // // // // //   // ================= FETCH =================
 // // // // // //   useEffect(() => {
 // // // // // //     fetchProduct();
 // // // // // //     fetchReviews();
 // // // // // //   }, [id]);
 
-// // // // // //   if (!product) return <div className="p-10 text-center">Loading...</div>;
+// // // // // //   const fetchProduct = async () => {
+// // // // // //     try {
+// // // // // //       const res = await axios.get(`${backendURL}/api/products/${id}`);
+// // // // // //       setProduct(res.data);
+// // // // // //     } catch (err) {
+// // // // // //       console.error(err);
+// // // // // //     }
+// // // // // //   };
 
-// // // // // //   // ================= IMAGE URL =================
+// // // // // //   const fetchReviews = async () => {
+// // // // // //     try {
+// // // // // //       const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
+// // // // // //       setReviews(res.data);
+// // // // // //     } catch (err) {
+// // // // // //       console.error(err);
+// // // // // //     }
+// // // // // //   };
+
+// // // // // //   if (!product) {
+// // // // // //     return (
+// // // // // //       <div className="h-screen flex items-center justify-center text-xl animate-pulse">
+// // // // // //         Loading product...
+// // // // // //       </div>
+// // // // // //     );
+// // // // // //   }
+
 // // // // // //   const imageUrl =
-// // // // // //     product.images && product.images[0]
+// // // // // //     product.images?.[0]
 // // // // // //       ? product.images[0].startsWith("http")
 // // // // // //         ? product.images[0]
-// // // // // //         : product.images[0].startsWith("/uploads/")
-// // // // // //         ? `${backendURL}${product.images[0]}`
-// // // // // //         : `${backendURL}/uploads/${product.images[0]}`
+// // // // // //         : `${backendURL}${product.images[0]}`
 // // // // // //       : "/placeholder.png";
 
-// // // // // //   // ================= ADD / UPDATE REVIEW =================
+// // // // // //   // ================= SUBMIT =================
 // // // // // //   const handleSubmitReview = async () => {
 // // // // // //     try {
 // // // // // //       const token = localStorage.getItem("token");
 
-// // // // // //       if (!token) {
-// // // // // //         alert("Please login first");
-// // // // // //         return;
-// // // // // //       }
-
-// // // // // //       if (!comment.trim()) {
-// // // // // //         alert("Please write a review");
-// // // // // //         return;
-// // // // // //       }
+// // // // // //       if (!token) return alert("Login required");
+// // // // // //       if (!comment.trim()) return alert("Write something");
 
 // // // // // //       if (editingReviewId) {
 // // // // // //         await axios.put(
 // // // // // //           `${backendURL}/api/reviews/${editingReviewId}`,
-// // // // // //           { rating: Number(rating), comment },
-// // // // // //           {
-// // // // // //             headers: { Authorization: `Bearer ${token}` },
-// // // // // //           }
+// // // // // //           { rating, comment },
+// // // // // //           { headers: { Authorization: `Bearer ${token}` } }
 // // // // // //         );
 // // // // // //       } else {
 // // // // // //         await axios.post(
 // // // // // //           `${backendURL}/api/reviews`,
-// // // // // //           { productId: id, rating: Number(rating), comment },
-// // // // // //           {
-// // // // // //             headers: { Authorization: `Bearer ${token}` },
-// // // // // //           }
+// // // // // //           { productId: id, rating, comment },
+// // // // // //           { headers: { Authorization: `Bearer ${token}` } }
 // // // // // //         );
 // // // // // //       }
 
-// // // // // //       alert("Review submitted successfully!");
 // // // // // //       setShowForm(false);
 // // // // // //       setComment("");
 // // // // // //       setRating(5);
 // // // // // //       setEditingReviewId(null);
 // // // // // //       fetchReviews();
 // // // // // //     } catch (err) {
-// // // // // //       console.error("Review error:", err.response?.data || err.message);
-// // // // // //       alert(err.response?.data?.message || "Review failed");
+// // // // // //       console.error(err);
+// // // // // //       alert("Submit failed");
 // // // // // //     }
 // // // // // //   };
 
-// // // // // //   // ================= DELETE REVIEW =================
-// // // // // //   const handleDelete = async (reviewId) => {
-// // // // // //     try {
-// // // // // //       await axios.delete(`${backendURL}/api/reviews/${reviewId}`, {
-// // // // // //         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-// // // // // //       });
-// // // // // //       fetchReviews();
-// // // // // //     } catch (err) {
-// // // // // //       console.error("Delete review error:", err);
-// // // // // //     }
+// // // // // //   const handleDelete = async (rid) => {
+// // // // // //     const token = localStorage.getItem("token");
+// // // // // //     await axios.delete(`${backendURL}/api/reviews/${rid}`, {
+// // // // // //       headers: { Authorization: `Bearer ${token}` },
+// // // // // //     });
+// // // // // //     fetchReviews();
 // // // // // //   };
 
-// // // // // //   // ================= EDIT REVIEW =================
-// // // // // //   const handleEdit = (review) => {
+// // // // // //   const handleEdit = (r) => {
 // // // // // //     setShowForm(true);
-// // // // // //     setRating(review.rating);
-// // // // // //     setComment(review.comment);
-// // // // // //     setEditingReviewId(review._id);
+// // // // // //     setRating(r.rating);
+// // // // // //     setComment(r.comment);
+// // // // // //     setEditingReviewId(r._id);
 // // // // // //   };
 
 // // // // // //   return (
-// // // // // //     <div className="bg-gray-50 min-h-screen">
-// // // // // //       <div className="max-w-6xl mx-auto p-4">
+// // // // // //     <div className="bg-gradient-to-br from-gray-100 to-pink-50 min-h-screen p-6">
 
-// // // // // //         {/* TOP SECTION */}
-// // // // // //         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-lg shadow">
+// // // // // //       {/* TOP CARD */}
+// // // // // //       <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-xl p-6 grid md:grid-cols-2 gap-8">
+
+// // // // // //         {/* IMAGE */}
+// // // // // //         <div className="overflow-hidden rounded-2xl">
 // // // // // //           <img
 // // // // // //             src={imageUrl}
-// // // // // //             alt={product.title}
-// // // // // //             className="h-[400px] w-full object-contain"
+// // // // // //             alt=""
+// // // // // //             className="w-full h-[400px] object-contain transition duration-500 hover:scale-110"
 // // // // // //           />
-
-// // // // // //           <div>
-// // // // // //             <h1 className="text-xl font-semibold">{product.title}</h1>
-// // // // // //             <p className="text-gray-600 mt-2">{product.description}</p>
-// // // // // //             <p className="text-2xl font-bold mt-2">₹{product.price}</p>
-
-// // // // // //             <div className="flex gap-3 mt-4">
-// // // // // //               <button
-// // // // // //                 onClick={() => addToCart({ ...product, quantity: 1 })}
-// // // // // //                 className="bg-pink-500 text-white px-6 py-3 rounded w-full"
-// // // // // //               >
-// // // // // //                 Add to Bag
-// // // // // //               </button>
-// // // // // //               <button
-// // // // // //                 onClick={() => addToWishlist(product)}
-// // // // // //                 className="border px-4 py-3 rounded"
-// // // // // //               >
-// // // // // //                 ❤️
-// // // // // //               </button>
-// // // // // //             </div>
-// // // // // //           </div>
 // // // // // //         </div>
 
-// // // // // //         {/* TABS SECTION */}
-// // // // // //         <div className="bg-white mt-6 rounded-lg shadow">
-// // // // // //           <div className="flex border-b">
-// // // // // //             <button
-// // // // // //               onClick={() => setActiveTab("details")}
-// // // // // //               className={`px-6 py-3 ${
-// // // // // //                 activeTab === "details" && "border-b-2 border-pink-500"
-// // // // // //               }`}
-// // // // // //             >
-// // // // // //               Product Details
-// // // // // //             </button>
-// // // // // //             <button
-// // // // // //               onClick={() => setActiveTab("reviews")}
-// // // // // //               className={`px-6 py-3 ${
-// // // // // //                 activeTab === "reviews" && "border-b-2 border-pink-500"
-// // // // // //               }`}
-// // // // // //             >
-// // // // // //               Ratings & Reviews
-// // // // // //             </button>
+// // // // // //         {/* DETAILS */}
+// // // // // //         <div className="flex flex-col justify-between">
+// // // // // //           <div>
+// // // // // //             <h1 className="text-3xl font-bold">{product.title}</h1>
+// // // // // //             <p className="text-gray-600 mt-3">{product.description}</p>
+
+// // // // // //             <p className="text-4xl font-bold text-pink-600 mt-4">
+// // // // // //               ₹{product.price}
+// // // // // //             </p>
+
+// // // // // //             <div className="text-yellow-400 mt-2 text-lg">
+// // // // // //               ⭐⭐⭐⭐☆
+// // // // // //             </div>
 // // // // // //           </div>
 
-// // // // // //           <div className="p-6">
-// // // // // //             {/* DETAILS */}
-// // // // // //             {activeTab === "details" && (
-// // // // // //               <p className="text-gray-600">{product.description}</p>
-// // // // // //             )}
+// // // // // //           <div className="flex gap-4 mt-6">
+// // // // // //             <button
+// // // // // //               onClick={() => addToCart({ ...product, quantity: 1 })}
+// // // // // //               className="flex-1 bg-gradient-to-r from-pink-500 to-pink-600 text-white py-3 rounded-xl shadow-lg hover:scale-105 transition"
+// // // // // //             >
+// // // // // //               Add to Cart
+// // // // // //             </button>
 
-// // // // // //             {/* REVIEWS */}
-// // // // // //             {activeTab === "reviews" && (
-// // // // // //               <div>
-// // // // // //                 {/* HEADER */}
-// // // // // //                 <div className="flex justify-between mb-4">
-// // // // // //                   <h2 className="font-semibold">Customer Reviews</h2>
-// // // // // //                   <button
-// // // // // //                     onClick={() => {
-// // // // // //                       setShowForm(true);
-// // // // // //                       setEditingReviewId(null);
-// // // // // //                       setComment("");
-// // // // // //                       setRating(5);
-// // // // // //                     }}
-// // // // // //                     className="border px-4 py-2 text-pink-500 rounded"
-// // // // // //                   >
-// // // // // //                     Write Review
-// // // // // //                   </button>
-// // // // // //                 </div>
+// // // // // //             <button
+// // // // // //               onClick={() => addToWishlist(product)}
+// // // // // //               className="px-5 border rounded-xl hover:bg-gray-100 transition"
+// // // // // //             >
+// // // // // //               ❤️
+// // // // // //             </button>
+// // // // // //           </div>
+// // // // // //         </div>
+// // // // // //       </div>
 
-// // // // // //                 {/* REVIEW FORM */}
-// // // // // //                 {showForm && (
-// // // // // //                   <div className="border p-4 mb-4 rounded">
-// // // // // //                     <select
-// // // // // //                       value={rating}
-// // // // // //                       onChange={(e) => setRating(Number(e.target.value))}
-// // // // // //                       className="border p-2 mb-2 w-full"
+// // // // // //       {/* TABS */}
+// // // // // //       <div className="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow">
+// // // // // //         <div className="flex border-b">
+// // // // // //           {["description", "reviews"].map((tab) => (
+// // // // // //             <button
+// // // // // //               key={tab}
+// // // // // //               onClick={() => setActiveTab(tab)}
+// // // // // //               className={`flex-1 py-3 font-medium transition ${
+// // // // // //                 activeTab === tab
+// // // // // //                   ? "border-b-2 border-pink-500 text-pink-500"
+// // // // // //                   : "text-gray-500"
+// // // // // //               }`}
+// // // // // //             >
+// // // // // //               {tab.toUpperCase()}
+// // // // // //             </button>
+// // // // // //           ))}
+// // // // // //         </div>
+
+// // // // // //         <div className="p-6">
+
+// // // // // //           {/* DESCRIPTION */}
+// // // // // //           {activeTab === "description" && (
+// // // // // //             <div className="animate-fadeIn text-gray-600 leading-relaxed">
+// // // // // //               {product.description}
+// // // // // //             </div>
+// // // // // //           )}
+
+// // // // // //           {/* REVIEWS */}
+// // // // // //           {activeTab === "reviews" && (
+// // // // // //             <div className="animate-fadeIn">
+
+// // // // // //               {/* HEADER */}
+// // // // // //               <div className="flex justify-between mb-4">
+// // // // // //                 <h2 className="font-semibold text-lg">Customer Reviews</h2>
+
+// // // // // //                 <button
+// // // // // //                   onClick={() => {
+// // // // // //                     setShowForm(true);
+// // // // // //                     setComment("");
+// // // // // //                     setRating(5);
+// // // // // //                     setEditingReviewId(null);
+// // // // // //                   }}
+// // // // // //                   className="bg-pink-500 text-white px-4 py-2 rounded-lg hover:scale-105 transition"
+// // // // // //                 >
+// // // // // //                   Write Review
+// // // // // //                 </button>
+// // // // // //               </div>
+
+// // // // // //               {/* FORM */}
+// // // // // //               {showForm && (
+// // // // // //                 <div className="bg-white/70 backdrop-blur-lg p-5 rounded-2xl shadow-xl mb-5 animate-slideUp">
+
+// // // // // //                   {/* Stars */}
+// // // // // //                   <div className="flex gap-2 text-2xl mb-3 cursor-pointer">
+// // // // // //                     {[1, 2, 3, 4, 5].map((s) => (
+// // // // // //                       <span
+// // // // // //                         key={s}
+// // // // // //                         onClick={() => setRating(s)}
+// // // // // //                         className={`${
+// // // // // //                           s <= rating ? "text-yellow-400" : "text-gray-300"
+// // // // // //                         } hover:scale-125 transition`}
+// // // // // //                       >
+// // // // // //                         ★
+// // // // // //                       </span>
+// // // // // //                     ))}
+// // // // // //                   </div>
+
+// // // // // //                   <textarea
+// // // // // //                     value={comment}
+// // // // // //                     onChange={(e) => setComment(e.target.value)}
+// // // // // //                     placeholder="Write your experience..."
+// // // // // //                     className="w-full p-3 border rounded-xl mb-3 focus:ring-2 focus:ring-pink-400"
+// // // // // //                   />
+
+// // // // // //                   <div className="flex justify-between">
+// // // // // //                     <button
+// // // // // //                       onClick={() => setShowForm(false)}
+// // // // // //                       className="text-gray-500"
 // // // // // //                     >
-// // // // // //                       {[5, 4, 3, 2, 1].map((r) => (
-// // // // // //                         <option key={r} value={r}>
-// // // // // //                           {r} Stars
-// // // // // //                         </option>
-// // // // // //                       ))}
-// // // // // //                     </select>
-
-// // // // // //                     <textarea
-// // // // // //                       value={comment}
-// // // // // //                       onChange={(e) => setComment(e.target.value)}
-// // // // // //                       placeholder="Write your review..."
-// // // // // //                       className="border p-2 w-full mb-2"
-// // // // // //                     />
+// // // // // //                       Cancel
+// // // // // //                     </button>
 
 // // // // // //                     <button
 // // // // // //                       onClick={handleSubmitReview}
-// // // // // //                       className="bg-pink-500 text-white px-4 py-2 rounded"
+// // // // // //                       className="bg-pink-500 text-white px-5 py-2 rounded-xl hover:scale-105 transition"
 // // // // // //                     >
-// // // // // //                       {editingReviewId ? "Update Review" : "Submit Review"}
+// // // // // //                       {editingReviewId ? "Update" : "Submit"}
 // // // // // //                     </button>
 // // // // // //                   </div>
-// // // // // //                 )}
+// // // // // //                 </div>
+// // // // // //               )}
 
-// // // // // //                 {/* REVIEW LIST */}
-// // // // // //                 {reviews.length === 0 && <p>No reviews yet</p>}
+// // // // // //               {/* LIST */}
+// // // // // //               {reviews.length === 0 && (
+// // // // // //                 <p className="text-gray-500">No reviews yet</p>
+// // // // // //               )}
 
-// // // // // //                 {reviews.map((review) => (
-// // // // // //                   <div
-// // // // // //                     key={review._id}
-// // // // // //                     className="border-b py-3 flex justify-between"
-// // // // // //                   >
-// // // // // //                     <div>
-// // // // // //                       <p className="font-semibold">⭐ {review.rating}</p>
-// // // // // //                       <p>{review.comment}</p>
-// // // // // //                       <p className="text-xs text-gray-500">
-// // // // // //                         by {review.user?.name}
-// // // // // //                       </p>
-// // // // // //                     </div>
-
-// // // // // //                     {/* EDIT / DELETE FOR OWNER */}
-// // // // // //                     {String(review.user?._id) === userId && (
-// // // // // //                       <div className="flex gap-2">
-// // // // // //                         <button
-// // // // // //                           onClick={() => handleEdit(review)}
-// // // // // //                           className="text-blue-500"
-// // // // // //                         >
-// // // // // //                           Edit
-// // // // // //                         </button>
-// // // // // //                         <button
-// // // // // //                           onClick={() => handleDelete(review._id)}
-// // // // // //                           className="text-red-500"
-// // // // // //                         >
-// // // // // //                           Delete
-// // // // // //                         </button>
-// // // // // //                       </div>
-// // // // // //                     )}
+// // // // // //               {reviews.map((r) => (
+// // // // // //                 <div
+// // // // // //                   key={r._id}
+// // // // // //                   className="bg-gray-50 p-4 rounded-xl mb-3 shadow-sm hover:shadow-md transition flex justify-between"
+// // // // // //                 >
+// // // // // //                   <div>
+// // // // // //                     <p className="text-yellow-400">
+// // // // // //                       {"★".repeat(r.rating)}
+// // // // // //                     </p>
+// // // // // //                     <p>{r.comment}</p>
+// // // // // //                     <p className="text-xs text-gray-500">
+// // // // // //                       {r.user?.name}
+// // // // // //                     </p>
 // // // // // //                   </div>
-// // // // // //                 ))}
 
-// // // // // //               </div>
-// // // // // //             )}
-// // // // // //           </div>
+// // // // // //                   {String(r.user?._id) === String(userId) && (
+// // // // // //                     <div className="flex gap-3 text-sm">
+// // // // // //                       <button
+// // // // // //                         onClick={() => handleEdit(r)}
+// // // // // //                         className="text-blue-500 hover:underline"
+// // // // // //                       >
+// // // // // //                         Edit
+// // // // // //                       </button>
+
+// // // // // //                       <button
+// // // // // //                         onClick={() => handleDelete(r._id)}
+// // // // // //                         className="text-red-500 hover:underline"
+// // // // // //                       >
+// // // // // //                         Delete
+// // // // // //                       </button>
+// // // // // //                     </div>
+// // // // // //                   )}
+// // // // // //                 </div>
+// // // // // //               ))}
+// // // // // //             </div>
+// // // // // //           )}
 // // // // // //         </div>
 // // // // // //       </div>
 // // // // // //     </div>
@@ -2127,1134 +3564,311 @@
 
 
 
-// // // // import React, { useEffect, useState } from "react";
-// // // // import { useParams } from "react-router-dom";
-// // // // import axios from "../../utils/axios";
-// // // // import { useCart } from "../../context/CartContext";
-// // // // import { useWishlist } from "../../context/WishlistContext";
-
-// // // // const ProductDetails = () => {
-// // // //   const { id } = useParams();
-// // // //   const { addToCart } = useCart();
-// // // //   const { addToWishlist } = useWishlist();
-
-// // // //   const [product, setProduct] = useState(null);
-// // // //   const [reviews, setReviews] = useState([]);
-// // // //   const [activeTab, setActiveTab] = useState("details");
-
-// // // //   const [showForm, setShowForm] = useState(false);
-// // // //   const [rating, setRating] = useState(5);
-// // // //   const [comment, setComment] = useState("");
-// // // //   const [editingReviewId, setEditingReviewId] = useState(null);
-
-// // // //   const backendURL =
-// // // //     import.meta.env.VITE_BACKEND_URL ||
-// // // //     "https://ecommerce-mern-backend-1.onrender.com";
-
-// // // //   // ✅ FIX: get userId from stored user
-// // // //   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-// // // //   const userId = storedUser?._id;
-
-// // // //   // ================= FETCH PRODUCT =================
-// // // //   const fetchProduct = async () => {
-// // // //     try {
-// // // //       const res = await axios.get(`${backendURL}/api/products/${id}`);
-// // // //       setProduct(res.data);
-// // // //     } catch (err) {
-// // // //       console.error("Fetch product error:", err);
-// // // //     }
-// // // //   };
-
-// // // //   // ================= FETCH REVIEWS =================
-// // // //   const fetchReviews = async () => {
-// // // //     try {
-// // // //       const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
-// // // //       setReviews(res.data);
-// // // //     } catch (err) {
-// // // //       console.error("Fetch reviews error:", err);
-// // // //     }
-// // // //   };
-
-// // // //   useEffect(() => {
-// // // //     fetchProduct();
-// // // //     fetchReviews();
-// // // //   }, [id]);
-
-// // // //   if (!product) return <div className="p-10 text-center">Loading...</div>;
-
-// // // //   // ================= IMAGE =================
-// // // //   const imageUrl =
-// // // //     product.images && product.images[0]
-// // // //       ? product.images[0].startsWith("http")
-// // // //         ? product.images[0]
-// // // //         : product.images[0].startsWith("/uploads/")
-// // // //         ? `${backendURL}${product.images[0]}`
-// // // //         : `${backendURL}/uploads/${product.images[0]}`
-// // // //       : "/placeholder.png";
-
-// // // //   // ================= ADD / UPDATE REVIEW =================
-// // // //   const handleSubmitReview = async () => {
-// // // //     try {
-// // // //       const token = localStorage.getItem("token");
-
-// // // //       if (!token) {
-// // // //         alert("Please login first");
-// // // //         return;
-// // // //       }
-
-// // // //       if (!comment.trim()) {
-// // // //         alert("Please write a review");
-// // // //         return;
-// // // //       }
-
-// // // //       if (editingReviewId) {
-// // // //         await axios.put(
-// // // //           `${backendURL}/api/reviews/${editingReviewId}`,
-// // // //           { rating: Number(rating), comment },
-// // // //           { headers: { Authorization: `Bearer ${token}` } }
-// // // //         );
-// // // //       } else {
-// // // //         await axios.post(
-// // // //           `${backendURL}/api/reviews`,
-// // // //           { productId: id, rating: Number(rating), comment },
-// // // //           { headers: { Authorization: `Bearer ${token}` } }
-// // // //         );
-// // // //       }
-
-// // // //       alert("Review submitted successfully!");
-// // // //       setShowForm(false);
-// // // //       setComment("");
-// // // //       setRating(5);
-// // // //       setEditingReviewId(null);
-// // // //       fetchReviews();
-// // // //     } catch (err) {
-// // // //       console.error("Review error:", err.response?.data || err.message);
-// // // //       alert(err.response?.data?.message || "Review failed");
-// // // //     }
-// // // //   };
-
-// // // //   // ================= DELETE =================
-// // // //   const handleDelete = async (reviewId) => {
-// // // //     try {
-// // // //       const token = localStorage.getItem("token");
-
-// // // //       await axios.delete(`${backendURL}/api/reviews/${reviewId}`, {
-// // // //         headers: { Authorization: `Bearer ${token}` },
-// // // //       });
-
-// // // //       fetchReviews();
-// // // //     } catch (err) {
-// // // //       console.error("Delete review error:", err);
-// // // //     }
-// // // //   };
-
-// // // //   // ================= EDIT =================
-// // // //   const handleEdit = (review) => {
-// // // //     setShowForm(true);
-// // // //     setRating(review.rating);
-// // // //     setComment(review.comment);
-// // // //     setEditingReviewId(review._id);
-// // // //   };
-
-// // // //   return (
-// // // //     <div className="bg-gray-50 min-h-screen">
-// // // //       <div className="max-w-6xl mx-auto p-4">
-
-// // // //         {/* TOP */}
-// // // //         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-lg shadow">
-// // // //           <img
-// // // //             src={imageUrl}
-// // // //             alt={product.title}
-// // // //             className="h-[400px] w-full object-contain"
-// // // //           />
-
-// // // //           <div>
-// // // //             <h1 className="text-xl font-semibold">{product.title}</h1>
-// // // //             <p className="text-gray-600 mt-2">{product.description}</p>
-// // // //             <p className="text-2xl font-bold mt-2">₹{product.price}</p>
-
-// // // //             <div className="flex gap-3 mt-4">
-// // // //               <button
-// // // //                 onClick={() => addToCart({ ...product, quantity: 1 })}
-// // // //                 className="bg-pink-500 text-white px-6 py-3 rounded w-full"
-// // // //               >
-// // // //                 Add to Bag
-// // // //               </button>
-// // // //               <button
-// // // //                 onClick={() => addToWishlist(product)}
-// // // //                 className="border px-4 py-3 rounded"
-// // // //               >
-// // // //                 ❤️
-// // // //               </button>
-// // // //             </div>
-// // // //           </div>
-// // // //         </div>
-
-// // // //         {/* TABS */}
-// // // //         <div className="bg-white mt-6 rounded-lg shadow">
-// // // //           <div className="flex border-b">
-// // // //             <button
-// // // //               onClick={() => setActiveTab("details")}
-// // // //               className={`px-6 py-3 ${
-// // // //                 activeTab === "details" && "border-b-2 border-pink-500"
-// // // //               }`}
-// // // //             >
-// // // //               Product Details
-// // // //             </button>
-// // // //             <button
-// // // //               onClick={() => setActiveTab("reviews")}
-// // // //               className={`px-6 py-3 ${
-// // // //                 activeTab === "reviews" && "border-b-2 border-pink-500"
-// // // //               }`}
-// // // //             >
-// // // //               Ratings & Reviews
-// // // //             </button>
-// // // //           </div>
-
-// // // //           <div className="p-6">
-// // // //             {activeTab === "details" && (
-// // // //               <p className="text-gray-600">{product.description}</p>
-// // // //             )}
-
-// // // //             {activeTab === "reviews" && (
-// // // //               <div>
-// // // //                 {/* HEADER */}
-// // // //                 <div className="flex justify-between mb-4">
-// // // //                   <h2 className="font-semibold">Customer Reviews</h2>
-// // // //                   <button
-// // // //                     onClick={() => {
-// // // //                       setShowForm(true);
-// // // //                       setEditingReviewId(null);
-// // // //                       setComment("");
-// // // //                       setRating(5);
-// // // //                     }}
-// // // //                     className="border px-4 py-2 text-pink-500 rounded"
-// // // //                   >
-// // // //                     Write Review
-// // // //                   </button>
-// // // //                 </div>
-
-// // // //                 {/* FORM */}
-// // // //                 {showForm && (
-// // // //                   <div className="border p-4 mb-4 rounded">
-// // // //                     <select
-// // // //                       value={rating}
-// // // //                       onChange={(e) => setRating(Number(e.target.value))}
-// // // //                       className="border p-2 mb-2 w-full"
-// // // //                     >
-// // // //                       {[5, 4, 3, 2, 1].map((r) => (
-// // // //                         <option key={r} value={r}>
-// // // //                           {r} Stars
-// // // //                         </option>
-// // // //                       ))}
-// // // //                     </select>
-
-// // // //                     <textarea
-// // // //                       value={comment}
-// // // //                       onChange={(e) => setComment(e.target.value)}
-// // // //                       placeholder="Write your review..."
-// // // //                       className="border p-2 w-full mb-2"
-// // // //                     />
-
-// // // //                     <button
-// // // //                       onClick={handleSubmitReview}
-// // // //                       className="bg-pink-500 text-white px-4 py-2 rounded"
-// // // //                     >
-// // // //                       {editingReviewId ? "Update Review" : "Submit Review"}
-// // // //                     </button>
-// // // //                   </div>
-// // // //                 )}
-
-// // // //                 {/* LIST */}
-// // // //                 {reviews.length === 0 && <p>No reviews yet</p>}
-
-// // // //                 {reviews.map((review) => (
-// // // //                   <div
-// // // //                     key={review._id}
-// // // //                     className="border-b py-3 flex justify-between"
-// // // //                   >
-// // // //                     <div>
-// // // //                       <p className="font-semibold">⭐ {review.rating}</p>
-// // // //                       <p>{review.comment}</p>
-// // // //                       <p className="text-xs text-gray-500">
-// // // //                         by {review.user?.name}
-// // // //                       </p>
-// // // //                     </div>
-
-// // // //                     {/* ✅ FIXED CONDITION */}
-// // // //                     {String(review.user?._id) === String(userId) && (
-// // // //                       <div className="flex gap-2">
-// // // //                         <button
-// // // //                           onClick={() => handleEdit(review)}
-// // // //                           className="text-blue-500"
-// // // //                         >
-// // // //                           Edit
-// // // //                         </button>
-// // // //                         <button
-// // // //                           onClick={() => handleDelete(review._id)}
-// // // //                           className="text-red-500"
-// // // //                         >
-// // // //                           Delete
-// // // //                         </button>
-// // // //                       </div>
-// // // //                     )}
-// // // //                   </div>
-// // // //                 ))}
-// // // //               </div>
-// // // //             )}
-// // // //           </div>
-// // // //         </div>
-// // // //       </div>
-// // // //     </div>
-// // // //   );
-// // // // };
-
-// // // // export default ProductDetails;
-
-
-
-// // // import React, { useEffect, useState } from "react";
-// // // import { useParams } from "react-router-dom";
-// // // import axios from "../../utils/axios";
-// // // import { useCart } from "../../context/CartContext";
-// // // import { useWishlist } from "../../context/WishlistContext";
-
-// // // const ProductDetails = () => {
-// // //   const { id } = useParams();
-// // //   const { addToCart } = useCart();
-// // //   const { addToWishlist } = useWishlist();
-
-// // //   const [product, setProduct] = useState(null);
-// // //   const [reviews, setReviews] = useState([]);
-// // //   const [activeTab, setActiveTab] = useState("details");
-
-// // //   const [showForm, setShowForm] = useState(false);
-// // //   const [rating, setRating] = useState(5);
-// // //   const [comment, setComment] = useState("");
-// // //   const [editingReviewId, setEditingReviewId] = useState(null);
-
-// // //   const backendURL =
-// // //     import.meta.env.VITE_BACKEND_URL ||
-// // //     "https://ecommerce-mern-backend-1.onrender.com";
-
-// // //   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-// // //   const userId = storedUser?._id;
-
-// // //   // ================= FETCH =================
-// // //   useEffect(() => {
-// // //     fetchProduct();
-// // //     fetchReviews();
-// // //   }, [id]);
-
-// // //   const fetchProduct = async () => {
-// // //     const res = await axios.get(`${backendURL}/api/products/${id}`);
-// // //     setProduct(res.data);
-// // //   };
-
-// // //   const fetchReviews = async () => {
-// // //     const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
-// // //     setReviews(res.data);
-// // //   };
-
-// // //   if (!product)
-// // //     return <div className="p-10 text-center text-lg">Loading...</div>;
-
-// // //   // ================= IMAGE =================
-// // //   const imageUrl =
-// // //     product.images?.[0]
-// // //       ? product.images[0].startsWith("http")
-// // //         ? product.images[0]
-// // //         : `${backendURL}${product.images[0]}`
-// // //       : "/placeholder.png";
-
-// // //   // ================= REVIEW SUBMIT =================
-// // //   const handleSubmitReview = async () => {
-// // //     const token = localStorage.getItem("token");
-
-// // //     if (!token) return alert("Please login first");
-// // //     if (!comment.trim()) return alert("Write something");
-
-// // //     if (editingReviewId) {
-// // //       await axios.put(
-// // //         `${backendURL}/api/reviews/${editingReviewId}`,
-// // //         { rating, comment },
-// // //         { headers: { Authorization: `Bearer ${token}` } }
-// // //       );
-// // //     } else {
-// // //       await axios.post(
-// // //         `${backendURL}/api/reviews`,
-// // //         { productId: id, rating, comment },
-// // //         { headers: { Authorization: `Bearer ${token}` } }
-// // //       );
-// // //     }
-
-// // //     setShowForm(false);
-// // //     setComment("");
-// // //     setRating(5);
-// // //     setEditingReviewId(null);
-// // //     fetchReviews();
-// // //   };
-
-// // //   const handleDelete = async (reviewId) => {
-// // //     const token = localStorage.getItem("token");
-
-// // //     await axios.delete(`${backendURL}/api/reviews/${reviewId}`, {
-// // //       headers: { Authorization: `Bearer ${token}` },
-// // //     });
-
-// // //     fetchReviews();
-// // //   };
-
-// // //   const handleEdit = (review) => {
-// // //     setShowForm(true);
-// // //     setRating(review.rating);
-// // //     setComment(review.comment);
-// // //     setEditingReviewId(review._id);
-// // //   };
-
-// // //   return (
-// // //     <div className="bg-gray-50 min-h-screen p-4">
-// // //       <div className="max-w-6xl mx-auto">
-
-// // //         {/* TOP SECTION */}
-// // //         <div className="grid md:grid-cols-2 gap-8 bg-white p-6 rounded-2xl shadow">
-
-// // //           {/* IMAGE */}
-// // //           <div className="overflow-hidden rounded-xl">
-// // //             <img
-// // //               src={imageUrl}
-// // //               alt={product.title}
-// // //               className="h-[400px] w-full object-contain hover:scale-105 transition duration-300"
-// // //             />
-// // //           </div>
-
-// // //           {/* DETAILS */}
-// // //           <div className="flex flex-col justify-between">
-// // //             <div>
-// // //               <h1 className="text-2xl font-bold">{product.title}</h1>
-
-// // //               <p className="text-gray-600 mt-2">{product.description}</p>
-
-// // //               <p className="text-3xl font-bold text-pink-600 mt-4">
-// // //                 ₹{product.price}
-// // //               </p>
-
-// // //               {/* Fake rating UI */}
-// // //               <div className="mt-2 text-yellow-500">
-// // //                 ⭐⭐⭐⭐☆ <span className="text-gray-500 text-sm">(4.2)</span>
-// // //               </div>
-// // //             </div>
-
-// // //             {/* BUTTONS */}
-// // //             <div className="flex gap-3 mt-6">
-// // //               <button
-// // //                 onClick={() => addToCart({ ...product, quantity: 1 })}
-// // //                 className="flex-1 bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-xl shadow-md transition"
-// // //               >
-// // //                 Add to Bag
-// // //               </button>
-
-// // //               <button
-// // //                 onClick={() => addToWishlist(product)}
-// // //                 className="px-4 border rounded-xl hover:bg-gray-100 transition"
-// // //               >
-// // //                 ❤️
-// // //               </button>
-// // //             </div>
-// // //           </div>
-// // //         </div>
-
-// // //         {/* TABS */}
-// // //         <div className="bg-white mt-6 rounded-2xl shadow">
-// // //           <div className="flex border-b">
-// // //             <button
-// // //               onClick={() => setActiveTab("details")}
-// // //               className={`px-6 py-3 font-medium ${
-// // //                 activeTab === "details"
-// // //                   ? "border-b-2 border-pink-500 text-pink-500"
-// // //                   : "text-gray-500"
-// // //               }`}
-// // //             >
-// // //               Details
-// // //             </button>
-
-// // //             <button
-// // //               onClick={() => setActiveTab("reviews")}
-// // //               className={`px-6 py-3 font-medium ${
-// // //                 activeTab === "reviews"
-// // //                   ? "border-b-2 border-pink-500 text-pink-500"
-// // //                   : "text-gray-500"
-// // //               }`}
-// // //             >
-// // //               Reviews
-// // //             </button>
-// // //           </div>
-
-// // //           <div className="p-6">
-
-// // //             {/* DETAILS TAB */}
-// // //             {activeTab === "details" && (
-// // //               <p className="text-gray-600 leading-relaxed">
-// // //                 {product.description}
-// // //               </p>
-// // //             )}
-
-// // //             {/* REVIEWS TAB */}
-// // //             {activeTab === "reviews" && (
-// // //               <div>
-
-// // //                 {/* HEADER */}
-// // //                 <div className="flex justify-between mb-4">
-// // //                   <h2 className="font-semibold text-lg">
-// // //                     Customer Reviews
-// // //                   </h2>
-
-// // //                   <button
-// // //                     onClick={() => {
-// // //                       setShowForm(true);
-// // //                       setEditingReviewId(null);
-// // //                       setComment("");
-// // //                       setRating(5);
-// // //                     }}
-// // //                     className="border px-4 py-2 text-pink-500 rounded-lg hover:bg-pink-50"
-// // //                   >
-// // //                     Write Review
-// // //                   </button>
-// // //                 </div>
-
-// // //                 {/* FORM */}
-// // //                 {showForm && (
-// // //                   <div className="border p-4 mb-4 rounded-xl bg-gray-50">
-// // //                     <select
-// // //                       value={rating}
-// // //                       onChange={(e) => setRating(Number(e.target.value))}
-// // //                       className="border p-2 mb-2 w-full rounded"
-// // //                     >
-// // //                       {[5, 4, 3, 2, 1].map((r) => (
-// // //                         <option key={r} value={r}>
-// // //                           {r} Stars
-// // //                         </option>
-// // //                       ))}
-// // //                     </select>
-
-// // //                     <textarea
-// // //                       value={comment}
-// // //                       onChange={(e) => setComment(e.target.value)}
-// // //                       placeholder="Write your review..."
-// // //                       className="border p-2 w-full mb-2 rounded"
-// // //                     />
-
-// // //                     <button
-// // //                       onClick={handleSubmitReview}
-// // //                       className="bg-pink-500 text-white px-4 py-2 rounded-lg"
-// // //                     >
-// // //                       {editingReviewId ? "Update" : "Submit"}
-// // //                     </button>
-// // //                   </div>
-// // //                 )}
-               
-
-// // //                 {/* LIST */}
-// // //                 {reviews.length === 0 && (
-// // //                   <p className="text-gray-500">No reviews yet</p>
-// // //                 )}
-
-// // //                 {reviews.map((review) => (
-// // //                   <div
-// // //                     key={review._id}
-// // //                     className="bg-gray-50 p-4 rounded-xl mb-3 shadow-sm flex justify-between"
-// // //                   >
-// // //                     <div>
-// // //                       <p className="text-yellow-500">
-// // //                         {"⭐".repeat(review.rating)}
-// // //                       </p>
-// // //                       <p className="mt-1">{review.comment}</p>
-// // //                       <p className="text-xs text-gray-500 mt-1">
-// // //                         by {review.user?.name}
-// // //                       </p>
-// // //                     </div>
-
-// // //                     {String(review.user?._id) === String(userId) && (
-// // //                       <div className="flex gap-3 text-sm">
-// // //                         <button
-// // //                           onClick={() => handleEdit(review)}
-// // //                           className="text-blue-500"
-// // //                         >
-// // //                           Edit
-// // //                         </button>
-
-// // //                         <button
-// // //                           onClick={() => handleDelete(review._id)}
-// // //                           className="text-red-500"
-// // //                         >
-// // //                           Delete
-// // //                         </button>
-// // //                       </div>
-// // //                     )}
-// // //                   </div>
-// // //                 ))}
-
-// // //               </div>
-// // //             )}
-// // //           </div>
-// // //         </div>
-// // //       </div>
-// // //     </div>
-// // //   );
-// // // };
-
-// // // export default ProductDetails;
-
-
-
-// // import React, { useEffect, useState } from "react";
-// // import { useParams } from "react-router-dom";
-// // import axios from "../../utils/axios";
-// // import { useCart } from "../../context/CartContext";
-// // import { useWishlist } from "../../context/WishlistContext";
-
-// // const ProductDetails = () => {
-// //   const { id } = useParams();
-// //   const { addToCart } = useCart();
-// //   const { addToWishlist } = useWishlist();
-
-// //   const [product, setProduct] = useState(null);
-// //   const [reviews, setReviews] = useState([]);
-// //   const [activeTab, setActiveTab] = useState("details");
-
-// //   const [showForm, setShowForm] = useState(false);
-// //   const [rating, setRating] = useState(5);
-// //   const [comment, setComment] = useState("");
-// //   const [editingReviewId, setEditingReviewId] = useState(null);
-
-// //   const backendURL =
-// //     import.meta.env.VITE_BACKEND_URL ||
-// //     "https://ecommerce-mern-backend-1.onrender.com";
-
-// //   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-// //   const userId = storedUser?._id;
-
-// //   useEffect(() => {
-// //     fetchProduct();
-// //     fetchReviews();
-// //   }, [id]);
-
-// //   const fetchProduct = async () => {
-// //     const res = await axios.get(`${backendURL}/api/products/${id}`);
-// //     setProduct(res.data);
-// //   };
-
-// //   const fetchReviews = async () => {
-// //     const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
-// //     setReviews(res.data);
-// //   };
-
-// //   if (!product)
-// //     return <div className="p-10 text-center text-lg">Loading...</div>;
-
-// //   const imageUrl =
-// //     product.images?.[0]
-// //       ? product.images[0].startsWith("http")
-// //         ? product.images[0]
-// //         : `${backendURL}${product.images[0]}`
-// //       : "/placeholder.png";
-
-// //   const handleSubmitReview = async () => {
-// //     const token = localStorage.getItem("token");
-
-// //     if (!token) return alert("Please login first");
-// //     if (!comment.trim()) return alert("Write something");
-
-// //     if (editingReviewId) {
-// //       await axios.put(
-// //         `${backendURL}/api/reviews/${editingReviewId}`,
-// //         { rating, comment },
-// //         { headers: { Authorization: `Bearer ${token}` } }
-// //       );
-// //     } else {
-// //       await axios.post(
-// //         `${backendURL}/api/reviews`,
-// //         { productId: id, rating, comment },
-// //         { headers: { Authorization: `Bearer ${token}` } }
-// //       );
-// //     }
-
-// //     setShowForm(false);
-// //     setComment("");
-// //     setRating(5);
-// //     setEditingReviewId(null);
-// //     fetchReviews();
-// //   };
-
-// //   const handleDelete = async (reviewId) => {
-// //     const token = localStorage.getItem("token");
-
-// //     await axios.delete(`${backendURL}/api/reviews/${reviewId}`, {
-// //       headers: { Authorization: `Bearer ${token}` },
-// //     });
-
-// //     fetchReviews();
-// //   };
-
-// //   const handleEdit = (review) => {
-// //     setShowForm(true);
-// //     setRating(review.rating);
-// //     setComment(review.comment);
-// //     setEditingReviewId(review._id);
-// //   };
-
-// //   return (
-// //     <div className="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen p-4">
-// //       <div className="max-w-6xl mx-auto">
-
-// //         {/* TOP SECTION */}
-// //         <div className="grid md:grid-cols-2 gap-8 bg-white p-6 rounded-3xl shadow-xl">
-
-// //           {/* IMAGE */}
-// //           <div className="overflow-hidden rounded-2xl group">
-// //             <img
-// //               src={imageUrl}
-// //               alt={product.title}
-// //               className="h-[400px] w-full object-contain group-hover:scale-110 transition duration-500"
-// //             />
-// //           </div>
-
-// //           {/* DETAILS */}
-// //           <div className="flex flex-col justify-between">
-// //             <div>
-// //               <h1 className="text-3xl font-bold text-gray-800">
-// //                 {product.title}
-// //               </h1>
-
-// //               <p className="text-gray-500 mt-3">{product.description}</p>
-
-// //               <p className="text-4xl font-bold text-pink-600 mt-5">
-// //                 ₹{product.price}
-// //               </p>
-
-// //               <div className="mt-3 text-yellow-400 text-lg">
-// //                 ⭐⭐⭐⭐☆ <span className="text-gray-500 text-sm">(4.2)</span>
-// //               </div>
-// //             </div>
-
-// //             {/* BUTTONS */}
-// //             <div className="flex gap-3 mt-8">
-// //               <button
-// //                 onClick={() => addToCart({ ...product, quantity: 1 })}
-// //                 className="flex-1 bg-gradient-to-r from-pink-500 to-pink-600 text-white py-3 rounded-2xl shadow-lg hover:scale-105 transition"
-// //               >
-// //                 🛒 Add to Bag
-// //               </button>
-
-// //               <button
-// //                 onClick={() => addToWishlist(product)}
-// //                 className="px-5 text-xl border rounded-2xl hover:bg-pink-50 transition"
-// //               >
-// //                 ❤️
-// //               </button>
-// //             </div>
-// //           </div>
-// //         </div>
-
-// //         {/* TABS */}
-// //         <div className="bg-white mt-6 rounded-3xl shadow-xl overflow-hidden">
-// //           <div className="flex">
-// //             {["details", "reviews"].map((tab) => (
-// //               <button
-// //                 key={tab}
-// //                 onClick={() => setActiveTab(tab)}
-// //                 className={`flex-1 py-4 font-semibold transition ${
-// //                   activeTab === tab
-// //                     ? "bg-pink-500 text-white"
-// //                     : "text-gray-500 hover:bg-gray-100"
-// //                 }`}
-// //               >
-// //                 {tab === "details" ? "Details" : "Reviews"}
-// //               </button>
-// //             ))}
-// //           </div>
-
-// //           <div className="p-6">
-
-// //             {/* DETAILS */}
-// //             {activeTab === "details" && (
-// //               <p className="text-gray-600 leading-relaxed">
-// //                 {product.description}
-// //               </p>
-// //             )}
-
-// //             {/* REVIEWS */}
-// //             {activeTab === "reviews" && (
-// //               <div>
-
-// //                 {/* HEADER */}
-// //                 <div className="flex justify-between mb-6">
-// //                   <h2 className="text-xl font-bold">Customer Reviews</h2>
-
-// //                   <button
-// //                     onClick={() => {
-// //                       setShowForm(true);
-// //                       setEditingReviewId(null);
-// //                       setComment("");
-// //                       setRating(5);
-// //                     }}
-// //                     className="bg-pink-500 text-white px-4 py-2 rounded-xl shadow hover:scale-105 transition"
-// //                   >
-// //                     + Write Review
-// //                   </button>
-// //                 </div>
-
-// //                 {/* FORM */}
-// //                 {showForm && (
-// //                   <div className="bg-gray-50 p-5 rounded-2xl shadow mb-6 animate-fadeIn">
-
-// //                     {/* Stars */}
-// //                     <div className="flex gap-2 text-2xl mb-3 cursor-pointer">
-// //                       {[1, 2, 3, 4, 5].map((star) => (
-// //                         <span
-// //                           key={star}
-// //                           onClick={(e) => {
-// //                             e.stopPropagation();
-// //                             setRating(star);
-// //                           }}
-// //                           className={`hover:scale-125 transition ${
-// //                             star <= rating
-// //                               ? "text-yellow-400"
-// //                               : "text-gray-300"
-// //                           }`}
-// //                         >
-// //                           ★
-// //                         </span>
-// //                       ))}
-// //                     </div>
-
-// //                     <textarea
-// //                       value={comment}
-// //                       onChange={(e) => setComment(e.target.value)}
-// //                       placeholder="Write your experience..."
-// //                       className="w-full p-3 border rounded-xl mb-3 focus:ring-2 focus:ring-pink-400"
-// //                     />
-
-// //                     <div className="flex justify-between">
-// //                       <button
-// //                         onClick={() => setShowForm(false)}
-// //                         className="text-gray-500"
-// //                       >
-// //                         Cancel
-// //                       </button>
-
-// //                       <button
-// //                         onClick={(e) => {
-// //                           e.stopPropagation();
-// //                           handleSubmitReview();
-// //                         }}
-// //                         className="bg-pink-500 text-white px-5 py-2 rounded-xl shadow hover:scale-105 transition"
-// //                       >
-// //                         {editingReviewId ? "Update" : "Submit"}
-// //                       </button>
-// //                     </div>
-// //                   </div>
-// //                 )}
-
-// //                 {/* LIST */}
-// //                 {reviews.length === 0 && (
-// //                   <p className="text-gray-500">No reviews yet</p>
-// //                 )}
-
-// //                 {reviews.map((review) => (
-// //                   <div
-// //                     key={review._id}
-// //                     className="bg-white p-4 rounded-2xl shadow-md mb-4 hover:shadow-lg transition flex justify-between"
-// //                   >
-// //                     <div>
-// //                       <div className="text-yellow-400 text-lg">
-// //                         {"★".repeat(review.rating)}
-// //                       </div>
-
-// //                       <p className="mt-2 text-gray-700">
-// //                         {review.comment}
-// //                       </p>
-
-// //                       <p className="text-xs text-gray-400 mt-1">
-// //                         by {review.user?.name}
-// //                       </p>
-// //                     </div>
-
-// //                     {String(review.user?._id) === String(userId) && (
-// //                       <div className="flex gap-4 items-center text-sm">
-// //                         <button
-// //                           onClick={() => handleEdit(review)}
-// //                           className="text-blue-500 hover:underline"
-// //                         >
-// //                           ✏️ Edit
-// //                         </button>
-
-// //                         <button
-// //                           onClick={() => handleDelete(review._id)}
-// //                           className="text-red-500 hover:underline"
-// //                         >
-// //                           🗑 Delete
-// //                         </button>
-// //                       </div>
-// //                     )}
-// //                   </div>
-// //                 ))}
-// //               </div>
-// //             )}
-// //           </div>
-// //         </div>
-// //       </div>
-// //     </div>
-// //   );
-// // };
-
-// // export default ProductDetails;
-
-
-
-// import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import axios from "../../utils/axios";
-// import { useCart } from "../../context/CartContext";
-// import { useWishlist } from "../../context/WishlistContext";
-
-// const ProductDetails = () => {
-//   const { id } = useParams();
-//   const { addToCart } = useCart();
-//   const { addToWishlist } = useWishlist();
-
-//   const [product, setProduct] = useState(null);
-//   const [reviews, setReviews] = useState([]);
-
-//   const [showForm, setShowForm] = useState(false);
-//   const [rating, setRating] = useState(5);
-//   const [comment, setComment] = useState("");
-//   const [editingReviewId, setEditingReviewId] = useState(null);
-
-//   const backendURL =
-//     import.meta.env.VITE_BACKEND_URL ||
-//     "https://ecommerce-mern-backend-1.onrender.com";
-
-//   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-//   const userId = storedUser?._id;
-
-//   // ================= FETCH =================
-//   useEffect(() => {
-//     fetchProduct();
-//     fetchReviews();
-//   }, [id]);
-
-//   const fetchProduct = async () => {
-//     try {
-//       const res = await axios.get(`${backendURL}/api/products/${id}`);
-//       setProduct(res.data);
-//     } catch (err) {
-//       console.error("Product fetch error:", err);
-//     }
-//   };
-
-//   const fetchReviews = async () => {
-//     try {
-//       const res = await axios.get(
-//         `${backendURL}/api/reviews?productId=${id}`
-//       );
-//       setReviews(res.data);
-//     } catch (err) {
-//       console.error("Review fetch error:", err);
-//     }
-//   };
-
-//   if (!product) {
-//     return <div className="text-center p-10">Loading...</div>;
-//   }
-
-//   // ================= IMAGE =================
-//   const imageUrl =
-//     product.images?.[0]
-//       ? product.images[0].startsWith("http")
-//         ? product.images[0]
-//         : `${backendURL}${product.images[0]}`
-//       : "/placeholder.png";
-
-//   // ================= SUBMIT =================
-//   const handleSubmitReview = async () => {
-//     try {
-//       const token = localStorage.getItem("token");
-
-//       if (!token) {
-//         alert("Login required");
-//         return;
-//       }
-
-//       if (!comment.trim()) {
-//         alert("Comment required");
-//         return;
-//       }
-
-//       if (editingReviewId) {
-//         await axios.put(
-//           `${backendURL}/api/reviews/${editingReviewId}`,
-//           { rating, comment },
-//           {
-//             headers: { Authorization: `Bearer ${token}` },
-//           }
-//         );
-//       } else {
-//         await axios.post(
-//           `${backendURL}/api/reviews`,
-//           {
-//             productId: id,
-//             rating,
-//             comment,
-//           },
-//           {
-//             headers: { Authorization: `Bearer ${token}` },
-//           }
-//         );
-//       }
-
-//       // RESET
-//       setShowForm(false);
-//       setComment("");
-//       setRating(5);
-//       setEditingReviewId(null);
-
-//       fetchReviews();
-//     } catch (err) {
-//       console.error("Submit error:", err);
-//       alert(err.response?.data?.message || "Submit failed");
-//     }
-//   };
-
-//   const handleDelete = async (reviewId) => {
-//     try {
-//       const token = localStorage.getItem("token");
-
-//       await axios.delete(`${backendURL}/api/reviews/${reviewId}`, {
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
-
-//       fetchReviews();
-//     } catch (err) {
-//       console.error("Delete error:", err);
-//     }
-//   };
-
-//   const handleEdit = (review) => {
-//     setShowForm(true);
-//     setRating(review.rating);
-//     setComment(review.comment);
-//     setEditingReviewId(review._id);
-//   };
-
-//   return (
-//     <div className="p-4 max-w-5xl mx-auto">
-
-//       {/* PRODUCT */}
-//       <div className="grid md:grid-cols-2 gap-6 bg-white p-6 rounded-xl shadow">
-//         <img
-//           src={imageUrl}
-//           className="w-full h-[350px] object-contain"
-//           alt=""
-//         />
-
-//         <div>
-//           <h2 className="text-2xl font-bold">{product.title}</h2>
-//           <p className="mt-2 text-gray-600">{product.description}</p>
-
-//           <p className="text-pink-600 text-2xl mt-4">
-//             ₹{product.price}
-//           </p>
-
-//           <div className="flex gap-3 mt-5">
-//             <button
-//               onClick={() => addToCart({ ...product, quantity: 1 })}
-//               className="bg-pink-500 text-white px-5 py-2 rounded"
-//             >
-//               Add to Cart
-//             </button>
-
-//             <button
-//               onClick={() => addToWishlist(product)}
-//               className="border px-4 rounded"
-//             >
-//               ❤️
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* REVIEWS */}
-//       <div className="mt-6 bg-white p-5 rounded-xl shadow">
-
-//         <div className="flex justify-between mb-4">
-//           <h3 className="font-bold">Reviews</h3>
-
-//           <button
-//             onClick={() => {
-//               setShowForm(true);
-//               setComment("");
-//               setRating(5);
-//               setEditingReviewId(null);
-//             }}
-//             className="text-pink-500"
-//           >
-//             Write Review
-//           </button>
-//         </div>
-
-//         {/* FORM */}
-//         {showForm && (
-//           <div className="border p-4 mb-4 rounded">
-//             <select
-//               value={rating}
-//               onChange={(e) => setRating(Number(e.target.value))}
-//               className="border p-2 w-full mb-2"
-//             >
-//               {[5, 4, 3, 2, 1].map((r) => (
-//                 <option key={r}>{r}</option>
-//               ))}
-//             </select>
-
-//             <textarea
-//               value={comment}
-//               onChange={(e) => setComment(e.target.value)}
-//               className="border p-2 w-full mb-2"
-//             />
-
-//             <button
-//               onClick={handleSubmitReview}
-//               className="bg-pink-500 text-white px-4 py-2 rounded"
-//             >
-//               Submit
-//             </button>
-//           </div>
-//         )}
-
-//         {/* LIST */}
-//         {reviews.map((r) => (
-//           <div key={r._id} className="border-b py-3 flex justify-between">
-//             <div>
-//               <p>{"⭐".repeat(r.rating)}</p>
-//               <p>{r.comment}</p>
-//               <small>{r.user?.name}</small>
-//             </div>
-
-//             {String(r.user?._id) === String(userId) && (
-//               <div className="flex gap-2">
-//                 <button onClick={() => handleEdit(r)}>Edit</button>
-//                 <button onClick={() => handleDelete(r._id)}>Delete</button>
-//               </div>
-//             )}
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ProductDetails;
-
+// // // // // import React, { useEffect, useState } from "react";
+// // // // // import { useParams } from "react-router-dom";
+// // // // // import axios from "../../utils/axios";
+// // // // // import { useCart } from "../../context/CartContext";
+// // // // // import { useWishlist } from "../../context/WishlistContext";
+// // // // // import { toast } from "react-toastify";
+
+// // // // // const ProductDetails = () => {
+// // // // //   const { id } = useParams();
+// // // // //   const { addToCart, addToFavorites } = useCart();
+// // // // //   const { addToWishlist } = useWishlist();
+
+// // // // //   const [product, setProduct] = useState(null);
+// // // // //   const [reviews, setReviews] = useState([]);
+// // // // //   const [activeTab, setActiveTab] = useState("description");
+
+// // // // //   const [showForm, setShowForm] = useState(false);
+// // // // //   const [rating, setRating] = useState(5);
+// // // // //   const [comment, setComment] = useState("");
+// // // // //   const [editingReviewId, setEditingReviewId] = useState(null);
+
+// // // // //   const backendURL =
+// // // // //     import.meta.env.VITE_BACKEND_URL ||
+// // // // //     "https://ecommerce-mern-backend-1.onrender.com";
+
+// // // // //   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+// // // // //   const userId = storedUser?._id;
+
+// // // // //   // ================= FETCH =================
+// // // // //   useEffect(() => {
+// // // // //     fetchProduct();
+// // // // //     fetchReviews();
+// // // // //   }, [id]);
+
+// // // // //   const fetchProduct = async () => {
+// // // // //     try {
+// // // // //       const res = await axios.get(`${backendURL}/api/products/${id}`);
+// // // // //       setProduct(res.data);
+// // // // //     } catch (err) {
+// // // // //       console.error(err);
+// // // // //     }
+// // // // //   };
+
+// // // // //   const fetchReviews = async () => {
+// // // // //     try {
+// // // // //       const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
+// // // // //       setReviews(res.data);
+// // // // //     } catch (err) {
+// // // // //       console.error(err);
+// // // // //     }
+// // // // //   };
+
+// // // // //   if (!product) {
+// // // // //     return (
+// // // // //       <div className="h-screen flex items-center justify-center text-xl animate-pulse">
+// // // // //         Loading product...
+// // // // //       </div>
+// // // // //     );
+// // // // //   }
+
+// // // // //   const imageUrl =
+// // // // //     product.images?.[0]
+// // // // //       ? product.images[0].startsWith("http")
+// // // // //         ? product.images[0]
+// // // // //         : `${backendURL}${product.images[0]}`
+// // // // //       : "/placeholder.png";
+
+// // // // //   // ================= SUBMIT =================
+// // // // //   const handleSubmitReview = async () => {
+// // // // //     try {
+// // // // //       const token = localStorage.getItem("token");
+
+// // // // //       if (!token) return alert("Login required");
+// // // // //       if (!comment.trim()) return alert("Write something");
+
+// // // // //       if (editingReviewId) {
+// // // // //         await axios.put(
+// // // // //           `${backendURL}/api/reviews/${editingReviewId}`,
+// // // // //           { rating, comment },
+// // // // //           { headers: { Authorization: `Bearer ${token}` } }
+// // // // //         );
+// // // // //       } else {
+// // // // //         await axios.post(
+// // // // //           `${backendURL}/api/reviews`,
+// // // // //           { productId: id, rating, comment },
+// // // // //           { headers: { Authorization: `Bearer ${token}` } }
+// // // // //         );
+// // // // //       }
+
+// // // // //       setShowForm(false);
+// // // // //       setComment("");
+// // // // //       setRating(5);
+// // // // //       setEditingReviewId(null);
+// // // // //       fetchReviews();
+// // // // //     } catch (err) {
+// // // // //       console.error(err);
+// // // // //       alert("Submit failed");
+// // // // //     }
+// // // // //   };
+
+// // // // //   const handleDelete = async (rid) => {
+// // // // //     const token = localStorage.getItem("token");
+// // // // //     await axios.delete(`${backendURL}/api/reviews/${rid}`, {
+// // // // //       headers: { Authorization: `Bearer ${token}` },
+// // // // //     });
+// // // // //     fetchReviews();
+// // // // //   };
+
+// // // // //   const handleEdit = (r) => {
+// // // // //     setShowForm(true);
+// // // // //     setRating(r.rating);
+// // // // //     setComment(r.comment);
+// // // // //     setEditingReviewId(r._id);
+// // // // //   };
+
+// // // // //   return (
+// // // // //     <div className="bg-gradient-to-br from-gray-100 to-pink-50 min-h-screen p-6">
+
+// // // // //       {/* TOP CARD */}
+// // // // //       <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-xl p-6 grid md:grid-cols-2 gap-8">
+
+// // // // //         {/* IMAGE */}
+// // // // //         <div className="overflow-hidden rounded-2xl">
+// // // // //           <img
+// // // // //             src={imageUrl}
+// // // // //             alt=""
+// // // // //             className="w-full h-[400px] object-contain transition duration-500 hover:scale-110"
+// // // // //           />
+// // // // //         </div>
+
+// // // // //         {/* DETAILS */}
+// // // // //         <div className="flex flex-col justify-between">
+// // // // //           <div>
+// // // // //             <h1 className="text-3xl font-bold">{product.title}</h1>
+// // // // //             <p className="text-gray-600 mt-3">{product.description}</p>
+
+// // // // //             <p className="text-4xl font-bold text-pink-600 mt-4">
+// // // // //               ₹{product.price}
+// // // // //             </p>
+
+// // // // //             <div className="text-yellow-400 mt-2 text-lg">
+// // // // //               ⭐⭐⭐⭐☆
+// // // // //             </div>
+// // // // //           </div>
+
+// // // // //           <div className="flex gap-4 mt-6">
+
+// // // // //             {/* ADD TO CART */}
+// // // // //             <button
+// // // // //               onClick={() => addToCart({ ...product })}
+// // // // //               className="flex-1 bg-gradient-to-r from-pink-500 to-pink-600 text-white py-3 rounded-xl shadow-lg hover:scale-105 transition"
+// // // // //             >
+// // // // //               Add to Cart
+// // // // //             </button>
+
+// // // // //             {/* FAVORITE / WISHLIST */}
+// // // // //             <button
+// // // // //               onClick={() => addToFavorites(product)}
+// // // // //               className="px-5 border rounded-xl hover:bg-gray-100 transition"
+// // // // //             >
+// // // // //               ❤️
+// // // // //             </button>
+
+// // // // //           </div>
+// // // // //         </div>
+// // // // //       </div>
+
+// // // // //       {/* TABS */}
+// // // // //       <div className="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow">
+// // // // //         <div className="flex border-b">
+// // // // //           {["description", "reviews"].map((tab) => (
+// // // // //             <button
+// // // // //               key={tab}
+// // // // //               onClick={() => setActiveTab(tab)}
+// // // // //               className={`flex-1 py-3 font-medium transition ${
+// // // // //                 activeTab === tab
+// // // // //                   ? "border-b-2 border-pink-500 text-pink-500"
+// // // // //                   : "text-gray-500"
+// // // // //               }`}
+// // // // //             >
+// // // // //               {tab.toUpperCase()}
+// // // // //             </button>
+// // // // //           ))}
+// // // // //         </div>
+
+// // // // //         <div className="p-6">
+
+// // // // //           {/* DESCRIPTION */}
+// // // // //           {activeTab === "description" && (
+// // // // //             <div className="animate-fadeIn text-gray-600 leading-relaxed">
+// // // // //               {product.description}
+// // // // //             </div>
+// // // // //           )}
+
+// // // // //           {/* REVIEWS */}
+// // // // //           {activeTab === "reviews" && (
+// // // // //             <div className="animate-fadeIn">
+
+// // // // //               {/* HEADER */}
+// // // // //               <div className="flex justify-between mb-4">
+// // // // //                 <h2 className="font-semibold text-lg">Customer Reviews</h2>
+
+// // // // //                 <button
+// // // // //                   onClick={() => {
+// // // // //                     setShowForm(true);
+// // // // //                     setComment("");
+// // // // //                     setRating(5);
+// // // // //                     setEditingReviewId(null);
+// // // // //                   }}
+// // // // //                   className="bg-pink-500 text-white px-4 py-2 rounded-lg hover:scale-105 transition"
+// // // // //                 >
+// // // // //                   Write Review
+// // // // //                 </button>
+// // // // //               </div>
+
+// // // // //               {/* FORM */}
+// // // // //               {showForm && (
+// // // // //                 <div className="bg-white/70 backdrop-blur-lg p-5 rounded-2xl shadow-xl mb-5 animate-slideUp">
+
+// // // // //                   {/* Stars */}
+// // // // //                   <div className="flex gap-2 text-2xl mb-3 cursor-pointer">
+// // // // //                     {[1, 2, 3, 4, 5].map((s) => (
+// // // // //                       <span
+// // // // //                         key={s}
+// // // // //                         onClick={() => setRating(s)}
+// // // // //                         className={`${s <= rating ? "text-yellow-400" : "text-gray-300"} hover:scale-125 transition`}
+// // // // //                       >
+// // // // //                         ★
+// // // // //                       </span>
+// // // // //                     ))}
+// // // // //                   </div>
+
+// // // // //                   <textarea
+// // // // //                     value={comment}
+// // // // //                     onChange={(e) => setComment(e.target.value)}
+// // // // //                     placeholder="Write your experience..."
+// // // // //                     className="w-full p-3 border rounded-xl mb-3 focus:ring-2 focus:ring-pink-400"
+// // // // //                   />
+
+// // // // //                   <div className="flex justify-between">
+// // // // //                     <button
+// // // // //                       onClick={() => setShowForm(false)}
+// // // // //                       className="text-gray-500"
+// // // // //                     >
+// // // // //                       Cancel
+// // // // //                     </button>
+
+// // // // //                     <button
+// // // // //                       onClick={handleSubmitReview}
+// // // // //                       className="bg-pink-500 text-white px-5 py-2 rounded-xl hover:scale-105 transition"
+// // // // //                     >
+// // // // //                       {editingReviewId ? "Update" : "Submit"}
+// // // // //                     </button>
+// // // // //                   </div>
+// // // // //                 </div>
+// // // // //               )}
+
+// // // // //               {/* LIST */}
+// // // // //               {reviews.length === 0 && (
+// // // // //                 <p className="text-gray-500">No reviews yet</p>
+// // // // //               )}
+
+// // // // //               {reviews.map((r) => (
+// // // // //                 <div
+// // // // //                   key={r._id}
+// // // // //                   className="bg-gray-50 p-4 rounded-xl mb-3 shadow-sm hover:shadow-md transition flex justify-between"
+// // // // //                 >
+// // // // //                   <div>
+// // // // //                     <p className="text-yellow-400">
+// // // // //                       {"★".repeat(r.rating)}
+// // // // //                     </p>
+// // // // //                     <p>{r.comment}</p>
+// // // // //                     <p className="text-xs text-gray-500">
+// // // // //                       {r.user?.name}
+// // // // //                     </p>
+// // // // //                   </div>
+
+// // // // //                   {String(r.user?._id) === String(userId) && (
+// // // // //                     <div className="flex gap-3 text-sm">
+// // // // //                       <button
+// // // // //                         onClick={() => handleEdit(r)}
+// // // // //                         className="text-blue-500 hover:underline"
+// // // // //                       >
+// // // // //                         Edit
+// // // // //                       </button>
+
+// // // // //                       <button
+// // // // //                         onClick={() => handleDelete(r._id)}
+// // // // //                         className="text-red-500 hover:underline"
+// // // // //                       >
+// // // // //                         Delete
+// // // // //                       </button>
+// // // // //                     </div>
+// // // // //                   )}
+// // // // //                 </div>
+// // // // //               ))}
+// // // // //             </div>
+// // // // //           )}
+// // // // //         </div>
+// // // // //       </div>
+// // // // //     </div>
+// // // // //   );
+// // // // // };
+
+// // // // // export default ProductDetails;
 
 
 
@@ -3263,11 +3877,12 @@ import { useParams } from "react-router-dom";
 import axios from "../../utils/axios";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
+import { toast } from "react-toastify";
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const { addToCart } = useCart();
-  const { addToWishlist } = useWishlist();
+  const { addToCart, cart, addToFavorites } = useCart();
+  const { addToWishlist, wishlist } = useWishlist();
 
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -3285,37 +3900,31 @@ const ProductDetails = () => {
   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = storedUser?._id;
 
-  // ================= FETCH =================
+  // ================= FETCH PRODUCT & REVIEWS =================
   useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await axios.get(`${backendURL}/api/products/${id}`);
+        setProduct(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    const fetchReviews = async () => {
+      try {
+        const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
+        setReviews(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
     fetchProduct();
     fetchReviews();
   }, [id]);
 
-  const fetchProduct = async () => {
-    try {
-      const res = await axios.get(`${backendURL}/api/products/${id}`);
-      setProduct(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const fetchReviews = async () => {
-    try {
-      const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
-      setReviews(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  if (!product) {
-    return (
-      <div className="h-screen flex items-center justify-center text-xl animate-pulse">
-        Loading product...
-      </div>
-    );
-  }
+  if (!product) return <div className="h-screen flex items-center justify-center text-xl animate-pulse">Loading product...</div>;
 
   const imageUrl =
     product.images?.[0]
@@ -3324,11 +3933,14 @@ const ProductDetails = () => {
         : `${backendURL}${product.images[0]}`
       : "/placeholder.png";
 
-  // ================= SUBMIT =================
+  // ✅ Get current cart quantity for this product
+  const cartItem = cart.find((p) => p._id === product._id);
+  const cartQty = cartItem ? cartItem.quantity : 0;
+
+  // ================= SUBMIT REVIEW =================
   const handleSubmitReview = async () => {
     try {
       const token = localStorage.getItem("token");
-
       if (!token) return alert("Login required");
       if (!comment.trim()) return alert("Write something");
 
@@ -3350,7 +3962,9 @@ const ProductDetails = () => {
       setComment("");
       setRating(5);
       setEditingReviewId(null);
-      fetchReviews();
+      // Refresh reviews
+      const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
+      setReviews(res.data);
     } catch (err) {
       console.error(err);
       alert("Submit failed");
@@ -3362,7 +3976,8 @@ const ProductDetails = () => {
     await axios.delete(`${backendURL}/api/reviews/${rid}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    fetchReviews();
+    const res = await axios.get(`${backendURL}/api/reviews?productId=${id}`);
+    setReviews(res.data);
   };
 
   const handleEdit = (r) => {
@@ -3374,10 +3989,8 @@ const ProductDetails = () => {
 
   return (
     <div className="bg-gradient-to-br from-gray-100 to-pink-50 min-h-screen p-6">
-
       {/* TOP CARD */}
       <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-xl p-6 grid md:grid-cols-2 gap-8">
-
         {/* IMAGE */}
         <div className="overflow-hidden rounded-2xl">
           <img
@@ -3393,29 +4006,40 @@ const ProductDetails = () => {
             <h1 className="text-3xl font-bold">{product.title}</h1>
             <p className="text-gray-600 mt-3">{product.description}</p>
 
-            <p className="text-4xl font-bold text-pink-600 mt-4">
-              ₹{product.price}
-            </p>
+            <p className="text-4xl font-bold text-pink-600 mt-4">₹{product.price}</p>
+            {/* <p className="text-gray-500 mt-1 text-sm">
+              {cartQty > 0 ? `Already in cart: Qty ${cartQty}` : "Not in cart yet"}
+            </p> */}
 
-            <div className="text-yellow-400 mt-2 text-lg">
-              ⭐⭐⭐⭐☆
-            </div>
+            <div className="text-yellow-400 mt-2 text-lg">⭐⭐⭐⭐☆</div>
           </div>
 
           <div className="flex gap-4 mt-6">
+            {/* ADD TO CART */}
             <button
-              onClick={() => addToCart({ ...product, quantity: 1 })}
+              onClick={() => addToCart({ ...product })}
               className="flex-1 bg-gradient-to-r from-pink-500 to-pink-600 text-white py-3 rounded-xl shadow-lg hover:scale-105 transition"
             >
-              Add to Cart
+              {/* {cartQty > 0 ? `Add More (+${cartQty})` : "Add to Cart"} */}
+              Add to cart
             </button>
 
-            <button
-              onClick={() => addToWishlist(product)}
+            {/* FAVORITE / WISHLIST */}
+            {/* <button
+              onClick={() => {
+                addToFavorites(product);
+                addToWishlist(product);
+              }}
               className="px-5 border rounded-xl hover:bg-gray-100 transition"
             >
               ❤️
-            </button>
+            </button> */}
+            <button
+  onClick={() => addToWishlist(product)}
+  className="text-xl hover:scale-110 transition"
+>
+  ❤️
+</button>
           </div>
         </div>
       </div>
@@ -3428,9 +4052,7 @@ const ProductDetails = () => {
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`flex-1 py-3 font-medium transition ${
-                activeTab === tab
-                  ? "border-b-2 border-pink-500 text-pink-500"
-                  : "text-gray-500"
+                activeTab === tab ? "border-b-2 border-pink-500 text-pink-500" : "text-gray-500"
               }`}
             >
               {tab.toUpperCase()}
@@ -3439,22 +4061,14 @@ const ProductDetails = () => {
         </div>
 
         <div className="p-6">
-
-          {/* DESCRIPTION */}
           {activeTab === "description" && (
-            <div className="animate-fadeIn text-gray-600 leading-relaxed">
-              {product.description}
-            </div>
+            <div className="animate-fadeIn text-gray-600 leading-relaxed">{product.description}</div>
           )}
 
-          {/* REVIEWS */}
           {activeTab === "reviews" && (
             <div className="animate-fadeIn">
-
-              {/* HEADER */}
               <div className="flex justify-between mb-4">
                 <h2 className="font-semibold text-lg">Customer Reviews</h2>
-
                 <button
                   onClick={() => {
                     setShowForm(true);
@@ -3468,19 +4082,14 @@ const ProductDetails = () => {
                 </button>
               </div>
 
-              {/* FORM */}
               {showForm && (
                 <div className="bg-white/70 backdrop-blur-lg p-5 rounded-2xl shadow-xl mb-5 animate-slideUp">
-
-                  {/* Stars */}
                   <div className="flex gap-2 text-2xl mb-3 cursor-pointer">
                     {[1, 2, 3, 4, 5].map((s) => (
                       <span
                         key={s}
                         onClick={() => setRating(s)}
-                        className={`${
-                          s <= rating ? "text-yellow-400" : "text-gray-300"
-                        } hover:scale-125 transition`}
+                        className={`${s <= rating ? "text-yellow-400" : "text-gray-300"} hover:scale-125 transition`}
                       >
                         ★
                       </span>
@@ -3495,13 +4104,7 @@ const ProductDetails = () => {
                   />
 
                   <div className="flex justify-between">
-                    <button
-                      onClick={() => setShowForm(false)}
-                      className="text-gray-500"
-                    >
-                      Cancel
-                    </button>
-
+                    <button onClick={() => setShowForm(false)} className="text-gray-500">Cancel</button>
                     <button
                       onClick={handleSubmitReview}
                       className="bg-pink-500 text-white px-5 py-2 rounded-xl hover:scale-105 transition"
@@ -3512,41 +4115,20 @@ const ProductDetails = () => {
                 </div>
               )}
 
-              {/* LIST */}
-              {reviews.length === 0 && (
-                <p className="text-gray-500">No reviews yet</p>
-              )}
+              {reviews.length === 0 && <p className="text-gray-500">No reviews yet</p>}
 
               {reviews.map((r) => (
-                <div
-                  key={r._id}
-                  className="bg-gray-50 p-4 rounded-xl mb-3 shadow-sm hover:shadow-md transition flex justify-between"
-                >
+                <div key={r._id} className="bg-gray-50 p-4 rounded-xl mb-3 shadow-sm hover:shadow-md transition flex justify-between">
                   <div>
-                    <p className="text-yellow-400">
-                      {"★".repeat(r.rating)}
-                    </p>
+                    <p className="text-yellow-400">{"★".repeat(r.rating)}</p>
                     <p>{r.comment}</p>
-                    <p className="text-xs text-gray-500">
-                      {r.user?.name}
-                    </p>
+                    <p className="text-xs text-gray-500">{r.user?.name}</p>
                   </div>
 
                   {String(r.user?._id) === String(userId) && (
                     <div className="flex gap-3 text-sm">
-                      <button
-                        onClick={() => handleEdit(r)}
-                        className="text-blue-500 hover:underline"
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        onClick={() => handleDelete(r._id)}
-                        className="text-red-500 hover:underline"
-                      >
-                        Delete
-                      </button>
+                      <button onClick={() => handleEdit(r)} className="text-blue-500 hover:underline">Edit</button>
+                      <button onClick={() => handleDelete(r._id)} className="text-red-500 hover:underline">Delete</button>
                     </div>
                   )}
                 </div>
@@ -3560,3 +4142,290 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
+
+
+// import React, { useEffect, useState } from "react";
+// import { useParams } from "react-router-dom";
+// import axios from "../../utils/axios";
+// import { useCart } from "../../context/CartContext";
+// import { useWishlist } from "../../context/WishlistContext";
+// import { toast } from "react-toastify";
+
+// const ProductDetails = () => {
+//   const { id } = useParams();
+//   const { addToCart, cart, addToFavorites } = useCart();
+//   const { addToWishlist } = useWishlist();
+
+//   const [product, setProduct] = useState(null);
+//   const [activeTab, setActiveTab] = useState("description");
+
+//   const [cartQty, setCartQty] = useState(0);
+
+//   const backendURL =
+//     import.meta.env.VITE_BACKEND_URL ||
+//     "https://ecommerce-mern-backend-1.onrender.com";
+
+//   // Update cartQty whenever cart or product changes
+//   useEffect(() => {
+//     const cartItem = cart.find((p) => p._id === product?._id);
+//     setCartQty(cartItem ? cartItem.quantity : 0);
+//   }, [cart, product]);
+
+//   // Fetch product
+//   useEffect(() => {
+//     const fetchProduct = async () => {
+//       try {
+//         const res = await axios.get(`${backendURL}/api/products/${id}`);
+//         setProduct(res.data);
+//       } catch (err) {
+//         console.error(err);
+//       }
+//     };
+//     fetchProduct();
+//   }, [id]);
+
+//   if (!product) return <div className="h-screen flex items-center justify-center animate-pulse">Loading...</div>;
+
+//   const imageUrl =
+//     product.images?.[0]
+//       ? product.images[0].startsWith("http")
+//         ? product.images[0]
+//         : `${backendURL}${product.images[0]}`
+//       : "/placeholder.png";
+
+//   return (
+//     <div className="bg-gradient-to-br from-gray-100 to-pink-50 min-h-screen p-6">
+//       <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-xl p-6 grid md:grid-cols-2 gap-8">
+//         <div className="overflow-hidden rounded-2xl">
+//           <img
+//             src={imageUrl}
+//             alt=""
+//             className="w-full h-[400px] object-contain transition duration-500 hover:scale-110"
+//           />
+//         </div>
+
+//         <div className="flex flex-col justify-between">
+//           <div>
+//             <h1 className="text-3xl font-bold">{product.title}</h1>
+//             <p className="text-gray-600 mt-3">{product.description}</p>
+//             <p className="text-4xl font-bold text-pink-600 mt-4">₹{product.price}</p>
+//           </div>
+
+//           <div className="flex gap-4 mt-6">
+//             <button
+//               onClick={() => addToCart(product)}
+//               className="flex-1 bg-gradient-to-r from-pink-500 to-pink-600 text-white py-3 rounded-xl shadow-lg hover:scale-105 transition"
+//             >
+//               {cartQty > 0 ? `Add More (+${cartQty})` : "Add to Cart"}
+//             </button>
+
+//             <button
+//               onClick={() => addToFavorites(product)}
+//               className="px-5 border rounded-xl hover:bg-gray-100 transition"
+//             >
+//               ❤️
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Tabs placeholder */}
+//       <div className="max-w-6xl mx-auto mt-6 bg-white rounded-2xl shadow">
+//         <div className="flex border-b">
+//           {["description", "reviews"].map((tab) => (
+//             <button
+//               key={tab}
+//               onClick={() => setActiveTab(tab)}
+//               className={`flex-1 py-3 font-medium transition ${
+//                 activeTab === tab
+//                   ? "border-b-2 border-pink-500 text-pink-500"
+//                   : "text-gray-500"
+//               }`}
+//             >
+//               {tab.toUpperCase()}
+//             </button>
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ProductDetails;
+
+
+
+// // import React, { useEffect, useState } from "react";
+// // import { useParams } from "react-router-dom";
+// // import axios from "../../utils/axios";
+// // import { useCart } from "../../context/CartContext";
+// // import { useWishlist } from "../../context/WishlistContext";
+// // import { toast } from "react-toastify";
+
+// // const ProductDetails = () => {
+// //   const { id } = useParams();
+// //   const { cart, addToCart, addToFavorites } = useCart();
+// //   const { addToWishlist } = useWishlist();
+
+// //   const [product, setProduct] = useState(null);
+
+// //   const backendURL =
+// //     import.meta.env.VITE_BACKEND_URL ||
+// //     "https://ecommerce-mern-backend-1.onrender.com";
+
+// //   useEffect(() => {
+// //     const fetchProduct = async () => {
+// //       try {
+// //         const res = await axios.get(`${backendURL}/api/products/${id}`);
+// //         setProduct(res.data);
+// //       } catch (err) {
+// //         console.error(err);
+// //       }
+// //     };
+// //     fetchProduct();
+// //   }, [id]);
+
+// //   if (!product) return <div className="h-screen flex items-center justify-center animate-pulse">Loading...</div>;
+
+// //   const cartItem = cart.find((p) => p._id === product._id);
+// //   const quantityInCart = cartItem ? cartItem.quantity : 0;
+
+// //   const imageUrl =
+// //     product.images?.[0]
+// //       ? product.images[0].startsWith("http")
+// //         ? product.images[0]
+// //         : `${backendURL}${product.images[0]}`
+// //       : "/placeholder.png";
+
+// //   return (
+// //     <div className="min-h-screen p-6 bg-gradient-to-br from-gray-100 to-pink-50">
+// //       <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-xl p-6 grid md:grid-cols-2 gap-8">
+// //         <img src={imageUrl} alt="" className="w-full h-[400px] object-contain rounded-2xl" />
+// //         <div className="flex flex-col justify-between">
+// //           <h1 className="text-3xl font-bold">{product.title}</h1>
+// //           <p className="text-gray-600 mt-3">{product.description}</p>
+// //           <p className="text-4xl font-bold text-pink-600 mt-4">₹{product.price}</p>
+
+// //           <div className="flex gap-4 mt-6">
+// //             <button
+// //               onClick={() => addToCart(product)}
+// //               className="flex-1 bg-gradient-to-r from-pink-500 to-pink-600 text-white py-3 rounded-xl shadow-lg hover:scale-105 transition"
+// //             >
+// //               {quantityInCart > 0 ? `Add More (+${quantityInCart})` : "Add to Cart"}
+// //             </button>
+
+// //             <button
+// //               onClick={() => addToFavorites(product)}
+// //               className="px-5 border rounded-xl hover:bg-gray-100 transition"
+// //             >
+// //               ❤️
+// //             </button>
+// //           </div>
+// //         </div>
+// //       </div>
+// //     </div>
+// //   );
+// // };
+
+// // export default ProductDetails;
+
+
+// import React, { useEffect, useState } from "react";
+// import { useParams } from "react-router-dom";
+// import axios from "../../utils/axios";
+// import { useCart } from "../../context/CartContext";
+// import { useWishlist } from "../../context/WishlistContext";
+// import { toast } from "react-toastify";
+
+// const ProductDetails = () => {
+//   const { id } = useParams();
+//   const { cart, addToCart, addToFavorites } = useCart();
+//   const { wishlist, addToWishlist } = useWishlist(); // ✅ Use wishlist here
+
+//   const [product, setProduct] = useState(null);
+
+//   const backendURL =
+//     import.meta.env.VITE_BACKEND_URL ||
+//     "https://ecommerce-mern-backend-1.onrender.com";
+
+//   useEffect(() => {
+//     const fetchProduct = async () => {
+//       try {
+//         const res = await axios.get(`${backendURL}/api/products/${id}`);
+//         setProduct(res.data);
+//       } catch (err) {
+//         console.error(err);
+//       }
+//     };
+//     fetchProduct();
+//   }, [id]);
+
+//   if (!product)
+//     return (
+//       <div className="h-screen flex items-center justify-center animate-pulse">
+//         Loading...
+//       </div>
+//     );
+
+//   const cartItem = cart.find((p) => p._id === product._id);
+//   const quantityInCart = cartItem ? cartItem.quantity : 0;
+
+//   const isInWishlist = wishlist.find((p) => p._id === product._id);
+
+//   const imageUrl =
+//     product.images?.[0]
+//       ? product.images[0].startsWith("http")
+//         ? product.images[0]
+//         : `${backendURL}${product.images[0]}`
+//       : "/placeholder.png";
+
+//   const handleWishlist = () => {
+//     if (isInWishlist) {
+//       toast.info("Already in wishlist 💖");
+//     } else {
+//       addToWishlist(product);
+//       toast.success("Added to wishlist 💖");
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen p-6 bg-gradient-to-br from-gray-100 to-pink-50">
+//       <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-xl p-6 grid md:grid-cols-2 gap-8">
+//         <img
+//           src={imageUrl}
+//           alt=""
+//           className="w-full h-[400px] object-contain rounded-2xl"
+//         />
+//         <div className="flex flex-col justify-between">
+//           <h1 className="text-3xl font-bold">{product.title}</h1>
+//           <p className="text-gray-600 mt-3">{product.description}</p>
+//           <p className="text-4xl font-bold text-pink-600 mt-4">₹{product.price}</p>
+
+//           <div className="flex gap-4 mt-6">
+//             <button
+//               onClick={() => addToCart(product)}
+//               className="flex-1 bg-gradient-to-r from-pink-500 to-pink-600 text-white py-3 rounded-xl shadow-lg hover:scale-105 transition"
+//             >
+//               {quantityInCart > 0
+//                 ? `Add More (+${quantityInCart})`
+//                 : "Add to Cart"}
+//             </button>
+
+//             <button
+//               onClick={handleWishlist} // ✅ Connect to wishlist
+//               className={`px-5 border rounded-xl transition ${
+//                 isInWishlist
+//                   ? "bg-pink-500 text-white hover:bg-pink-600"
+//                   : "hover:bg-gray-100"
+//               }`}
+//             >
+//               {isInWishlist ? "In Wishlist ❤️" : "Add to Wishlist 🤍"}
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ProductDetails;

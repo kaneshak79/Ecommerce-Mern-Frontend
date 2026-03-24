@@ -1431,7 +1431,7 @@ const Home = () => {
       <BannerSlider />
 
       {/* Categories */}
-      <div className="container mx-auto px-4 py-6">
+      {/* <div className="container mx-auto px-4 py-6">
         <h2 className="text-xl font-bold mb-4">Shop by Category</h2>
         <div className="flex gap-4 flex-wrap">
           {categories.map((cat) => (
@@ -1443,10 +1443,10 @@ const Home = () => {
             </button>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Products */}
-      <div className="container mx-auto px-4 pb-10">
+      <div className="container mx-auto px-4 pb-10 mt-20">
         <h2 className="text-xl font-bold mb-6">Trending Products</h2>
         {products.length === 0 ? (
           <p>No products available.</p>
@@ -1460,7 +1460,7 @@ const Home = () => {
                   animation: `fadeIn 0.5s ease ${(index + 1) * 0.1}s forwards`,
                   opacity: 0,
                 }}
-                onClick={() => navigate(`/product/${product._id}`)}
+                // onClick={() => navigate(`/product/${product._id}`)}
               >
                 {/* ProductCard uses images[0] for display */}
                 <ProductCard product={product} />

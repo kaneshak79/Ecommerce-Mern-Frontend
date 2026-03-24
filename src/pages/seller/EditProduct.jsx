@@ -1,3 +1,100 @@
+// // // // // // // // // // // // // // // // // src/pages/seller/EditProduct.jsx
+// // // // // // // // // // // // // // // // import React, { useState, useEffect } from "react";
+// // // // // // // // // // // // // // // // import axios from "../../utils/axios";
+// // // // // // // // // // // // // // // // import { useNavigate, useParams } from "react-router-dom";
+
+// // // // // // // // // // // // // // // // const EditProduct = () => {
+// // // // // // // // // // // // // // // //   const { id } = useParams();
+// // // // // // // // // // // // // // // //   const navigate = useNavigate();
+// // // // // // // // // // // // // // // //   const [title, setTitle] = useState("");
+// // // // // // // // // // // // // // // //   const [description, setDescription] = useState("");
+// // // // // // // // // // // // // // // //   const [price, setPrice] = useState("");
+// // // // // // // // // // // // // // // //   const [image, setImage] = useState(null);
+
+// // // // // // // // // // // // // // // //   useEffect(() => {
+// // // // // // // // // // // // // // // //     const fetchProduct = async () => {
+// // // // // // // // // // // // // // // //       try {
+// // // // // // // // // // // // // // // //         const res = await axios.get(`/seller/products/${id}`, {
+// // // // // // // // // // // // // // // //           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+// // // // // // // // // // // // // // // //         });
+// // // // // // // // // // // // // // // //         setTitle(res.data.title);
+// // // // // // // // // // // // // // // //         setDescription(res.data.description);
+// // // // // // // // // // // // // // // //         setPrice(res.data.price);
+// // // // // // // // // // // // // // // //       } catch (err) {
+// // // // // // // // // // // // // // // //         console.error(err);
+// // // // // // // // // // // // // // // //       }
+// // // // // // // // // // // // // // // //     };
+// // // // // // // // // // // // // // // //     fetchProduct();
+// // // // // // // // // // // // // // // //   }, [id]);
+
+// // // // // // // // // // // // // // // //   const handleSubmit = async (e) => {
+// // // // // // // // // // // // // // // //     e.preventDefault();
+// // // // // // // // // // // // // // // //     const formData = new FormData();
+// // // // // // // // // // // // // // // //     formData.append("title", title);
+// // // // // // // // // // // // // // // //     formData.append("description", description);
+// // // // // // // // // // // // // // // //     formData.append("price", price);
+// // // // // // // // // // // // // // // //     if (image) formData.append("image", image);
+
+// // // // // // // // // // // // // // // //     try {
+// // // // // // // // // // // // // // // //       await axios.put(`/seller/products/${id}`, formData, {
+// // // // // // // // // // // // // // // //         headers: {
+// // // // // // // // // // // // // // // //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+// // // // // // // // // // // // // // // //           "Content-Type": "multipart/form-data",
+// // // // // // // // // // // // // // // //         },
+// // // // // // // // // // // // // // // //       });
+// // // // // // // // // // // // // // // //       alert("Product updated successfully");
+// // // // // // // // // // // // // // // //       navigate("/seller/products");
+// // // // // // // // // // // // // // // //     } catch (err) {
+// // // // // // // // // // // // // // // //       console.error(err);
+// // // // // // // // // // // // // // // //       alert("Failed to update product");
+// // // // // // // // // // // // // // // //     }
+// // // // // // // // // // // // // // // //   };
+
+// // // // // // // // // // // // // // // //   return (
+// // // // // // // // // // // // // // // //     <div className="container mx-auto p-4">
+// // // // // // // // // // // // // // // //       <h1 className="text-3xl font-bold mb-4">Edit Product</h1>
+// // // // // // // // // // // // // // // //       <form onSubmit={handleSubmit} className="space-y-4">
+// // // // // // // // // // // // // // // //         <input
+// // // // // // // // // // // // // // // //           type="text"
+// // // // // // // // // // // // // // // //           placeholder="Title"
+// // // // // // // // // // // // // // // //           className="w-full border p-2 rounded"
+// // // // // // // // // // // // // // // //           value={title}
+// // // // // // // // // // // // // // // //           onChange={(e) => setTitle(e.target.value)}
+// // // // // // // // // // // // // // // //           required
+// // // // // // // // // // // // // // // //         />
+// // // // // // // // // // // // // // // //         <textarea
+// // // // // // // // // // // // // // // //           placeholder="Description"
+// // // // // // // // // // // // // // // //           className="w-full border p-2 rounded"
+// // // // // // // // // // // // // // // //           value={description}
+// // // // // // // // // // // // // // // //           onChange={(e) => setDescription(e.target.value)}
+// // // // // // // // // // // // // // // //           required
+// // // // // // // // // // // // // // // //         />
+// // // // // // // // // // // // // // // //         <input
+// // // // // // // // // // // // // // // //           type="number"
+// // // // // // // // // // // // // // // //           placeholder="Price"
+// // // // // // // // // // // // // // // //           className="w-full border p-2 rounded"
+// // // // // // // // // // // // // // // //           value={price}
+// // // // // // // // // // // // // // // //           onChange={(e) => setPrice(e.target.value)}
+// // // // // // // // // // // // // // // //           required
+// // // // // // // // // // // // // // // //         />
+// // // // // // // // // // // // // // // //         <input
+// // // // // // // // // // // // // // // //           type="file"
+// // // // // // // // // // // // // // // //           onChange={(e) => setImage(e.target.files[0])}
+// // // // // // // // // // // // // // // //         />
+// // // // // // // // // // // // // // // //         <button
+// // // // // // // // // // // // // // // //           type="submit"
+// // // // // // // // // // // // // // // //           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+// // // // // // // // // // // // // // // //         >
+// // // // // // // // // // // // // // // //           Update Product
+// // // // // // // // // // // // // // // //         </button>
+// // // // // // // // // // // // // // // //       </form>
+// // // // // // // // // // // // // // // //     </div>
+// // // // // // // // // // // // // // // //   );
+// // // // // // // // // // // // // // // // };
+
+// // // // // // // // // // // // // // // // export default EditProduct;
+
+
 // // // // // // // // // // // // // // // // src/pages/seller/EditProduct.jsx
 // // // // // // // // // // // // // // // import React, { useState, useEffect } from "react";
 // // // // // // // // // // // // // // // import axios from "../../utils/axios";
@@ -6,44 +103,65 @@
 // // // // // // // // // // // // // // // const EditProduct = () => {
 // // // // // // // // // // // // // // //   const { id } = useParams();
 // // // // // // // // // // // // // // //   const navigate = useNavigate();
+
 // // // // // // // // // // // // // // //   const [title, setTitle] = useState("");
 // // // // // // // // // // // // // // //   const [description, setDescription] = useState("");
 // // // // // // // // // // // // // // //   const [price, setPrice] = useState("");
 // // // // // // // // // // // // // // //   const [image, setImage] = useState(null);
+// // // // // // // // // // // // // // //   const [preview, setPreview] = useState("");
 
+// // // // // // // // // // // // // // //   // 🔥 Fetch product
 // // // // // // // // // // // // // // //   useEffect(() => {
 // // // // // // // // // // // // // // //     const fetchProduct = async () => {
 // // // // // // // // // // // // // // //       try {
 // // // // // // // // // // // // // // //         const res = await axios.get(`/seller/products/${id}`, {
-// // // // // // // // // // // // // // //           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+// // // // // // // // // // // // // // //           headers: {
+// // // // // // // // // // // // // // //             Authorization: `Bearer ${localStorage.getItem("token")}`,
+// // // // // // // // // // // // // // //           },
 // // // // // // // // // // // // // // //         });
+
 // // // // // // // // // // // // // // //         setTitle(res.data.title);
 // // // // // // // // // // // // // // //         setDescription(res.data.description);
 // // // // // // // // // // // // // // //         setPrice(res.data.price);
+
+// // // // // // // // // // // // // // //         // ✅ show existing image
+// // // // // // // // // // // // // // //         if (res.data.images?.[0]) {
+// // // // // // // // // // // // // // //           setPreview(
+// // // // // // // // // // // // // // //             `http://localhost:5000/${res.data.images[0].replace(/^\/+/, "")}`
+// // // // // // // // // // // // // // //           );
+// // // // // // // // // // // // // // //         }
 // // // // // // // // // // // // // // //       } catch (err) {
 // // // // // // // // // // // // // // //         console.error(err);
 // // // // // // // // // // // // // // //       }
 // // // // // // // // // // // // // // //     };
+
 // // // // // // // // // // // // // // //     fetchProduct();
 // // // // // // // // // // // // // // //   }, [id]);
 
+// // // // // // // // // // // // // // //   // 🔥 Handle submit
 // // // // // // // // // // // // // // //   const handleSubmit = async (e) => {
 // // // // // // // // // // // // // // //     e.preventDefault();
+
 // // // // // // // // // // // // // // //     const formData = new FormData();
 // // // // // // // // // // // // // // //     formData.append("title", title);
 // // // // // // // // // // // // // // //     formData.append("description", description);
-// // // // // // // // // // // // // // //     formData.append("price", price);
-// // // // // // // // // // // // // // //     if (image) formData.append("image", image);
+// // // // // // // // // // // // // // //     formData.append("price", Number(price));
+
+// // // // // // // // // // // // // // //     if (image) {
+// // // // // // // // // // // // // // //       formData.append("image", image);
+// // // // // // // // // // // // // // //     }
 
 // // // // // // // // // // // // // // //     try {
 // // // // // // // // // // // // // // //       await axios.put(`/seller/products/${id}`, formData, {
 // // // // // // // // // // // // // // //         headers: {
 // // // // // // // // // // // // // // //           Authorization: `Bearer ${localStorage.getItem("token")}`,
-// // // // // // // // // // // // // // //           "Content-Type": "multipart/form-data",
 // // // // // // // // // // // // // // //         },
 // // // // // // // // // // // // // // //       });
+
 // // // // // // // // // // // // // // //       alert("Product updated successfully");
-// // // // // // // // // // // // // // //       navigate("/seller/products");
+
+// // // // // // // // // // // // // // //       // 🔥 force refresh
+// // // // // // // // // // // // // // //       navigate("/seller/products", { replace: true });
 // // // // // // // // // // // // // // //     } catch (err) {
 // // // // // // // // // // // // // // //       console.error(err);
 // // // // // // // // // // // // // // //       alert("Failed to update product");
@@ -53,6 +171,7 @@
 // // // // // // // // // // // // // // //   return (
 // // // // // // // // // // // // // // //     <div className="container mx-auto p-4">
 // // // // // // // // // // // // // // //       <h1 className="text-3xl font-bold mb-4">Edit Product</h1>
+
 // // // // // // // // // // // // // // //       <form onSubmit={handleSubmit} className="space-y-4">
 // // // // // // // // // // // // // // //         <input
 // // // // // // // // // // // // // // //           type="text"
@@ -62,6 +181,7 @@
 // // // // // // // // // // // // // // //           onChange={(e) => setTitle(e.target.value)}
 // // // // // // // // // // // // // // //           required
 // // // // // // // // // // // // // // //         />
+
 // // // // // // // // // // // // // // //         <textarea
 // // // // // // // // // // // // // // //           placeholder="Description"
 // // // // // // // // // // // // // // //           className="w-full border p-2 rounded"
@@ -69,6 +189,7 @@
 // // // // // // // // // // // // // // //           onChange={(e) => setDescription(e.target.value)}
 // // // // // // // // // // // // // // //           required
 // // // // // // // // // // // // // // //         />
+
 // // // // // // // // // // // // // // //         <input
 // // // // // // // // // // // // // // //           type="number"
 // // // // // // // // // // // // // // //           placeholder="Price"
@@ -77,10 +198,29 @@
 // // // // // // // // // // // // // // //           onChange={(e) => setPrice(e.target.value)}
 // // // // // // // // // // // // // // //           required
 // // // // // // // // // // // // // // //         />
+
+// // // // // // // // // // // // // // //         {/* ✅ Image preview */}
+// // // // // // // // // // // // // // //         {preview && (
+// // // // // // // // // // // // // // //           <img
+// // // // // // // // // // // // // // //             src={preview}
+// // // // // // // // // // // // // // //             alt="preview"
+// // // // // // // // // // // // // // //             className="w-32 h-32 object-cover rounded"
+// // // // // // // // // // // // // // //           />
+// // // // // // // // // // // // // // //         )}
+
 // // // // // // // // // // // // // // //         <input
 // // // // // // // // // // // // // // //           type="file"
-// // // // // // // // // // // // // // //           onChange={(e) => setImage(e.target.files[0])}
+// // // // // // // // // // // // // // //           onChange={(e) => {
+// // // // // // // // // // // // // // //             const file = e.target.files[0];
+// // // // // // // // // // // // // // //             setImage(file);
+
+// // // // // // // // // // // // // // //             // 🔥 preview new image
+// // // // // // // // // // // // // // //             if (file) {
+// // // // // // // // // // // // // // //               setPreview(URL.createObjectURL(file));
+// // // // // // // // // // // // // // //             }
+// // // // // // // // // // // // // // //           }}
 // // // // // // // // // // // // // // //         />
+
 // // // // // // // // // // // // // // //         <button
 // // // // // // // // // // // // // // //           type="submit"
 // // // // // // // // // // // // // // //           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -93,7 +233,6 @@
 // // // // // // // // // // // // // // // };
 
 // // // // // // // // // // // // // // // export default EditProduct;
-
 
 // // // // // // // // // // // // // // // src/pages/seller/EditProduct.jsx
 // // // // // // // // // // // // // // import React, { useState, useEffect } from "react";
@@ -110,7 +249,11 @@
 // // // // // // // // // // // // // //   const [image, setImage] = useState(null);
 // // // // // // // // // // // // // //   const [preview, setPreview] = useState("");
 
-// // // // // // // // // // // // // //   // 🔥 Fetch product
+// // // // // // // // // // // // // //   const BASE_URL =
+// // // // // // // // // // // // // //     import.meta.env.VITE_BACKEND_URL ||
+// // // // // // // // // // // // // //     "https://ecommerce-mern-backend-1.onrender.com";
+
+// // // // // // // // // // // // // //   // ✅ Fetch product
 // // // // // // // // // // // // // //   useEffect(() => {
 // // // // // // // // // // // // // //     const fetchProduct = async () => {
 // // // // // // // // // // // // // //       try {
@@ -124,10 +267,9 @@
 // // // // // // // // // // // // // //         setDescription(res.data.description);
 // // // // // // // // // // // // // //         setPrice(res.data.price);
 
-// // // // // // // // // // // // // //         // ✅ show existing image
 // // // // // // // // // // // // // //         if (res.data.images?.[0]) {
 // // // // // // // // // // // // // //           setPreview(
-// // // // // // // // // // // // // //             `http://localhost:5000/${res.data.images[0].replace(/^\/+/, "")}`
+// // // // // // // // // // // // // //             `${BASE_URL}/${res.data.images[0].replace(/^\/+/, "")}`
 // // // // // // // // // // // // // //           );
 // // // // // // // // // // // // // //         }
 // // // // // // // // // // // // // //       } catch (err) {
@@ -136,9 +278,9 @@
 // // // // // // // // // // // // // //     };
 
 // // // // // // // // // // // // // //     fetchProduct();
-// // // // // // // // // // // // // //   }, [id]);
+// // // // // // // // // // // // // //   }, [id, BASE_URL]);
 
-// // // // // // // // // // // // // //   // 🔥 Handle submit
+// // // // // // // // // // // // // //   // ✅ Submit update
 // // // // // // // // // // // // // //   const handleSubmit = async (e) => {
 // // // // // // // // // // // // // //     e.preventDefault();
 
@@ -152,7 +294,8 @@
 // // // // // // // // // // // // // //     }
 
 // // // // // // // // // // // // // //     try {
-// // // // // // // // // // // // // //       await axios.put(`/seller/products/${id}`, formData, {
+// // // // // // // // // // // // // //       await axios.put(`/products/${id}`, formData, {
+// // // // // // // // // // // // // //       // await axios.put(`/seller/products/${id}`, formData, {
 // // // // // // // // // // // // // //         headers: {
 // // // // // // // // // // // // // //           Authorization: `Bearer ${localStorage.getItem("token")}`,
 // // // // // // // // // // // // // //         },
@@ -160,8 +303,8 @@
 
 // // // // // // // // // // // // // //       alert("Product updated successfully");
 
-// // // // // // // // // // // // // //       // 🔥 force refresh
-// // // // // // // // // // // // // //       navigate("/seller/products", { replace: true });
+// // // // // // // // // // // // // //       navigate("/seller/products");
+// // // // // // // // // // // // // //       // navigate("/seller/products", { replace: true });
 // // // // // // // // // // // // // //     } catch (err) {
 // // // // // // // // // // // // // //       console.error(err);
 // // // // // // // // // // // // // //       alert("Failed to update product");
@@ -175,7 +318,6 @@
 // // // // // // // // // // // // // //       <form onSubmit={handleSubmit} className="space-y-4">
 // // // // // // // // // // // // // //         <input
 // // // // // // // // // // // // // //           type="text"
-// // // // // // // // // // // // // //           placeholder="Title"
 // // // // // // // // // // // // // //           className="w-full border p-2 rounded"
 // // // // // // // // // // // // // //           value={title}
 // // // // // // // // // // // // // //           onChange={(e) => setTitle(e.target.value)}
@@ -183,7 +325,6 @@
 // // // // // // // // // // // // // //         />
 
 // // // // // // // // // // // // // //         <textarea
-// // // // // // // // // // // // // //           placeholder="Description"
 // // // // // // // // // // // // // //           className="w-full border p-2 rounded"
 // // // // // // // // // // // // // //           value={description}
 // // // // // // // // // // // // // //           onChange={(e) => setDescription(e.target.value)}
@@ -192,7 +333,6 @@
 
 // // // // // // // // // // // // // //         <input
 // // // // // // // // // // // // // //           type="number"
-// // // // // // // // // // // // // //           placeholder="Price"
 // // // // // // // // // // // // // //           className="w-full border p-2 rounded"
 // // // // // // // // // // // // // //           value={price}
 // // // // // // // // // // // // // //           onChange={(e) => setPrice(e.target.value)}
@@ -214,17 +354,13 @@
 // // // // // // // // // // // // // //             const file = e.target.files[0];
 // // // // // // // // // // // // // //             setImage(file);
 
-// // // // // // // // // // // // // //             // 🔥 preview new image
 // // // // // // // // // // // // // //             if (file) {
 // // // // // // // // // // // // // //               setPreview(URL.createObjectURL(file));
 // // // // // // // // // // // // // //             }
 // // // // // // // // // // // // // //           }}
 // // // // // // // // // // // // // //         />
 
-// // // // // // // // // // // // // //         <button
-// // // // // // // // // // // // // //           type="submit"
-// // // // // // // // // // // // // //           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-// // // // // // // // // // // // // //         >
+// // // // // // // // // // // // // //         <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
 // // // // // // // // // // // // // //           Update Product
 // // // // // // // // // // // // // //         </button>
 // // // // // // // // // // // // // //       </form>
@@ -233,6 +369,8 @@
 // // // // // // // // // // // // // // };
 
 // // // // // // // // // // // // // // export default EditProduct;
+
+
 
 // // // // // // // // // // // // // // src/pages/seller/EditProduct.jsx
 // // // // // // // // // // // // // import React, { useState, useEffect } from "react";
@@ -253,11 +391,11 @@
 // // // // // // // // // // // // //     import.meta.env.VITE_BACKEND_URL ||
 // // // // // // // // // // // // //     "https://ecommerce-mern-backend-1.onrender.com";
 
-// // // // // // // // // // // // //   // ✅ Fetch product
+// // // // // // // // // // // // //   // Fetch product details
 // // // // // // // // // // // // //   useEffect(() => {
 // // // // // // // // // // // // //     const fetchProduct = async () => {
 // // // // // // // // // // // // //       try {
-// // // // // // // // // // // // //         const res = await axios.get(`/seller/products/${id}`, {
+// // // // // // // // // // // // //         const res = await axios.get(`${BASE_URL}/seller/products/${id}`, {
 // // // // // // // // // // // // //           headers: {
 // // // // // // // // // // // // //             Authorization: `Bearer ${localStorage.getItem("token")}`,
 // // // // // // // // // // // // //           },
@@ -268,19 +406,18 @@
 // // // // // // // // // // // // //         setPrice(res.data.price);
 
 // // // // // // // // // // // // //         if (res.data.images?.[0]) {
-// // // // // // // // // // // // //           setPreview(
-// // // // // // // // // // // // //             `${BASE_URL}/${res.data.images[0].replace(/^\/+/, "")}`
-// // // // // // // // // // // // //           );
+// // // // // // // // // // // // //           setPreview(`${BASE_URL}/${res.data.images[0].replace(/^\/+/, "")}`);
 // // // // // // // // // // // // //         }
 // // // // // // // // // // // // //       } catch (err) {
-// // // // // // // // // // // // //         console.error(err);
+// // // // // // // // // // // // //         console.error("Error fetching product:", err.response?.data || err);
+// // // // // // // // // // // // //         alert("Failed to load product details");
 // // // // // // // // // // // // //       }
 // // // // // // // // // // // // //     };
 
 // // // // // // // // // // // // //     fetchProduct();
 // // // // // // // // // // // // //   }, [id, BASE_URL]);
 
-// // // // // // // // // // // // //   // ✅ Submit update
+// // // // // // // // // // // // //   // Submit updated product
 // // // // // // // // // // // // //   const handleSubmit = async (e) => {
 // // // // // // // // // // // // //     e.preventDefault();
 
@@ -294,19 +431,17 @@
 // // // // // // // // // // // // //     }
 
 // // // // // // // // // // // // //     try {
-// // // // // // // // // // // // //       await axios.put(`/products/${id}`, formData, {
-// // // // // // // // // // // // //       // await axios.put(`/seller/products/${id}`, formData, {
+// // // // // // // // // // // // //       await axios.put(`${BASE_URL}/seller/products/${id}`, formData, {
 // // // // // // // // // // // // //         headers: {
 // // // // // // // // // // // // //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+// // // // // // // // // // // // //           "Content-Type": "multipart/form-data",
 // // // // // // // // // // // // //         },
 // // // // // // // // // // // // //       });
 
 // // // // // // // // // // // // //       alert("Product updated successfully");
-
 // // // // // // // // // // // // //       navigate("/seller/products");
-// // // // // // // // // // // // //       // navigate("/seller/products", { replace: true });
 // // // // // // // // // // // // //     } catch (err) {
-// // // // // // // // // // // // //       console.error(err);
+// // // // // // // // // // // // //       console.error("Error updating product:", err.response?.data || err);
 // // // // // // // // // // // // //       alert("Failed to update product");
 // // // // // // // // // // // // //     }
 // // // // // // // // // // // // //   };
@@ -339,7 +474,7 @@
 // // // // // // // // // // // // //           required
 // // // // // // // // // // // // //         />
 
-// // // // // // // // // // // // //         {/* ✅ Image preview */}
+// // // // // // // // // // // // //         {/* Image preview */}
 // // // // // // // // // // // // //         {preview && (
 // // // // // // // // // // // // //           <img
 // // // // // // // // // // // // //             src={preview}
@@ -353,10 +488,7 @@
 // // // // // // // // // // // // //           onChange={(e) => {
 // // // // // // // // // // // // //             const file = e.target.files[0];
 // // // // // // // // // // // // //             setImage(file);
-
-// // // // // // // // // // // // //             if (file) {
-// // // // // // // // // // // // //               setPreview(URL.createObjectURL(file));
-// // // // // // // // // // // // //             }
+// // // // // // // // // // // // //             if (file) setPreview(URL.createObjectURL(file));
 // // // // // // // // // // // // //           }}
 // // // // // // // // // // // // //         />
 
@@ -396,9 +528,7 @@
 // // // // // // // // // // // //     const fetchProduct = async () => {
 // // // // // // // // // // // //       try {
 // // // // // // // // // // // //         const res = await axios.get(`${BASE_URL}/seller/products/${id}`, {
-// // // // // // // // // // // //           headers: {
-// // // // // // // // // // // //             Authorization: `Bearer ${localStorage.getItem("token")}`,
-// // // // // // // // // // // //           },
+// // // // // // // // // // // //           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 // // // // // // // // // // // //         });
 
 // // // // // // // // // // // //         setTitle(res.data.title);
@@ -425,13 +555,10 @@
 // // // // // // // // // // // //     formData.append("title", title);
 // // // // // // // // // // // //     formData.append("description", description);
 // // // // // // // // // // // //     formData.append("price", Number(price));
-
-// // // // // // // // // // // //     if (image) {
-// // // // // // // // // // // //       formData.append("image", image);
-// // // // // // // // // // // //     }
+// // // // // // // // // // // //     if (image) formData.append("image", image);
 
 // // // // // // // // // // // //     try {
-// // // // // // // // // // // //       await axios.put(`${BASE_URL}/seller/products/${id}`, formData, {
+// // // // // // // // // // // //       const res = await axios.put(`${BASE_URL}/seller/products/${id}`, formData, {
 // // // // // // // // // // // //         headers: {
 // // // // // // // // // // // //           Authorization: `Bearer ${localStorage.getItem("token")}`,
 // // // // // // // // // // // //           "Content-Type": "multipart/form-data",
@@ -439,7 +566,8 @@
 // // // // // // // // // // // //       });
 
 // // // // // // // // // // // //       alert("Product updated successfully");
-// // // // // // // // // // // //       navigate("/seller/products");
+// // // // // // // // // // // //       // Pass updated product back to products page
+// // // // // // // // // // // //       navigate("/seller/products", { state: { updatedProduct: res.data } });
 // // // // // // // // // // // //     } catch (err) {
 // // // // // // // // // // // //       console.error("Error updating product:", err.response?.data || err);
 // // // // // // // // // // // //       alert("Failed to update product");
@@ -503,7 +631,6 @@
 // // // // // // // // // // // // export default EditProduct;
 
 
-
 // // // // // // // // // // // // src/pages/seller/EditProduct.jsx
 // // // // // // // // // // // import React, { useState, useEffect } from "react";
 // // // // // // // // // // // import axios from "../../utils/axios";
@@ -523,7 +650,7 @@
 // // // // // // // // // // //     import.meta.env.VITE_BACKEND_URL ||
 // // // // // // // // // // //     "https://ecommerce-mern-backend-1.onrender.com";
 
-// // // // // // // // // // //   // Fetch product details
+// // // // // // // // // // //   // Fetch single product
 // // // // // // // // // // //   useEffect(() => {
 // // // // // // // // // // //     const fetchProduct = async () => {
 // // // // // // // // // // //       try {
@@ -543,11 +670,9 @@
 // // // // // // // // // // //         alert("Failed to load product details");
 // // // // // // // // // // //       }
 // // // // // // // // // // //     };
-
 // // // // // // // // // // //     fetchProduct();
 // // // // // // // // // // //   }, [id, BASE_URL]);
 
-// // // // // // // // // // //   // Submit updated product
 // // // // // // // // // // //   const handleSubmit = async (e) => {
 // // // // // // // // // // //     e.preventDefault();
 
@@ -566,7 +691,6 @@
 // // // // // // // // // // //       });
 
 // // // // // // // // // // //       alert("Product updated successfully");
-// // // // // // // // // // //       // Pass updated product back to products page
 // // // // // // // // // // //       navigate("/seller/products", { state: { updatedProduct: res.data } });
 // // // // // // // // // // //     } catch (err) {
 // // // // // // // // // // //       console.error("Error updating product:", err.response?.data || err);
@@ -602,7 +726,6 @@
 // // // // // // // // // // //           required
 // // // // // // // // // // //         />
 
-// // // // // // // // // // //         {/* Image preview */}
 // // // // // // // // // // //         {preview && (
 // // // // // // // // // // //           <img
 // // // // // // // // // // //             src={preview}
@@ -630,14 +753,13 @@
 
 // // // // // // // // // // // export default EditProduct;
 
-
 // // // // // // // // // // // src/pages/seller/EditProduct.jsx
 // // // // // // // // // // import React, { useState, useEffect } from "react";
 // // // // // // // // // // import axios from "../../utils/axios";
 // // // // // // // // // // import { useNavigate, useParams } from "react-router-dom";
 
 // // // // // // // // // // const EditProduct = () => {
-// // // // // // // // // //   const { id } = useParams();
+// // // // // // // // // //   const { id } = useParams(); // product ID
 // // // // // // // // // //   const navigate = useNavigate();
 
 // // // // // // // // // //   const [title, setTitle] = useState("");
@@ -650,7 +772,7 @@
 // // // // // // // // // //     import.meta.env.VITE_BACKEND_URL ||
 // // // // // // // // // //     "https://ecommerce-mern-backend-1.onrender.com";
 
-// // // // // // // // // //   // Fetch single product
+// // // // // // // // // //   // Fetch product details
 // // // // // // // // // //   useEffect(() => {
 // // // // // // // // // //     const fetchProduct = async () => {
 // // // // // // // // // //       try {
@@ -673,6 +795,7 @@
 // // // // // // // // // //     fetchProduct();
 // // // // // // // // // //   }, [id, BASE_URL]);
 
+// // // // // // // // // //   // Submit updated product
 // // // // // // // // // //   const handleSubmit = async (e) => {
 // // // // // // // // // //     e.preventDefault();
 
@@ -680,10 +803,11 @@
 // // // // // // // // // //     formData.append("title", title);
 // // // // // // // // // //     formData.append("description", description);
 // // // // // // // // // //     formData.append("price", Number(price));
+
 // // // // // // // // // //     if (image) formData.append("image", image);
 
 // // // // // // // // // //     try {
-// // // // // // // // // //       const res = await axios.put(`${BASE_URL}/seller/products/${id}`, formData, {
+// // // // // // // // // //       await axios.put(`${BASE_URL}/seller/products/${id}`, formData, {
 // // // // // // // // // //         headers: {
 // // // // // // // // // //           Authorization: `Bearer ${localStorage.getItem("token")}`,
 // // // // // // // // // //           "Content-Type": "multipart/form-data",
@@ -691,7 +815,7 @@
 // // // // // // // // // //       });
 
 // // // // // // // // // //       alert("Product updated successfully");
-// // // // // // // // // //       navigate("/seller/products", { state: { updatedProduct: res.data } });
+// // // // // // // // // //       navigate("/seller/products"); // go back to seller product list
 // // // // // // // // // //     } catch (err) {
 // // // // // // // // // //       console.error("Error updating product:", err.response?.data || err);
 // // // // // // // // // //       alert("Failed to update product");
@@ -708,6 +832,7 @@
 // // // // // // // // // //           className="w-full border p-2 rounded"
 // // // // // // // // // //           value={title}
 // // // // // // // // // //           onChange={(e) => setTitle(e.target.value)}
+// // // // // // // // // //           placeholder="Product Title"
 // // // // // // // // // //           required
 // // // // // // // // // //         />
 
@@ -715,6 +840,7 @@
 // // // // // // // // // //           className="w-full border p-2 rounded"
 // // // // // // // // // //           value={description}
 // // // // // // // // // //           onChange={(e) => setDescription(e.target.value)}
+// // // // // // // // // //           placeholder="Product Description"
 // // // // // // // // // //           required
 // // // // // // // // // //         />
 
@@ -723,9 +849,11 @@
 // // // // // // // // // //           className="w-full border p-2 rounded"
 // // // // // // // // // //           value={price}
 // // // // // // // // // //           onChange={(e) => setPrice(e.target.value)}
+// // // // // // // // // //           placeholder="Price"
 // // // // // // // // // //           required
 // // // // // // // // // //         />
 
+// // // // // // // // // //         {/* Image preview */}
 // // // // // // // // // //         {preview && (
 // // // // // // // // // //           <img
 // // // // // // // // // //             src={preview}
@@ -753,6 +881,8 @@
 
 // // // // // // // // // // export default EditProduct;
 
+
+
 // // // // // // // // // // src/pages/seller/EditProduct.jsx
 // // // // // // // // // import React, { useState, useEffect } from "react";
 // // // // // // // // // import axios from "../../utils/axios";
@@ -765,14 +895,14 @@
 // // // // // // // // //   const [title, setTitle] = useState("");
 // // // // // // // // //   const [description, setDescription] = useState("");
 // // // // // // // // //   const [price, setPrice] = useState("");
-// // // // // // // // //   const [image, setImage] = useState(null);
-// // // // // // // // //   const [preview, setPreview] = useState("");
+// // // // // // // // //   const [image, setImage] = useState(null); // new image file
+// // // // // // // // //   const [preview, setPreview] = useState(""); // image preview
 
 // // // // // // // // //   const BASE_URL =
 // // // // // // // // //     import.meta.env.VITE_BACKEND_URL ||
 // // // // // // // // //     "https://ecommerce-mern-backend-1.onrender.com";
 
-// // // // // // // // //   // Fetch product details
+// // // // // // // // //   // 1️⃣ Fetch existing product details
 // // // // // // // // //   useEffect(() => {
 // // // // // // // // //     const fetchProduct = async () => {
 // // // // // // // // //       try {
@@ -780,45 +910,50 @@
 // // // // // // // // //           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 // // // // // // // // //         });
 
-// // // // // // // // //         setTitle(res.data.title);
-// // // // // // // // //         setDescription(res.data.description);
-// // // // // // // // //         setPrice(res.data.price);
+// // // // // // // // //         const product = res.data;
 
-// // // // // // // // //         if (res.data.images?.[0]) {
-// // // // // // // // //           setPreview(`${BASE_URL}/${res.data.images[0].replace(/^\/+/, "")}`);
+// // // // // // // // //         setTitle(product.title || "");
+// // // // // // // // //         setDescription(product.description || "");
+// // // // // // // // //         setPrice(product.price || "");
+
+// // // // // // // // //         // Show existing image
+// // // // // // // // //         if (product.images?.[0]) {
+// // // // // // // // //           setPreview(`${BASE_URL}/${product.images[0].replace(/^\/+/, "")}`);
 // // // // // // // // //         }
 // // // // // // // // //       } catch (err) {
 // // // // // // // // //         console.error("Error fetching product:", err.response?.data || err);
 // // // // // // // // //         alert("Failed to load product details");
 // // // // // // // // //       }
 // // // // // // // // //     };
+
 // // // // // // // // //     fetchProduct();
 // // // // // // // // //   }, [id, BASE_URL]);
 
-// // // // // // // // //   // Submit updated product
+// // // // // // // // //   // 2️⃣ Submit updated product
 // // // // // // // // //   const handleSubmit = async (e) => {
 // // // // // // // // //     e.preventDefault();
 
-// // // // // // // // //     const formData = new FormData();
-// // // // // // // // //     formData.append("title", title);
-// // // // // // // // //     formData.append("description", description);
-// // // // // // // // //     formData.append("price", Number(price));
-
-// // // // // // // // //     if (image) formData.append("image", image);
-
 // // // // // // // // //     try {
-// // // // // // // // //       await axios.put(`${BASE_URL}/seller/products/${id}`, formData, {
+// // // // // // // // //       const formData = new FormData();
+// // // // // // // // //       formData.append("title", title);
+// // // // // // // // //       formData.append("description", description);
+// // // // // // // // //       formData.append("price", Number(price));
+
+// // // // // // // // //       // Only append new image if user selected one
+// // // // // // // // //       if (image) formData.append("image", image);
+
+// // // // // // // // //       const res = await axios.put(`${BASE_URL}/seller/products/${id}`, formData, {
 // // // // // // // // //         headers: {
 // // // // // // // // //           Authorization: `Bearer ${localStorage.getItem("token")}`,
 // // // // // // // // //           "Content-Type": "multipart/form-data",
 // // // // // // // // //         },
 // // // // // // // // //       });
 
-// // // // // // // // //       alert("Product updated successfully");
-// // // // // // // // //       navigate("/seller/products"); // go back to seller product list
+// // // // // // // // //       alert("Product updated successfully!");
+// // // // // // // // //       navigate("/seller/products");
 // // // // // // // // //     } catch (err) {
 // // // // // // // // //       console.error("Error updating product:", err.response?.data || err);
-// // // // // // // // //       alert("Failed to update product");
+// // // // // // // // //       alert(err.response?.data?.message || "Failed to update product");
 // // // // // // // // //     }
 // // // // // // // // //   };
 
@@ -864,6 +999,7 @@
 
 // // // // // // // // //         <input
 // // // // // // // // //           type="file"
+// // // // // // // // //           accept="image/*"
 // // // // // // // // //           onChange={(e) => {
 // // // // // // // // //             const file = e.target.files[0];
 // // // // // // // // //             setImage(file);
@@ -882,54 +1018,47 @@
 // // // // // // // // // export default EditProduct;
 
 
-
 // // // // // // // // // src/pages/seller/EditProduct.jsx
 // // // // // // // // import React, { useState, useEffect } from "react";
-// // // // // // // // import axios from "../../utils/axios";
+// // // // // // // // import axios from "../../utils/axios"; // your axios instance
 // // // // // // // // import { useNavigate, useParams } from "react-router-dom";
 
 // // // // // // // // const EditProduct = () => {
-// // // // // // // //   const { id } = useParams(); // product ID
+// // // // // // // //   const { id } = useParams(); // product ID from URL
 // // // // // // // //   const navigate = useNavigate();
 
 // // // // // // // //   const [title, setTitle] = useState("");
 // // // // // // // //   const [description, setDescription] = useState("");
 // // // // // // // //   const [price, setPrice] = useState("");
-// // // // // // // //   const [image, setImage] = useState(null); // new image file
+// // // // // // // //   const [image, setImage] = useState(null); // new file
 // // // // // // // //   const [preview, setPreview] = useState(""); // image preview
 
-// // // // // // // //   const BASE_URL =
-// // // // // // // //     import.meta.env.VITE_BACKEND_URL ||
-// // // // // // // //     "https://ecommerce-mern-backend-1.onrender.com";
+// // // // // // // //   const BASE_URL = "http://localhost:5000"; // your backend URL
 
-// // // // // // // //   // 1️⃣ Fetch existing product details
+// // // // // // // //   // Fetch product details on mount
 // // // // // // // //   useEffect(() => {
 // // // // // // // //     const fetchProduct = async () => {
 // // // // // // // //       try {
-// // // // // // // //         const res = await axios.get(`${BASE_URL}/seller/products/${id}`, {
+// // // // // // // //         const res = await axios.get(`${BASE_URL}/api/seller/products/${id}`, {
 // // // // // // // //           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 // // // // // // // //         });
 
 // // // // // // // //         const product = res.data;
-
 // // // // // // // //         setTitle(product.title || "");
 // // // // // // // //         setDescription(product.description || "");
 // // // // // // // //         setPrice(product.price || "");
-
-// // // // // // // //         // Show existing image
 // // // // // // // //         if (product.images?.[0]) {
 // // // // // // // //           setPreview(`${BASE_URL}/${product.images[0].replace(/^\/+/, "")}`);
 // // // // // // // //         }
 // // // // // // // //       } catch (err) {
-// // // // // // // //         console.error("Error fetching product:", err.response?.data || err);
+// // // // // // // //         console.error("Failed to load product:", err.response?.data || err);
 // // // // // // // //         alert("Failed to load product details");
 // // // // // // // //       }
 // // // // // // // //     };
-
 // // // // // // // //     fetchProduct();
-// // // // // // // //   }, [id, BASE_URL]);
+// // // // // // // //   }, [id]);
 
-// // // // // // // //   // 2️⃣ Submit updated product
+// // // // // // // //   // Handle form submit
 // // // // // // // //   const handleSubmit = async (e) => {
 // // // // // // // //     e.preventDefault();
 
@@ -939,10 +1068,9 @@
 // // // // // // // //       formData.append("description", description);
 // // // // // // // //       formData.append("price", Number(price));
 
-// // // // // // // //       // Only append new image if user selected one
-// // // // // // // //       if (image) formData.append("image", image);
+// // // // // // // //       if (image) formData.append("image", image); // only if new image
 
-// // // // // // // //       const res = await axios.put(`${BASE_URL}/seller/products/${id}`, formData, {
+// // // // // // // //       await axios.put(`${BASE_URL}/api/seller/products/${id}`, formData, {
 // // // // // // // //         headers: {
 // // // // // // // //           Authorization: `Bearer ${localStorage.getItem("token")}`,
 // // // // // // // //           "Content-Type": "multipart/form-data",
@@ -950,9 +1078,9 @@
 // // // // // // // //       });
 
 // // // // // // // //       alert("Product updated successfully!");
-// // // // // // // //       navigate("/seller/products");
+// // // // // // // //       navigate("/seller/products"); // back to product list
 // // // // // // // //     } catch (err) {
-// // // // // // // //       console.error("Error updating product:", err.response?.data || err);
+// // // // // // // //       console.error("Failed to update product:", err.response?.data || err);
 // // // // // // // //       alert(err.response?.data?.message || "Failed to update product");
 // // // // // // // //     }
 // // // // // // // //   };
@@ -964,35 +1092,34 @@
 // // // // // // // //       <form onSubmit={handleSubmit} className="space-y-4">
 // // // // // // // //         <input
 // // // // // // // //           type="text"
-// // // // // // // //           className="w-full border p-2 rounded"
 // // // // // // // //           value={title}
 // // // // // // // //           onChange={(e) => setTitle(e.target.value)}
 // // // // // // // //           placeholder="Product Title"
+// // // // // // // //           className="w-full border p-2 rounded"
 // // // // // // // //           required
 // // // // // // // //         />
 
 // // // // // // // //         <textarea
-// // // // // // // //           className="w-full border p-2 rounded"
 // // // // // // // //           value={description}
 // // // // // // // //           onChange={(e) => setDescription(e.target.value)}
 // // // // // // // //           placeholder="Product Description"
+// // // // // // // //           className="w-full border p-2 rounded"
 // // // // // // // //           required
 // // // // // // // //         />
 
 // // // // // // // //         <input
 // // // // // // // //           type="number"
-// // // // // // // //           className="w-full border p-2 rounded"
 // // // // // // // //           value={price}
 // // // // // // // //           onChange={(e) => setPrice(e.target.value)}
 // // // // // // // //           placeholder="Price"
+// // // // // // // //           className="w-full border p-2 rounded"
 // // // // // // // //           required
 // // // // // // // //         />
 
-// // // // // // // //         {/* Image preview */}
 // // // // // // // //         {preview && (
 // // // // // // // //           <img
 // // // // // // // //             src={preview}
-// // // // // // // //             alt="preview"
+// // // // // // // //             alt="Preview"
 // // // // // // // //             className="w-32 h-32 object-cover rounded"
 // // // // // // // //           />
 // // // // // // // //         )}
@@ -1018,69 +1145,63 @@
 // // // // // // // // export default EditProduct;
 
 
-// // // // // // // // src/pages/seller/EditProduct.jsx
 // // // // // // // import React, { useState, useEffect } from "react";
 // // // // // // // import axios from "../../utils/axios"; // your axios instance
 // // // // // // // import { useNavigate, useParams } from "react-router-dom";
 
 // // // // // // // const EditProduct = () => {
-// // // // // // //   const { id } = useParams(); // product ID from URL
+// // // // // // //   const { id } = useParams();
 // // // // // // //   const navigate = useNavigate();
 
 // // // // // // //   const [title, setTitle] = useState("");
 // // // // // // //   const [description, setDescription] = useState("");
 // // // // // // //   const [price, setPrice] = useState("");
-// // // // // // //   const [image, setImage] = useState(null); // new file
-// // // // // // //   const [preview, setPreview] = useState(""); // image preview
+// // // // // // //   const [image, setImage] = useState(null);
+// // // // // // //   const [preview, setPreview] = useState("");
 
-// // // // // // //   const BASE_URL = "http://localhost:5000"; // your backend URL
+// // // // // // //   const BASE_URL = "http://localhost:5000";
 
-// // // // // // //   // Fetch product details on mount
+// // // // // // //   // Fetch existing product
 // // // // // // //   useEffect(() => {
 // // // // // // //     const fetchProduct = async () => {
 // // // // // // //       try {
 // // // // // // //         const res = await axios.get(`${BASE_URL}/api/seller/products/${id}`, {
 // // // // // // //           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 // // // // // // //         });
+// // // // // // //         const p = res.data;
 
-// // // // // // //         const product = res.data;
-// // // // // // //         setTitle(product.title || "");
-// // // // // // //         setDescription(product.description || "");
-// // // // // // //         setPrice(product.price || "");
-// // // // // // //         if (product.images?.[0]) {
-// // // // // // //           setPreview(`${BASE_URL}/${product.images[0].replace(/^\/+/, "")}`);
-// // // // // // //         }
+// // // // // // //         setTitle(p.title || "");
+// // // // // // //         setDescription(p.description || "");
+// // // // // // //         setPrice(p.price || "");
+// // // // // // //         if (p.images?.[0]) setPreview(`${BASE_URL}/${p.images[0].replace(/^\/+/, "")}`);
 // // // // // // //       } catch (err) {
-// // // // // // //         console.error("Failed to load product:", err.response?.data || err);
-// // // // // // //         alert("Failed to load product details");
+// // // // // // //         console.error(err);
+// // // // // // //         alert("Failed to fetch product");
 // // // // // // //       }
 // // // // // // //     };
 // // // // // // //     fetchProduct();
 // // // // // // //   }, [id]);
 
-// // // // // // //   // Handle form submit
 // // // // // // //   const handleSubmit = async (e) => {
 // // // // // // //     e.preventDefault();
 
+// // // // // // //     const formData = new FormData();
+// // // // // // //     if (title) formData.append("title", title);
+// // // // // // //     if (description) formData.append("description", description);
+// // // // // // //     if (price) formData.append("price", price);
+// // // // // // //     if (image) formData.append("image", image); // only append if new image
+
 // // // // // // //     try {
-// // // // // // //       const formData = new FormData();
-// // // // // // //       formData.append("title", title);
-// // // // // // //       formData.append("description", description);
-// // // // // // //       formData.append("price", Number(price));
-
-// // // // // // //       if (image) formData.append("image", image); // only if new image
-
-// // // // // // //       await axios.put(`${BASE_URL}/api/seller/products/${id}`, formData, {
+// // // // // // //       const res = await axios.put(`${BASE_URL}/api/seller/products/${id}`, formData, {
 // // // // // // //         headers: {
 // // // // // // //           Authorization: `Bearer ${localStorage.getItem("token")}`,
 // // // // // // //           "Content-Type": "multipart/form-data",
 // // // // // // //         },
 // // // // // // //       });
-
 // // // // // // //       alert("Product updated successfully!");
-// // // // // // //       navigate("/seller/products"); // back to product list
+// // // // // // //       navigate("/seller/products");
 // // // // // // //     } catch (err) {
-// // // // // // //       console.error("Failed to update product:", err.response?.data || err);
+// // // // // // //       console.error(err.response?.data || err);
 // // // // // // //       alert(err.response?.data?.message || "Failed to update product");
 // // // // // // //     }
 // // // // // // //   };
@@ -1088,41 +1209,32 @@
 // // // // // // //   return (
 // // // // // // //     <div className="container mx-auto p-4">
 // // // // // // //       <h1 className="text-3xl font-bold mb-4">Edit Product</h1>
-
 // // // // // // //       <form onSubmit={handleSubmit} className="space-y-4">
 // // // // // // //         <input
 // // // // // // //           type="text"
+// // // // // // //           placeholder="Title"
+// // // // // // //           className="w-full border p-2 rounded"
 // // // // // // //           value={title}
 // // // // // // //           onChange={(e) => setTitle(e.target.value)}
-// // // // // // //           placeholder="Product Title"
-// // // // // // //           className="w-full border p-2 rounded"
 // // // // // // //           required
 // // // // // // //         />
-
 // // // // // // //         <textarea
+// // // // // // //           placeholder="Description"
+// // // // // // //           className="w-full border p-2 rounded"
 // // // // // // //           value={description}
 // // // // // // //           onChange={(e) => setDescription(e.target.value)}
-// // // // // // //           placeholder="Product Description"
-// // // // // // //           className="w-full border p-2 rounded"
 // // // // // // //           required
 // // // // // // //         />
-
 // // // // // // //         <input
 // // // // // // //           type="number"
-// // // // // // //           value={price}
-// // // // // // //           onChange={(e) => setPrice(e.target.value)}
 // // // // // // //           placeholder="Price"
 // // // // // // //           className="w-full border p-2 rounded"
+// // // // // // //           value={price}
+// // // // // // //           onChange={(e) => setPrice(e.target.value)}
 // // // // // // //           required
 // // // // // // //         />
 
-// // // // // // //         {preview && (
-// // // // // // //           <img
-// // // // // // //             src={preview}
-// // // // // // //             alt="Preview"
-// // // // // // //             className="w-32 h-32 object-cover rounded"
-// // // // // // //           />
-// // // // // // //         )}
+// // // // // // //         {preview && <img src={preview} alt="preview" className="w-32 h-32 object-cover rounded" />}
 
 // // // // // // //         <input
 // // // // // // //           type="file"
@@ -1145,8 +1257,11 @@
 // // // // // // // export default EditProduct;
 
 
+
+
+
 // // // // // // import React, { useState, useEffect } from "react";
-// // // // // // import axios from "../../utils/axios"; // your axios instance
+// // // // // // import axios from "../../utils/axios";
 // // // // // // import { useNavigate, useParams } from "react-router-dom";
 
 // // // // // // const EditProduct = () => {
@@ -1161,7 +1276,6 @@
 
 // // // // // //   const BASE_URL = "http://localhost:5000";
 
-// // // // // //   // Fetch existing product
 // // // // // //   useEffect(() => {
 // // // // // //     const fetchProduct = async () => {
 // // // // // //       try {
@@ -1186,16 +1300,15 @@
 // // // // // //     e.preventDefault();
 
 // // // // // //     const formData = new FormData();
-// // // // // //     if (title) formData.append("title", title);
-// // // // // //     if (description) formData.append("description", description);
-// // // // // //     if (price) formData.append("price", price);
-// // // // // //     if (image) formData.append("image", image); // only append if new image
+// // // // // //     formData.append("title", title);
+// // // // // //     formData.append("description", description);
+// // // // // //     formData.append("price", Number(price)); // ensure number
+// // // // // //     if (image) formData.append("image", image); // append only if new image
 
 // // // // // //     try {
-// // // // // //       const res = await axios.put(`${BASE_URL}/api/seller/products/${id}`, formData, {
+// // // // // //       const res = await axios.put(`${BASE_URL}/api/products/${id}`, formData, {
 // // // // // //         headers: {
 // // // // // //           Authorization: `Bearer ${localStorage.getItem("token")}`,
-// // // // // //           "Content-Type": "multipart/form-data",
 // // // // // //         },
 // // // // // //       });
 // // // // // //       alert("Product updated successfully!");
@@ -1234,7 +1347,13 @@
 // // // // // //           required
 // // // // // //         />
 
-// // // // // //         {preview && <img src={preview} alt="preview" className="w-32 h-32 object-cover rounded" />}
+// // // // // //         {preview && (
+// // // // // //           <img
+// // // // // //             src={preview}
+// // // // // //             alt="preview"
+// // // // // //             className="w-32 h-32 object-cover rounded"
+// // // // // //           />
+// // // // // //         )}
 
 // // // // // //         <input
 // // // // // //           type="file"
@@ -1257,9 +1376,6 @@
 // // // // // // export default EditProduct;
 
 
-
-
-
 // // // // // import React, { useState, useEffect } from "react";
 // // // // // import axios from "../../utils/axios";
 // // // // // import { useNavigate, useParams } from "react-router-dom";
@@ -1271,11 +1387,12 @@
 // // // // //   const [title, setTitle] = useState("");
 // // // // //   const [description, setDescription] = useState("");
 // // // // //   const [price, setPrice] = useState("");
-// // // // //   const [image, setImage] = useState(null);
+// // // // //   const [image, setImage] = useState(""); // will store new image path or URL
 // // // // //   const [preview, setPreview] = useState("");
 
-// // // // //   const BASE_URL = "http://localhost:5000";
+// // // // //   const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
+// // // // //   // Fetch product
 // // // // //   useEffect(() => {
 // // // // //     const fetchProduct = async () => {
 // // // // //       try {
@@ -1283,38 +1400,43 @@
 // // // // //           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 // // // // //         });
 // // // // //         const p = res.data;
-
 // // // // //         setTitle(p.title || "");
 // // // // //         setDescription(p.description || "");
 // // // // //         setPrice(p.price || "");
 // // // // //         if (p.images?.[0]) setPreview(`${BASE_URL}/${p.images[0].replace(/^\/+/, "")}`);
 // // // // //       } catch (err) {
-// // // // //         console.error(err);
+// // // // //         console.error("Fetch product error:", err.response || err);
 // // // // //         alert("Failed to fetch product");
 // // // // //       }
 // // // // //     };
 // // // // //     fetchProduct();
 // // // // //   }, [id]);
 
+// // // // //   // Handle submit
 // // // // //   const handleSubmit = async (e) => {
 // // // // //     e.preventDefault();
 
-// // // // //     const formData = new FormData();
-// // // // //     formData.append("title", title);
-// // // // //     formData.append("description", description);
-// // // // //     formData.append("price", Number(price)); // ensure number
-// // // // //     if (image) formData.append("image", image); // append only if new image
+// // // // //     // Build payload
+// // // // //     const payload = {
+// // // // //       title,
+// // // // //       description,
+// // // // //       price: Number(price),
+// // // // //     };
+
+// // // // //     // Update image if user selected new
+// // // // //     if (image) {
+// // // // //       payload.images = [image]; // pass array of strings
+// // // // //     }
 
 // // // // //     try {
-// // // // //       const res = await axios.put(`${BASE_URL}/api/products/${id}`, formData, {
-// // // // //         headers: {
-// // // // //           Authorization: `Bearer ${localStorage.getItem("token")}`,
-// // // // //         },
+// // // // //       const res = await axios.put(`${BASE_URL}/api/seller/products/${id}`, payload, {
+// // // // //         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 // // // // //       });
+
 // // // // //       alert("Product updated successfully!");
-// // // // //       navigate("/seller/products");
+// // // // //       navigate("/seller/products", { state: { updatedProduct: res.data } });
 // // // // //     } catch (err) {
-// // // // //       console.error(err.response?.data || err);
+// // // // //       console.error("Update product error:", err.response || err);
 // // // // //       alert(err.response?.data?.message || "Failed to update product");
 // // // // //     }
 // // // // //   };
@@ -1355,13 +1477,15 @@
 // // // // //           />
 // // // // //         )}
 
+// // // // //         {/* Instead of uploading, input new image URL */}
 // // // // //         <input
-// // // // //           type="file"
-// // // // //           accept="image/*"
+// // // // //           type="text"
+// // // // //           placeholder="Enter image URL"
+// // // // //           className="w-full border p-2 rounded"
+// // // // //           value={image}
 // // // // //           onChange={(e) => {
-// // // // //             const file = e.target.files[0];
-// // // // //             setImage(file);
-// // // // //             if (file) setPreview(URL.createObjectURL(file));
+// // // // //             setImage(e.target.value);
+// // // // //             setPreview(e.target.value); // live preview
 // // // // //           }}
 // // // // //         />
 
@@ -1376,6 +1500,8 @@
 // // // // // export default EditProduct;
 
 
+
+
 // // // // import React, { useState, useEffect } from "react";
 // // // // import axios from "../../utils/axios";
 // // // // import { useNavigate, useParams } from "react-router-dom";
@@ -1387,54 +1513,89 @@
 // // // //   const [title, setTitle] = useState("");
 // // // //   const [description, setDescription] = useState("");
 // // // //   const [price, setPrice] = useState("");
-// // // //   const [image, setImage] = useState(""); // will store new image path or URL
+// // // //   const [image, setImage] = useState(""); // base64 or path
 // // // //   const [preview, setPreview] = useState("");
 
-// // // //   const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+// // // //   const BASE_URL =
+// // // //     import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
 // // // //   // Fetch product
 // // // //   useEffect(() => {
 // // // //     const fetchProduct = async () => {
 // // // //       try {
 // // // //         const res = await axios.get(`${BASE_URL}/api/seller/products/${id}`, {
-// // // //           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+// // // //           headers: {
+// // // //             Authorization: `Bearer ${localStorage.getItem("token")}`,
+// // // //           },
 // // // //         });
+
 // // // //         const p = res.data;
+
 // // // //         setTitle(p.title || "");
 // // // //         setDescription(p.description || "");
 // // // //         setPrice(p.price || "");
-// // // //         if (p.images?.[0]) setPreview(`${BASE_URL}/${p.images[0].replace(/^\/+/, "")}`);
+
+// // // //         const img = p.images?.[0];
+
+// // // //         if (img) {
+// // // //           if (img.startsWith("data:")) {
+// // // //             setPreview(img); // ✅ base64
+// // // //           } else {
+// // // //             setPreview(`${BASE_URL}/${img.replace(/^\/+/, "")}`); // ✅ backend
+// // // //           }
+// // // //         }
 // // // //       } catch (err) {
 // // // //         console.error("Fetch product error:", err.response || err);
 // // // //         alert("Failed to fetch product");
 // // // //       }
 // // // //     };
+
 // // // //     fetchProduct();
 // // // //   }, [id]);
 
-// // // //   // Handle submit
+// // // //   // ✅ Handle file upload (base64)
+// // // //   const handleImageUpload = (e) => {
+// // // //     const file = e.target.files[0];
+
+// // // //     const reader = new FileReader();
+// // // //     reader.onloadend = () => {
+// // // //       setImage(reader.result); // base64
+// // // //       setPreview(reader.result);
+// // // //     };
+
+// // // //     if (file) reader.readAsDataURL(file);
+// // // //   };
+
+// // // //   // Submit
 // // // //   const handleSubmit = async (e) => {
 // // // //     e.preventDefault();
 
-// // // //     // Build payload
 // // // //     const payload = {
 // // // //       title,
 // // // //       description,
 // // // //       price: Number(price),
 // // // //     };
 
-// // // //     // Update image if user selected new
 // // // //     if (image) {
-// // // //       payload.images = [image]; // pass array of strings
+// // // //       payload.images = [image]; // ✅ base64 or path
 // // // //     }
 
 // // // //     try {
-// // // //       const res = await axios.put(`${BASE_URL}/api/seller/products/${id}`, payload, {
-// // // //         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-// // // //       });
+// // // //       const res = await axios.put(
+// // // //         `${BASE_URL}/api/seller/products/${id}`,
+// // // //         payload,
+// // // //         {
+// // // //           headers: {
+// // // //             Authorization: `Bearer ${localStorage.getItem("token")}`,
+// // // //           },
+// // // //         }
+// // // //       );
 
 // // // //       alert("Product updated successfully!");
-// // // //       navigate("/seller/products", { state: { updatedProduct: res.data } });
+
+// // // //       navigate("/seller/products", {
+// // // //         state: { updatedProduct: res.data },
+// // // //       });
 // // // //     } catch (err) {
 // // // //       console.error("Update product error:", err.response || err);
 // // // //       alert(err.response?.data?.message || "Failed to update product");
@@ -1444,31 +1605,32 @@
 // // // //   return (
 // // // //     <div className="container mx-auto p-4">
 // // // //       <h1 className="text-3xl font-bold mb-4">Edit Product</h1>
+
 // // // //       <form onSubmit={handleSubmit} className="space-y-4">
 // // // //         <input
 // // // //           type="text"
-// // // //           placeholder="Title"
-// // // //           className="w-full border p-2 rounded"
 // // // //           value={title}
 // // // //           onChange={(e) => setTitle(e.target.value)}
-// // // //           required
-// // // //         />
-// // // //         <textarea
-// // // //           placeholder="Description"
 // // // //           className="w-full border p-2 rounded"
-// // // //           value={description}
-// // // //           onChange={(e) => setDescription(e.target.value)}
-// // // //           required
-// // // //         />
-// // // //         <input
-// // // //           type="number"
-// // // //           placeholder="Price"
-// // // //           className="w-full border p-2 rounded"
-// // // //           value={price}
-// // // //           onChange={(e) => setPrice(e.target.value)}
 // // // //           required
 // // // //         />
 
+// // // //         <textarea
+// // // //           value={description}
+// // // //           onChange={(e) => setDescription(e.target.value)}
+// // // //           className="w-full border p-2 rounded"
+// // // //           required
+// // // //         />
+
+// // // //         <input
+// // // //           type="number"
+// // // //           value={price}
+// // // //           onChange={(e) => setPrice(e.target.value)}
+// // // //           className="w-full border p-2 rounded"
+// // // //           required
+// // // //         />
+
+// // // //         {/* Preview */}
 // // // //         {preview && (
 // // // //           <img
 // // // //             src={preview}
@@ -1477,19 +1639,28 @@
 // // // //           />
 // // // //         )}
 
-// // // //         {/* Instead of uploading, input new image URL */}
+// // // //         {/* ✅ File upload */}
+// // // //         <input
+// // // //           type="file"
+// // // //           accept="image/*"
+// // // //           onChange={handleImageUpload}
+// // // //           className="w-full"
+// // // //         />
+
+// // // //         {/* Optional manual URL */}
 // // // //         <input
 // // // //           type="text"
-// // // //           placeholder="Enter image URL"
+// // // //           placeholder="Or enter image URL (/uploads/...)"
 // // // //           className="w-full border p-2 rounded"
-// // // //           value={image}
 // // // //           onChange={(e) => {
 // // // //             setImage(e.target.value);
-// // // //             setPreview(e.target.value); // live preview
+// // // //             setPreview(e.target.value.startsWith("data:")
+// // // //               ? e.target.value
+// // // //               : `${BASE_URL}/${e.target.value.replace(/^\/+/, "")}`);
 // // // //           }}
 // // // //         />
 
-// // // //         <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+// // // //         <button className="bg-blue-500 text-white px-4 py-2 rounded">
 // // // //           Update Product
 // // // //         </button>
 // // // //       </form>
@@ -1498,9 +1669,6 @@
 // // // // };
 
 // // // // export default EditProduct;
-
-
-
 
 // // // import React, { useState, useEffect } from "react";
 // // // import axios from "../../utils/axios";
@@ -1513,21 +1681,24 @@
 // // //   const [title, setTitle] = useState("");
 // // //   const [description, setDescription] = useState("");
 // // //   const [price, setPrice] = useState("");
-// // //   const [image, setImage] = useState(""); // base64 or path
+// // //   const [image, setImage] = useState(""); // base64
 // // //   const [preview, setPreview] = useState("");
 
 // // //   const BASE_URL =
 // // //     import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
-// // //   // Fetch product
+// // //   // ✅ Fetch product
 // // //   useEffect(() => {
 // // //     const fetchProduct = async () => {
 // // //       try {
-// // //         const res = await axios.get(`${BASE_URL}/api/seller/products/${id}`, {
-// // //           headers: {
-// // //             Authorization: `Bearer ${localStorage.getItem("token")}`,
-// // //           },
-// // //         });
+// // //         const res = await axios.get(
+// // //           `${BASE_URL}/api/seller/products/${id}`,
+// // //           {
+// // //             headers: {
+// // //               Authorization: `Bearer ${localStorage.getItem("token")}`,
+// // //             },
+// // //           }
+// // //         );
 
 // // //         const p = res.data;
 
@@ -1539,13 +1710,13 @@
 
 // // //         if (img) {
 // // //           if (img.startsWith("data:")) {
-// // //             setPreview(img); // ✅ base64
+// // //             setPreview(img); // base64
 // // //           } else {
-// // //             setPreview(`${BASE_URL}/${img.replace(/^\/+/, "")}`); // ✅ backend
+// // //             setPreview(`${BASE_URL}/${img.replace(/^\/+/, "")}`);
 // // //           }
 // // //         }
 // // //       } catch (err) {
-// // //         console.error("Fetch product error:", err.response || err);
+// // //         console.error(err);
 // // //         alert("Failed to fetch product");
 // // //       }
 // // //     };
@@ -1553,20 +1724,21 @@
 // // //     fetchProduct();
 // // //   }, [id]);
 
-// // //   // ✅ Handle file upload (base64)
+// // //   // ✅ File upload → base64
 // // //   const handleImageUpload = (e) => {
 // // //     const file = e.target.files[0];
+// // //     if (!file) return;
 
 // // //     const reader = new FileReader();
 // // //     reader.onloadend = () => {
-// // //       setImage(reader.result); // base64
+// // //       setImage(reader.result);
 // // //       setPreview(reader.result);
 // // //     };
 
-// // //     if (file) reader.readAsDataURL(file);
+// // //     reader.readAsDataURL(file);
 // // //   };
 
-// // //   // Submit
+// // //   // ✅ Submit update
 // // //   const handleSubmit = async (e) => {
 // // //     e.preventDefault();
 
@@ -1577,11 +1749,11 @@
 // // //     };
 
 // // //     if (image) {
-// // //       payload.images = [image]; // ✅ base64 or path
+// // //       payload.images = [image]; // send base64
 // // //     }
 
 // // //     try {
-// // //       const res = await axios.put(
+// // //       await axios.put(
 // // //         `${BASE_URL}/api/seller/products/${id}`,
 // // //         payload,
 // // //         {
@@ -1593,12 +1765,20 @@
 
 // // //       alert("Product updated successfully!");
 
+// // //       // ✅ IMPORTANT: send updated data manually
 // // //       navigate("/seller/products", {
-// // //         state: { updatedProduct: res.data },
+// // //         state: {
+// // //           updatedProduct: {
+// // //             _id: id,
+// // //             title,
+// // //             price,
+// // //             images: image ? [image] : undefined, // 🔥 key fix
+// // //           },
+// // //         },
 // // //       });
 // // //     } catch (err) {
-// // //       console.error("Update product error:", err.response || err);
-// // //       alert(err.response?.data?.message || "Failed to update product");
+// // //       console.error(err);
+// // //       alert("Update failed");
 // // //     }
 // // //   };
 
@@ -1639,25 +1819,12 @@
 // // //           />
 // // //         )}
 
-// // //         {/* ✅ File upload */}
+// // //         {/* File Upload */}
 // // //         <input
 // // //           type="file"
 // // //           accept="image/*"
 // // //           onChange={handleImageUpload}
 // // //           className="w-full"
-// // //         />
-
-// // //         {/* Optional manual URL */}
-// // //         <input
-// // //           type="text"
-// // //           placeholder="Or enter image URL (/uploads/...)"
-// // //           className="w-full border p-2 rounded"
-// // //           onChange={(e) => {
-// // //             setImage(e.target.value);
-// // //             setPreview(e.target.value.startsWith("data:")
-// // //               ? e.target.value
-// // //               : `${BASE_URL}/${e.target.value.replace(/^\/+/, "")}`);
-// // //           }}
 // // //         />
 
 // // //         <button className="bg-blue-500 text-white px-4 py-2 rounded">
@@ -1670,6 +1837,7 @@
 
 // // // export default EditProduct;
 
+
 // // import React, { useState, useEffect } from "react";
 // // import axios from "../../utils/axios";
 // // import { useNavigate, useParams } from "react-router-dom";
@@ -1678,156 +1846,131 @@
 // //   const { id } = useParams();
 // //   const navigate = useNavigate();
 
-// //   const [title, setTitle] = useState("");
-// //   const [description, setDescription] = useState("");
-// //   const [price, setPrice] = useState("");
-// //   const [image, setImage] = useState(""); // base64
-// //   const [preview, setPreview] = useState("");
+// //   const [form, setForm] = useState({
+// //     title: "",
+// //     description: "",
+// //     price: "",
+// //     image: "", // base64 for new image
+// //   });
 
-// //   const BASE_URL =
-// //     import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+// //   const [preview, setPreview] = useState(""); // for showing old or new image
 
-// //   // ✅ Fetch product
+// //   const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
+// //   // Fetch product data on mount
 // //   useEffect(() => {
 // //     const fetchProduct = async () => {
 // //       try {
-// //         const res = await axios.get(
-// //           `${BASE_URL}/api/seller/products/${id}`,
-// //           {
-// //             headers: {
-// //               Authorization: `Bearer ${localStorage.getItem("token")}`,
-// //             },
-// //           }
-// //         );
+// //         const res = await axios.get(`${BASE_URL}/api/seller/products/${id}`, {
+// //           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+// //         });
 
 // //         const p = res.data;
-
-// //         setTitle(p.title || "");
-// //         setDescription(p.description || "");
-// //         setPrice(p.price || "");
+// //         setForm({
+// //           title: p.title,
+// //           description: p.description,
+// //           price: p.price,
+// //           image: "", // start empty for new upload
+// //         });
 
 // //         const img = p.images?.[0];
-
 // //         if (img) {
-// //           if (img.startsWith("data:")) {
-// //             setPreview(img); // base64
-// //           } else {
-// //             setPreview(`${BASE_URL}/${img.replace(/^\/+/, "")}`);
-// //           }
+// //           setPreview(img.startsWith("data:") ? img : img); // base64 or URL
 // //         }
 // //       } catch (err) {
-// //         console.error(err);
-// //         alert("Failed to fetch product");
+// //         console.log(err.response?.data);
+// //         alert("Error fetching product");
 // //       }
 // //     };
 
 // //     fetchProduct();
 // //   }, [id]);
 
-// //   // ✅ File upload → base64
-// //   const handleImageUpload = (e) => {
+// //   // Handle input change
+// //   const handleChange = (e) => {
+// //     setForm({ ...form, [e.target.name]: e.target.value });
+// //   };
+
+// //   // Handle new image selection
+// //   const handleImageChange = (e) => {
 // //     const file = e.target.files[0];
 // //     if (!file) return;
 
 // //     const reader = new FileReader();
 // //     reader.onloadend = () => {
-// //       setImage(reader.result);
+// //       setForm((prev) => ({ ...prev, image: reader.result }));
 // //       setPreview(reader.result);
 // //     };
-
 // //     reader.readAsDataURL(file);
 // //   };
 
-// //   // ✅ Submit update
+// //   // Submit updated product
 // //   const handleSubmit = async (e) => {
 // //     e.preventDefault();
 
 // //     const payload = {
-// //       title,
-// //       description,
-// //       price: Number(price),
+// //       title: form.title,
+// //       description: form.description,
+// //       price: form.price,
 // //     };
 
-// //     if (image) {
-// //       payload.images = [image]; // send base64
+// //     if (form.image) {
+// //       payload.images = [form.image]; // only send new image if selected
 // //     }
 
 // //     try {
-// //       await axios.put(
-// //         `${BASE_URL}/api/seller/products/${id}`,
-// //         payload,
-// //         {
-// //           headers: {
-// //             Authorization: `Bearer ${localStorage.getItem("token")}`,
-// //           },
-// //         }
-// //       );
-
-// //       alert("Product updated successfully!");
-
-// //       // ✅ IMPORTANT: send updated data manually
-// //       navigate("/seller/products", {
-// //         state: {
-// //           updatedProduct: {
-// //             _id: id,
-// //             title,
-// //             price,
-// //             images: image ? [image] : undefined, // 🔥 key fix
-// //           },
-// //         },
+// //       await axios.put(`${BASE_URL}/api/products/${id}`, payload, {
+// //         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 // //       });
+
+// //       alert("Product updated successfully");
+// //       navigate("/seller/products");
 // //     } catch (err) {
-// //       console.error(err);
-// //       alert("Update failed");
+// //       console.log(err.response?.data);
+// //       alert("Error updating product");
 // //     }
 // //   };
 
 // //   return (
-// //     <div className="container mx-auto p-4">
-// //       <h1 className="text-3xl font-bold mb-4">Edit Product</h1>
+// //     <div className="p-4 max-w-md mx-auto">
+// //       <h2 className="text-2xl font-bold mb-4">Edit Product</h2>
 
 // //       <form onSubmit={handleSubmit} className="space-y-4">
 // //         <input
-// //           type="text"
-// //           value={title}
-// //           onChange={(e) => setTitle(e.target.value)}
-// //           className="w-full border p-2 rounded"
+// //           name="title"
+// //           value={form.title}
+// //           placeholder="Title"
+// //           onChange={handleChange}
+// //           className="w-full border p-2"
 // //           required
 // //         />
 
 // //         <textarea
-// //           value={description}
-// //           onChange={(e) => setDescription(e.target.value)}
-// //           className="w-full border p-2 rounded"
+// //           name="description"
+// //           value={form.description}
+// //           placeholder="Description"
+// //           onChange={handleChange}
+// //           className="w-full border p-2"
 // //           required
 // //         />
 
 // //         <input
+// //           name="price"
 // //           type="number"
-// //           value={price}
-// //           onChange={(e) => setPrice(e.target.value)}
-// //           className="w-full border p-2 rounded"
+// //           value={form.price}
+// //           placeholder="Price"
+// //           onChange={handleChange}
+// //           className="w-full border p-2"
 // //           required
 // //         />
 
-// //         {/* Preview */}
-// //         {preview && (
-// //           <img
-// //             src={preview}
-// //             alt="preview"
-// //             className="w-32 h-32 object-cover rounded"
-// //           />
-// //         )}
+// //         {/* Image Preview */}
+// //         {preview && <img src={preview} className="h-32 object-cover" />}
 
 // //         {/* File Upload */}
-// //         <input
-// //           type="file"
-// //           accept="image/*"
-// //           onChange={handleImageUpload}
-// //           className="w-full"
-// //         />
+// //         <input type="file" accept="image/*" onChange={handleImageChange} className="w-full" />
 
-// //         <button className="bg-blue-500 text-white px-4 py-2 rounded">
+// //         <button className="bg-blue-500 text-white px-4 py-2 rounded w-full">
 // //           Update Product
 // //         </button>
 // //       </form>
@@ -1836,7 +1979,6 @@
 // // };
 
 // // export default EditProduct;
-
 
 // import React, { useState, useEffect } from "react";
 // import axios from "../../utils/axios";
@@ -1850,14 +1992,13 @@
 //     title: "",
 //     description: "",
 //     price: "",
-//     image: "", // base64 for new image
+//     image: "",
 //   });
 
-//   const [preview, setPreview] = useState(""); // for showing old or new image
+//   const [preview, setPreview] = useState("");
 
 //   const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
-//   // Fetch product data on mount
 //   useEffect(() => {
 //     const fetchProduct = async () => {
 //       try {
@@ -1870,13 +2011,11 @@
 //           title: p.title,
 //           description: p.description,
 //           price: p.price,
-//           image: "", // start empty for new upload
+//           image: "",
 //         });
 
 //         const img = p.images?.[0];
-//         if (img) {
-//           setPreview(img.startsWith("data:") ? img : img); // base64 or URL
-//         }
+//         if (img) setPreview(img.startsWith("data:") ? img : img);
 //       } catch (err) {
 //         console.log(err.response?.data);
 //         alert("Error fetching product");
@@ -1886,12 +2025,8 @@
 //     fetchProduct();
 //   }, [id]);
 
-//   // Handle input change
-//   const handleChange = (e) => {
-//     setForm({ ...form, [e.target.name]: e.target.value });
-//   };
+//   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-//   // Handle new image selection
 //   const handleImageChange = (e) => {
 //     const file = e.target.files[0];
 //     if (!file) return;
@@ -1904,25 +2039,15 @@
 //     reader.readAsDataURL(file);
 //   };
 
-//   // Submit updated product
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
-
-//     const payload = {
-//       title: form.title,
-//       description: form.description,
-//       price: form.price,
-//     };
-
-//     if (form.image) {
-//       payload.images = [form.image]; // only send new image if selected
-//     }
+//     const payload = { title: form.title, description: form.description, price: form.price };
+//     if (form.image) payload.images = [form.image];
 
 //     try {
 //       await axios.put(`${BASE_URL}/api/products/${id}`, payload, {
 //         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 //       });
-
 //       alert("Product updated successfully");
 //       navigate("/seller/products");
 //     } catch (err) {
@@ -1932,53 +2057,84 @@
 //   };
 
 //   return (
-//     <div className="p-4 max-w-md mx-auto">
-//       <h2 className="text-2xl font-bold mb-4">Edit Product</h2>
+//     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+//       <div className="bg-white shadow-lg rounded-xl w-full max-w-lg p-6">
+//         <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Edit Product</h2>
 
-//       <form onSubmit={handleSubmit} className="space-y-4">
-//         <input
-//           name="title"
-//           value={form.title}
-//           placeholder="Title"
-//           onChange={handleChange}
-//           className="w-full border p-2"
-//           required
-//         />
+//         <form onSubmit={handleSubmit} className="space-y-5">
+//           <div className="flex flex-col">
+//             <label className="text-gray-600 mb-1 font-medium">Title</label>
+//             <input
+//               name="title"
+//               value={form.title}
+//               onChange={handleChange}
+//               placeholder="Enter product title"
+//               className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+//               required
+//             />
+//           </div>
 
-//         <textarea
-//           name="description"
-//           value={form.description}
-//           placeholder="Description"
-//           onChange={handleChange}
-//           className="w-full border p-2"
-//           required
-//         />
+//           <div className="flex flex-col">
+//             <label className="text-gray-600 mb-1 font-medium">Description</label>
+//             <textarea
+//               name="description"
+//               value={form.description}
+//               onChange={handleChange}
+//               placeholder="Enter product description"
+//               className="border border-gray-300 rounded-lg p-3 h-24 focus:outline-none focus:ring-2 focus:ring-blue-400 transition resize-none"
+//               required
+//             />
+//           </div>
 
-//         <input
-//           name="price"
-//           type="number"
-//           value={form.price}
-//           placeholder="Price"
-//           onChange={handleChange}
-//           className="w-full border p-2"
-//           required
-//         />
+//           <div className="flex flex-col">
+//             <label className="text-gray-600 mb-1 font-medium">Price</label>
+//             <input
+//               name="price"
+//               type="number"
+//               value={form.price}
+//               onChange={handleChange}
+//               placeholder="Enter product price"
+//               className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+//               required
+//             />
+//           </div>
 
-//         {/* Image Preview */}
-//         {preview && <img src={preview} className="h-32 object-cover" />}
+//           {/* Image Preview */}
+//           {preview && (
+//             <div className="flex justify-center">
+//               <img
+//                 src={preview}
+//                 alt="Preview"
+//                 className="w-48 h-48 object-cover rounded-lg shadow-md"
+//               />
+//             </div>
+//           )}
 
-//         {/* File Upload */}
-//         <input type="file" accept="image/*" onChange={handleImageChange} className="w-full" />
+//           <div className="flex flex-col">
+//             <label className="text-gray-600 mb-1 font-medium">Upload New Image</label>
+//             <input
+//               type="file"
+//               accept="image/*"
+//               onChange={handleImageChange}
+//               className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+//             />
+//           </div>
 
-//         <button className="bg-blue-500 text-white px-4 py-2 rounded w-full">
-//           Update Product
-//         </button>
-//       </form>
+//           <button
+//             type="submit"
+//             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition"
+//           >
+//             Update Product
+//           </button>
+//         </form>
+//       </div>
 //     </div>
 //   );
 // };
 
 // export default EditProduct;
+
+
 
 import React, { useState, useEffect } from "react";
 import axios from "../../utils/axios";
@@ -2057,77 +2213,94 @@ const EditProduct = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white shadow-lg rounded-xl w-full max-w-lg p-6">
-        <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Edit Product</h2>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl shadow-md w-full max-w-md p-6 animate-fadeIn">
+        <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
+          Edit Product
+        </h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Title */}
           <div className="flex flex-col">
-            <label className="text-gray-600 mb-1 font-medium">Title</label>
+            <label className="text-gray-700 mb-1 font-medium">Title</label>
             <input
               name="title"
               value={form.title}
               onChange={handleChange}
               placeholder="Enter product title"
-              className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition shadow-sm hover:shadow-md"
               required
             />
           </div>
 
+          {/* Description */}
           <div className="flex flex-col">
-            <label className="text-gray-600 mb-1 font-medium">Description</label>
+            <label className="text-gray-700 mb-1 font-medium">Description</label>
             <textarea
               name="description"
               value={form.description}
               onChange={handleChange}
               placeholder="Enter product description"
-              className="border border-gray-300 rounded-lg p-3 h-24 focus:outline-none focus:ring-2 focus:ring-blue-400 transition resize-none"
+              className="border border-gray-300 rounded-lg p-3 h-24 focus:outline-none focus:ring-2 focus:ring-blue-400 transition shadow-sm hover:shadow-md resize-none"
               required
             />
           </div>
 
+          {/* Price */}
           <div className="flex flex-col">
-            <label className="text-gray-600 mb-1 font-medium">Price</label>
+            <label className="text-gray-700 mb-1 font-medium">Price</label>
             <input
               name="price"
               type="number"
               value={form.price}
               onChange={handleChange}
               placeholder="Enter product price"
-              className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition shadow-sm hover:shadow-md"
               required
             />
           </div>
 
           {/* Image Preview */}
           {preview && (
-            <div className="flex justify-center">
+            <div className="flex justify-center my-3">
               <img
                 src={preview}
                 alt="Preview"
-                className="w-48 h-48 object-cover rounded-lg shadow-md"
+                className="w-48 h-48 object-cover rounded-lg shadow-md transition-transform duration-300 hover:scale-105"
               />
             </div>
           )}
 
+          {/* Image Upload */}
           <div className="flex flex-col">
-            <label className="text-gray-600 mb-1 font-medium">Upload New Image</label>
+            <label className="text-gray-700 mb-1 font-medium">Upload New Image</label>
             <input
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition shadow-sm hover:shadow-md"
             />
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg shadow-md transition transform hover:scale-105"
           >
             Update Product
           </button>
         </form>
       </div>
+
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.5s ease forwards;
+        }
+      `}</style>
     </div>
   );
 };
